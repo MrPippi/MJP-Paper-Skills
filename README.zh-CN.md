@@ -1,6 +1,6 @@
 <div align="center">
 
-# MJP-Paper-Skills
+# MJP Skills — Minecraft Java Plugin Skills
 
 **经过编译验证的 Minecraft Paper 插件开发 Agent Skills**
 
