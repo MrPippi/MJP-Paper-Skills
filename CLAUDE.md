@@ -362,7 +362,7 @@ npm run build         # 靜態匯出至 web/out/（robots.txt / sitemap.xml 由 
 
 2. **技能自給自足**：使用者可用 `npx skills add MrPippi/MJP-Paper-Skills --skill <id>` 單獨安裝技能，只會複製該技能資料夾。各技能需要的 `PLATFORM.md` 與 `_shared/*.md` 由 `scripts/sync-skill-references.mjs` 複製到 `<skill>/references/`（產生檔，不可手改）。修改 `Skills/paper-*/PLATFORM.md` 或 `Skills/_shared/` 後必須重跑腳本；`web/tests/skill-references.test.ts` 會以 `--check` 檢查。
 
-3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.3** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.3 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。唯一例外是 `paper-world-clock`（API 只有 26.3：所有區塊標 `// @only 26.3`，registry 加 `mc_versions: ["26.3"]`）。
+3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.3** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.3 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。唯一例外是 `paper-world-clock`（API 只有 26.3）：registry 寫 `mc_versions: ["26.3"]`（抽取腳本會跳過其他版本）、網站 frontmatter 寫 `mcVersions: ["26.3"]`（技能頁顯示支援版本），區塊仍標 `// @only 26.3` 方便閱讀。
 
 4. **Mojang 官方名稱強制**：不產生 Spigot/混淆映射的代碼。
 

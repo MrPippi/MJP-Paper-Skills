@@ -19,6 +19,8 @@ export interface SkillMeta {
   updatedAt: string;
   githubPath: string;
   featured: boolean;
+  /** Verified Minecraft versions; MC_VERSIONS unless the skill frontmatter narrows it. */
+  mcVersions: string[];
   readingTime?: number;
 }
 

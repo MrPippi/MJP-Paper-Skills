@@ -8,7 +8,7 @@ import { getPlatform, PLATFORMS } from '@/features/skills/lib/platform';
 import { HeroBackdrop, HeroLandscape } from './HeroScene';
 import { HeroTerminal } from './HeroTerminal';
 import { ROUTES } from '@/config/routes';
-import { GITHUB_CONTRIBUTE_URLS } from '@/config/site';
+import { GITHUB_CONTRIBUTE_URLS, MC_VERSIONS } from '@/config/site';
 import { PixelIcon } from '@/shared/ui/PixelIcon';
 import type { PixelIconName } from '@/shared/ui/pixel-icons';
 import { ArrowRightIcon } from '@/shared/ui/icons';
@@ -21,7 +21,6 @@ interface HomePageClientProps {
   referenceDocs: DocLink[];
 }
 
-const MC_VERSIONS = ['1.21.11', '26.3'];
 const STEP_ICONS: PixelIconName[] = ['chest', 'sign', 'command'];
 const FEATURED_LIMIT = 6;
 

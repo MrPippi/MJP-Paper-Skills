@@ -14,15 +14,19 @@
  * Long skills keep their full templates in template.md next to SKILL.md; both files
  * form one compile set.
  *
+ * A skill whose registry entry lists `mc_versions` is skipped for every other target
+ * (e.g. paper-world-clock is 26.3 only).
+ *
  * Partial snippets (no `package` line) are not compiled. Exits 1 on conflicting
  * duplicate files or NMS imports in Paper API skills.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ALL_MC_VERSIONS, readRegistry } from './lib/registry.mjs';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const TARGETS = ['26.3', '1.21.11'];
+export const TARGETS = ALL_MC_VERSIONS;
 const DEFAULT_TARGET = '26.3';
 const GROUPS = ['nms', 'paper'];
 /** Files whose complete units form a skill's base compile set. */
@@ -121,11 +125,17 @@ function main() {
 
   let files = 0;
   let snippets = 0;
+  let skippedSkills = 0;
   const problems = [];
+  const versionsById = new Map(readRegistry().skills.map((skill) => [skill.id, skill.mcVersions]));
   for (const group of GROUPS) {
     const groupDir = path.join(REPO_ROOT, 'Skills', group);
     for (const id of fs.readdirSync(groupDir).sort()) {
       if (!fs.statSync(path.join(groupDir, id)).isDirectory()) continue;
+      if (!(versionsById.get(id) ?? TARGETS).includes(target)) {
+        skippedSkills += 1;                     // registry mc_versions excludes this target
+        continue;
+      }
       const result = extractSkill(group, id, target);
       problems.push(...result.problems);
       snippets += result.skippedSnippets;
@@ -141,7 +151,7 @@ function main() {
   }
 
   for (const problem of problems) console.error(`error: ${problem}`);
-  console.log(`[${target}] extracted ${files} files; skipped ${snippets} partial snippets`);
+  console.log(`[${target}] extracted ${files} files; skipped ${snippets} partial snippets and ${skippedSkills} skills not built for this version`);
   if (problems.length) process.exit(1);
 }
 

@@ -58,6 +58,7 @@ describe('getAllSkills (fixture)', () => {
       updatedAt: '2026-01-15',
       githubPath: 'Skills/nms/full/SKILL.md',
       featured: true,
+      mcVersions: ['1.21.11', '26.3'],
     });
   });
 
@@ -80,6 +81,7 @@ describe('getAllSkills (fixture)', () => {
       updatedAt: '',
       githubPath: '',
       featured: false,
+      mcVersions: ['1.21.11', '26.3'],
     });
   });
 

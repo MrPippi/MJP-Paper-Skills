@@ -9,6 +9,7 @@ on:
       - "Skills/**"
       - "verify/**"
       - "scripts/extract-skill-java.mjs"
+      - "scripts/lib/**"
       - ".github/workflows/skills-compile.yml"
   push:
     branches: ["main"]
@@ -16,6 +17,7 @@ on:
       - "Skills/**"
       - "verify/**"
       - "scripts/extract-skill-java.mjs"
+      - "scripts/lib/**"
       - ".github/workflows/skills-compile.yml"
   workflow_dispatch:
 
