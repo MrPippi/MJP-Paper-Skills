@@ -2,22 +2,22 @@
 
 本平台定義 Paper NMS 開發的基礎建置設定，使用 Paperweight userdev 與 Mojang 官方命名（Minecraft 26.1 起原版不再混淆）。所有 MJP-Paper-Skills NMS 技能產出的代碼皆預設此平台。
 
-- **MC 版本**：**1.21.11** 與 **26.2**（兩版皆經編譯驗證；範本預設 26.2）
-- **Java**：1.21.11 → 21；26.2 → 25（Paper 26.x 最低需求）
-- **建置工具**：Gradle 8.11.2+（Groovy DSL；已驗證 9.8.1）— Paperweight 2.x 不支援更舊的 Gradle
+- **MC 版本**：**1.21.11** 與 **26.3**（兩版皆經編譯驗證；範本預設 26.3）
+- **Java**：1.21.11 → 21；26.3 → 25（Paper 26.x 最低需求）
+- **建置工具**：Gradle 9.7.1+（Groovy DSL；已驗證 9.8.1）— paperweight userdev 2.0.0-beta.24 需要 Gradle 9.7.1 以上
 - **命名**：Mojang 官方名稱（透過 Paperweight userdev 2.0.0-beta.24，pre-release）
-- **Javadoc**：https://jd.papermc.io/paper/26.2/ ・ https://jd.papermc.io/paper/1.21.11/
+- **Javadoc**：https://jd.papermc.io/paper/26.3/ ・ https://jd.papermc.io/paper/1.21.11/
 
 ### 版本差異標註慣例
 
-範本預設寫 26.2 的 API。1.21.11 寫法不同的那一行，會在行尾加上替代程式碼：
+範本預設寫 26.3 的 API。1.21.11 寫法不同的那一行，會在行尾加上替代程式碼：
 
 ```text
 CustomZombie zombie = new CustomZombie(EntityTypes.ZOMBIE, level); // @1.21.11: CustomZombie zombie = new CustomZombie(EntityType.ZOMBIE, level);
 ```
 
 - 目標為 1.21.11 時，把該行換成 `// @1.21.11:` 後面的程式碼
-- 整段只適用單一版本的程式碼區塊，第一行為 `// @only 26.2` 或 `// @only 1.21.11`
+- 整段只適用單一版本的程式碼區塊，第一行為 `// @only 26.3` 或 `// @only 1.21.11`
 - 驗證流程會依此替換後，分別對兩個 dev bundle 編譯
 
 ---
@@ -40,7 +40,7 @@ repositories {
 
 dependencies {
     // Paperweight 提供 Mojang-mapped Paper + NMS API
-    paperweight.paperDevBundle('26.2.build.132-stable')
+    paperweight.paperDevBundle('26.3.build.258-stable')
 }
 
 java {
@@ -73,11 +73,11 @@ tasks {
 
 **1.21.11 版**：上方範本改三處即可（已實際 build 驗證）
 
-| 項目 | 26.2（預設） | 1.21.11 |
+| 項目 | 26.3（預設） | 1.21.11 |
 |------|-------------|---------|
-| `paperweight.paperDevBundle(...)` | `'26.2.build.132-stable'` | `'1.21.11-R0.1-SNAPSHOT'` |
+| `paperweight.paperDevBundle(...)` | `'26.3.build.258-stable'` | `'1.21.11-R0.1-SNAPSHOT'` |
 | `JavaLanguageVersion.of(...)` / `options.release.set(...)` | `25` | `21` |
-| `paper-plugin.yml` 的 `api-version` | `'26.2'` | `'1.21.11'` |
+| `paper-plugin.yml` 的 `api-version` | `'26.3'` | `'1.21.11'` |
 
 ---
 
@@ -95,7 +95,7 @@ rootProject.name = 'my-nms-plugin'
 name: ${name}
 version: '${version}'
 main: com.example.MyNmsPlugin
-api-version: '26.2'
+api-version: '26.3'
 description: '${description}'
 author: YourName
 
@@ -139,8 +139,8 @@ public final class MyNmsPlugin extends JavaPlugin {
 |--------------|--------|--------------------|----------------------|
 | `1.21.11-R0.1-SNAPSHOT`（**已驗證**） | 1.21.11 | `org.bukkit.craftbukkit` | `net.minecraft.server.level.ServerPlayer` |
 | `26.1.2.build.<n>-stable` | 26.1.2 | `org.bukkit.craftbukkit` | 同上 |
-| `26.2.build.132-stable`（**預設、已驗證**） | 26.2 | `org.bukkit.craftbukkit` | 同上 |
-| `26.3.build.<n>-beta` | 26.3（Paper 仍為 beta） | `org.bukkit.craftbukkit` | 同上 |
+| `26.2.build.135-stable`（不再驗證；26.2 最後一個 build） | 26.2 | `org.bukkit.craftbukkit` | 同上 |
+| `26.3.build.258-stable`（**預設、已驗證**） | 26.3 | `org.bukkit.craftbukkit` | 同上 |
 
 > 26.x 起 Paper dev bundle 版本格式改為 `<MC版本>.build.<build號>-<channel>`（不再是 `-R0.1-SNAPSHOT`），可在
 > https://repo.papermc.io/repository/maven-public/io/papermc/paper/dev-bundle/maven-metadata.xml 查詢最新 build。
@@ -148,6 +148,13 @@ public final class MyNmsPlugin extends JavaPlugin {
 > Paper 1.20.5+ 已移除 CraftBukkit 的版本號 relocation，套件固定為 `org.bukkit.craftbukkit`（無 `v1_21_R1` 後綴）；`v1_xx_Rx` 只存在於 Spigot 與 Paper 1.20.4 以前。
 >
 > 1.21.11 → 26.x 主要差異：`ServerBossEvent` 建構子新增 UUID、原版實體常數移至 `EntityTypes`、`ServerboundInteractPacket` 改為 record 並拆出 `ServerboundAttackPacket`、`ClientboundExplodePacket` 建構子改版（範本以 `// @1.21.11:` 或 `// @only` 標註）。
+>
+> 26.2 → 26.3 影響範本的變更（26.2 不再是驗證目標；除了下列幾行，26.2 使用者可照 26.3 的寫法）：
+> - `LivingEntity#swing(InteractionHand)` 移除，改用 `swing(hand, SwingAnimation.DEFAULT, false)`（`net.minecraft.world.item.component.SwingAnimation`；`boolean` 是 `sendToSwingingEntity`，舊的單參數版本傳的是 `false`）
+> - 封包：`ServerboundSwingPacket` 換成沒有欄位的 `ServerboundPunchPacket`；`ClientboundExplodePacket` 最後多一個 `boolean playSound`；新增 `ClientboundSwingAnimationPacket`、`ClientboundPostEffectsPacket`、`ClientboundAddTransientBlockPacket`
+> - 物品元件：移除 `minecraft:swing_animation` 與 `minecraft:map_color`；新增 `attack_animation`、`interact_animation`、`mob_visibility`、`villager_food` 等（見 `nms-data-component`）
+> - 方塊實體 NBT：方塊狀態改存 `id` / `properties`（原為 `Name` / `Properties`）；告示牌新增 `allow_op_features`；熔爐與釀造台計時改為 int；裝飾陶罐 `sherds` 改為物件
+> - 世界升級到 26.3 是單向的；在正式世界的複本上測試插件前先備份
 >
 > 從 1.21.3 以前升級到 1.21.11 / 26.x 常見的 NMS 變更（技能範本皆已對應）：
 > - `ResourceLocation` → `Identifier`；原版 `EntityType.XXX` 常數移至 `EntityTypes`；`Entity.moveTo()` → `snapTo()`；`Level.isClientSide` 欄位 → `isClientSide()`
@@ -194,7 +201,20 @@ NMS 是插件中最容易隨版本（甚至同版本不同 Paper build）壞掉�
 
 ---
 
-## 9. 相關技能
+## 9. Spigot 相容性
+
+除了 `nms-reflection-bridge`，所有 NMS 技能都**僅限 Paper**：
+
+- Paperweight dev bundle 只有 Paper 提供，Spigot 插件無法使用。
+- Paper 在 2024-12-13 從 Spigot 硬分叉，之後不再引入新的 Spigot API，兩邊的 CraftBukkit 內部實作會逐漸分歧。
+- 26.1 起 Mojang 與 Spigot 都不再提供混淆的伺服器 jar，Paper 也移除了 remapper；用 Spigot 映射（混淆）名稱編譯的插件在 26.x 完全無法執行。
+- Spigot 26.3 需要 Java 25 或 26（`hub.spigotmc.org/versions/26.3.json` 的 `javaVersions`）。
+
+每個 `SKILL.md` 的版本段落都會標明 Spigot 狀態。要讓同一個 jar 支援 Spigot，請把呼叫隔離在 `nms-reflection-bridge` 後面，並在以 BuildTools `--rev 26.3` 建置的 Spigot 伺服器上測試。
+
+---
+
+## 10. 相關技能
 
 | 技能 ID | 用途 |
 |--------|------|
@@ -209,7 +229,7 @@ NMS 是插件中最容易隨版本（甚至同版本不同 Paper build）壞掉�
 
 ---
 
-## 10. 進階參考
+## 11. 進階參考
 
 - **Paperweight 文件**：https://github.com/PaperMC/paperweight
 - **Paper 開發指南**：https://docs.papermc.io/paper/dev/getting-started/paper-plugins

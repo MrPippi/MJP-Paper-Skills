@@ -13,9 +13,10 @@ Bridge in-game chat with **one Discord channel** using only the JDK (`java.net.h
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (identical on both; uses `AsyncChatEvent`, Adventure, the Bukkit scheduler)
+- Paper 1.21.11 / 26.3 (identical on both; uses `AsyncChatEvent`, Adventure, the Bukkit scheduler)
 - Pure Paper API, no Paperweight needed; `java.net.http` is part of the JDK and Gson ships with paper-api, so no extra dependencies
 - Discord API v10, Gateway `encoding=json` (no compression)
+- **Spigot**: Core portable — the JDK webhook/Gateway client is server-independent; chat capture uses Paper `AsyncChatEvent` (Spigot: `AsyncPlayerChatEvent`) and Adventure
 
 ---
 

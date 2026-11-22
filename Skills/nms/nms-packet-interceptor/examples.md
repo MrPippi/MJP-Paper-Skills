@@ -107,9 +107,9 @@ manager_name: RateLimitManager
 handler_id: rate_limit
 ```
 
-**Usage: detect an excessive ServerboundSwingPacket rate per time window:**
+**Usage: detect an excessive arm-swing (left-click) packet rate per time window. 26.3 replaced `ServerboundSwingPacket` with `ServerboundPunchPacket`, which carries no hand (the server handles it as a main-hand punch):**
 ```java
-import net.minecraft.network.protocol.game.ServerboundSwingPacket;
+import net.minecraft.network.protocol.game.ServerboundPunchPacket; // @1.21.11: import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import java.util.concurrent.ConcurrentHashMap;
 
 Map<UUID, Deque<Long>> swingTimes = new ConcurrentHashMap<>();
@@ -118,7 +118,7 @@ int MAX_SWINGS = 20;
 
 RateLimitManager manager = new RateLimitManager(
     (player, packet) -> {
-        if (packet instanceof ServerboundSwingPacket) {
+        if (packet instanceof ServerboundPunchPacket) { // @1.21.11: if (packet instanceof ServerboundSwingPacket) {
             Deque<Long> times = swingTimes.computeIfAbsent(
                 player.getUniqueId(), k -> new ConcurrentLinkedDeque<>());
             long now = System.currentTimeMillis();

@@ -1,4 +1,4 @@
-# Compiles every complete Java template in Skills/ against Paper 26.2 and 1.21.11
+# Compiles every complete Java template in Skills/ against Paper 26.3 and 1.21.11
 # (see verify/build.gradle and scripts/extract-skill-java.mjs).
 name: Skills compile
 
@@ -31,7 +31,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - mc: "26.2"
+          - mc: "26.3"
             java: "25"
           - mc: "1.21.11"
             java: "21"

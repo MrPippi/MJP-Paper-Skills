@@ -6,7 +6,7 @@
 
 Low-level NMS with official Mojang names and pure Paper API, for any AI coding tool that reads `SKILL.md`
 
-[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.2-2ea44f)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
 [![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
@@ -25,7 +25,7 @@ AI coding tools often get Paper plugins subtly wrong: outdated or obfuscated NMS
 
 ## Highlights
 
-- **Compile-verified**: CI compiles every complete template against both Paper **1.21.11** and **26.2** on each change; version-specific lines are marked inline.
+- **Compile-verified**: CI compiles every complete template against both Paper **1.21.11** and **26.3** on each change; version-specific lines are marked inline.
 - **Official Mojang names**: NMS code uses Paperweight userdev and the names Minecraft ships unobfuscated since 26.1.
 - **Thread-safe by design**: each skill states which thread every call runs on (main, Netty IO or async).
 - **Tool-agnostic**: the open [Agent Skills](https://agentskills.io) format works with Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI and more.
@@ -114,7 +114,7 @@ Describe the feature in plain language. The tool matches your request against ea
 
 ## Skill Catalog
 
-31 skills, all compile-verified against Paper 1.21.11 and 26.2. Browse them with filters and full templates on the [documentation site](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); the machine-readable index is [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
+31 skills, all compile-verified against Paper 1.21.11 and 26.3. Browse them with filters and full templates on the [documentation site](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); the machine-readable index is [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
 
 ### NMS (16 skills, requires Paperweight userdev)
 
@@ -181,9 +181,9 @@ For APIs beyond the templates, the [NMS quick reference](docs/paper-nms) covers 
 
 | Item | Supported |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 and 26.2 (templates default to 26.2; 1.21.11 differences are marked `// @1.21.11:`) |
-| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.2.build.132-stable` |
-| Java | 21 (1.21.11) / 25 (26.2) |
+| Minecraft / Paper | 1.21.11 and 26.3 (templates default to 26.3; 1.21.11 differences are marked `// @1.21.11:`) |
+| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
+| Java | 21 (1.21.11) / 25 (26.3) |
 | Build | Gradle 8.11.2+ (verified with 9.8.1), Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24` (NMS skills only; no `reobfJar` needed) |
 | Shadow (optional) | `com.gradleup.shadow` `9.6.1`, for multi-module builds (`nms-version-adapter`) |
@@ -223,11 +223,11 @@ Contributions are welcome. To add a skill:
 2. Mirror it to the same path under `.claude/skills/`, then run `node scripts/sync-skill-references.mjs` to generate its `references/` folder (re-run it whenever a `PLATFORM.md` or `_shared/` file changes).
 3. Add the entry to both `skills-registry.yml` files.
 4. Add the site page `web/data/skills/<slug>.md` and its English body `web/data/skills/en/<slug>.md`, then update the expected list in `web/tests/skills-api.data.test.ts`.
-5. Make sure the templates compile against Paper 1.21.11 and 26.2. CI runs this on every pull request that touches `Skills/`; to run it locally (JDK 25 for 26.2, JDK 21 for 1.21.11):
+5. Make sure the templates compile against Paper 1.21.11 and 26.3. CI runs this on every pull request that touches `Skills/`; to run it locally (JDK 25 for 26.3, JDK 21 for 1.21.11):
 
    ```bash
-   node scripts/extract-skill-java.mjs 26.2
-   cd verify && ./gradlew compileSkills -Pmc=26.2
+   node scripts/extract-skill-java.mjs 26.3
+   cd verify && ./gradlew compileSkills -Pmc=26.3
    ```
 
 [`CLAUDE.md`](CLAUDE.md) documents the full process and repository invariants. To work on the documentation site:

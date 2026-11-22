@@ -3,10 +3,10 @@
 `Skills/paper/` 底下的技能只使用 **Paper API**（`paper-api` compileOnly），不需要 Paperweight，也不碰 `net.minecraft` / `org.bukkit.craftbukkit`。
 需要 NMS 時改用 `Skills/nms/` 的技能與 [`Skills/paper-nms/PLATFORM.md`](../paper-nms/PLATFORM.md)。
 
-- **MC 版本**：**1.21.11** 與 **26.2**（兩版皆經編譯驗證；範本預設 26.2，差異以 `// @1.21.11:` 行尾標註，規則同 paper-nms 平台）
-- **Java**：1.21.11 → 21；26.2 → 25
-- **建置工具**：Gradle 8.11.2+（Groovy DSL 範例；Kotlin DSL 寫法相同）
-- **Javadoc**：https://jd.papermc.io/paper/26.2/ ・ https://jd.papermc.io/paper/1.21.11/
+- **MC 版本**：**1.21.11** 與 **26.3**（兩版皆經編譯驗證；範本預設 26.3，差異以 `// @1.21.11:` 行尾標註，規則同 paper-nms 平台）
+- **Java**：1.21.11 → 21；26.3 → 25
+- **建置工具**：建議 Gradle 9.7.1+（Groovy DSL 範例；Kotlin DSL 寫法相同；已驗證 9.8.1，與 paper-nms 平台同一基準）
+- **Javadoc**：https://jd.papermc.io/paper/26.3/ ・ https://jd.papermc.io/paper/1.21.11/
 
 ---
 
@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable' // 1.21.11：'1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable' // 1.21.11：'1.21.11-R0.1-SNAPSHOT'
 
     // 軟依賴（伺服器上由對應插件提供，不可打包進 jar）
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
@@ -54,11 +54,11 @@ tasks.withType(JavaCompile).configureEach {
 }
 ```
 
-| 項目 | 26.2（預設） | 1.21.11 |
+| 項目 | 26.3（預設） | 1.21.11 |
 |------|-------------|---------|
-| `paper-api` 版本 | `26.2.build.132-stable` | `1.21.11-R0.1-SNAPSHOT` |
+| `paper-api` 版本 | `26.3.build.258-stable` | `1.21.11-R0.1-SNAPSHOT` |
 | Java toolchain / `options.release` | `25` | `21` |
-| `plugin.yml` / `paper-plugin.yml` 的 `api-version` | `'26.2'` | `'1.21.11'` |
+| `plugin.yml` / `paper-plugin.yml` 的 `api-version` | `'26.3'` | `'1.21.11'` |
 
 > 上表依賴版本為 BlockoSMP / Bydsmp 實際使用、且本庫已編譯驗證的版本。
 
@@ -70,7 +70,7 @@ tasks.withType(JavaCompile).configureEach {
 name: Example
 version: '${version}'
 main: com.example.ExamplePlugin
-api-version: '26.2'
+api-version: '26.3'
 softdepend: [Vault, PlaceholderAPI, packetevents]
 libraries:
   - org.xerial:sqlite-jdbc:3.49.1.0
@@ -98,6 +98,26 @@ permissions:
 | 跨插件 | 只透過 ServicesManager 發布的介面互通，見 `paper-service-api` |
 | 軟依賴 | Hook／Bridge 分離，避免 class 載入失敗，見 `paper-softdepend-hook` |
 | 專案規範優先 | 產生程式碼前先讀目標專案的 `CLAUDE.md` / `docs/` 規範（命名、分層、測試方式），範本與專案規範衝突時以專案為準 |
+
+---
+
+## 3a. Spigot 相容性
+
+範本以 Paper 為目標。Spigot-API 26.3 只有 `org.bukkit` 與 `org.spigotmc` 兩個套件（已對照 `hub.spigotmc.org/javadocs/spigot/`），其餘在 Spigot 上都不存在：
+
+| 僅 Paper 的 API | 使用的技能 |
+|------|------|
+| Adventure / MiniMessage（`net.kyori.*`）— Spigot 沒有內建 Adventure | 幾乎所有技能（訊息） |
+| `io.papermc.paper.*`（Dialog、Brigadier `Commands`、lifecycle、registry 事件、資料元件、`AsyncChatEvent`、世界邊界事件、`Tick`） | `paper-dialog-ui`、`paper-brigadier-command`、`paper-chest-gui`、`paper-client-side-effects`、`paper-discord-bridge` |
+| `Entity#teleportAsync`、`World#getChunkAtAsync`、`ItemStack#editMeta`、`Bukkit#getMinecraftVersion`、`PlayerKickEvent.Cause`、`org.bukkit.GameRules` | `paper-safe-teleport`、`paper-disposable-world`、`paper-combat-tag`、`paper-chest-gui`、`paper-packetevents-filter` |
+
+每個 `SKILL.md` 的版本段落用三種等級標明 Spigot 狀態：
+
+- **僅 Paper**：核心依賴 Paper API。
+- **核心可移植**：替換 Adventure 訊息與列出的 Paper 呼叫後，邏輯可在 Spigot 運作。
+- **Spigot 可用**：範本沒有使用 Paper API。
+
+Paper 自 2024-12-13 硬分叉後不再引入新的 Spigot API，因此 Spigot 之後新增的 API（例如 `ImbueRecipe`、`DyeRecipe`）在 Paper 上可能不存在，反之亦然。
 
 ---
 

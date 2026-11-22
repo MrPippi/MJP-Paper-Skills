@@ -4,7 +4,7 @@ title: NMS Packet Interceptor
 titleZh: NMS 封包攔截器
 description: Inject a custom ChannelDuplexHandler into the Netty pipeline to intercept and modify Clientbound and Serverbound NMS packets.
 descriptionZh: 透過 Netty ChannelDuplexHandler 注入玩家連線管線，攔截或修改 Clientbound 與 Serverbound 封包。
-version: "1.0.0"
+version: "1.1.0"
 status: active
 category: nms-packet
 categoryLabel: NMS 封包
@@ -18,7 +18,7 @@ triggerKeywords:
   - "封包監聽"
   - "修改封包"
   - "packet listener"
-updatedAt: "2026-04-19"
+updatedAt: "2026-11-22"
 githubPath: Skills/nms/nms-packet-interceptor/SKILL.md
 featured: true
 ---
@@ -39,9 +39,10 @@ featured: true
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證；版本差異以行尾 `// @1.21.11:` 標註）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證；版本差異以行尾 `// @1.21.11:` 標註）
 - Paperweight userdev 2.0.0-beta.24+
 - Netty 4.x（Paper 內建）
+- **Spigot**：僅 Paper——建立在只有 Paper 提供的 Paperweight dev bundle 上
 
 ---
 

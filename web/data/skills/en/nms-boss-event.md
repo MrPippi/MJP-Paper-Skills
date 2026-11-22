@@ -8,10 +8,11 @@ Precisely control the progress, color, style (notched segments), and visibility 
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (both versions compile-verified; version differences are marked with a trailing `// @1.21.11:`)
+- Paper 1.21.11 / 26.3 (both versions compile-verified; version differences are marked with a trailing `// @1.21.11:`)
 - Paperweight userdev 2.0.0-beta.24+
 - Mojang official names (no longer obfuscated since Minecraft 26.1)
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper
 
 ---
 

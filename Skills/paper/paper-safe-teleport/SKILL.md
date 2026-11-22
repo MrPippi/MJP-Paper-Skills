@@ -22,9 +22,10 @@ Core approach:
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (templates are compile-verified on both, no differences)
+- Paper 1.21.11 / 26.3 (templates are compile-verified on both, no differences)
 - Pure Paper API, no Paperweight required
 - Uses only `World`, `WorldBorder`, `HeightMap`, `Player#teleportAsync`, `BukkitScheduler`
+- **Spigot**: Paper only — the core relies on `World#getChunkAtAsync` and `Entity#teleportAsync`
 
 ## Triggers
 

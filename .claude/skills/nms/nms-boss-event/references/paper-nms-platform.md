@@ -4,22 +4,22 @@
 
 This platform defines the base build setup for Paper NMS development, using Paperweight userdev and official Mojang names (vanilla has no longer been obfuscated since Minecraft 26.1). All code produced by the MJP-Paper-Skills NMS skills targets this platform by default.
 
-- **MC versions**: **1.21.11** and **26.2** (both compile-verified; templates default to 26.2)
-- **Java**: 1.21.11 → 21; 26.2 → 25 (minimum for Paper 26.x)
-- **Build tool**: Gradle 8.11.2+ (Groovy DSL; 9.8.1 verified) — Paperweight 2.x does not support older Gradle
+- **MC versions**: **1.21.11** and **26.3** (both compile-verified; templates default to 26.3)
+- **Java**: 1.21.11 → 21; 26.3 → 25 (minimum for Paper 26.x)
+- **Build tool**: Gradle 9.7.1+ (Groovy DSL; 9.8.1 verified) — paperweight userdev 2.0.0-beta.24 requires Gradle 9.7.1 or newer
 - **Naming**: official Mojang names (via Paperweight userdev 2.0.0-beta.24, pre-release)
-- **Javadoc**: https://jd.papermc.io/paper/26.2/ | https://jd.papermc.io/paper/1.21.11/
+- **Javadoc**: https://jd.papermc.io/paper/26.3/ | https://jd.papermc.io/paper/1.21.11/
 
 ### Version Difference Annotation Convention
 
-Templates default to the 26.2 API. For a line that is written differently on 1.21.11, the replacement code is appended at the end of the line:
+Templates default to the 26.3 API. For a line that is written differently on 1.21.11, the replacement code is appended at the end of the line:
 
 ```text
 CustomZombie zombie = new CustomZombie(EntityTypes.ZOMBIE, level); // @1.21.11: CustomZombie zombie = new CustomZombie(EntityType.ZOMBIE, level);
 ```
 
 - When targeting 1.21.11, replace that line with the code after `// @1.21.11:`
-- A code block that applies to a single version only starts with `// @only 26.2` or `// @only 1.21.11`
+- A code block that applies to a single version only starts with `// @only 26.3` or `// @only 1.21.11`
 - The verification flow applies these substitutions and then compiles against both dev bundles separately
 
 ---
@@ -42,7 +42,7 @@ repositories {
 
 dependencies {
     // Paperweight provides Mojang-mapped Paper + NMS API
-    paperweight.paperDevBundle('26.2.build.132-stable')
+    paperweight.paperDevBundle('26.3.build.258-stable')
 }
 
 java {
@@ -75,11 +75,11 @@ tasks {
 
 **1.21.11 version**: change three places in the template above (verified with a real build)
 
-| Item | 26.2 (default) | 1.21.11 |
+| Item | 26.3 (default) | 1.21.11 |
 |------|-------------|---------|
-| `paperweight.paperDevBundle(...)` | `'26.2.build.132-stable'` | `'1.21.11-R0.1-SNAPSHOT'` |
+| `paperweight.paperDevBundle(...)` | `'26.3.build.258-stable'` | `'1.21.11-R0.1-SNAPSHOT'` |
 | `JavaLanguageVersion.of(...)` / `options.release.set(...)` | `25` | `21` |
-| `api-version` in `paper-plugin.yml` | `'26.2'` | `'1.21.11'` |
+| `api-version` in `paper-plugin.yml` | `'26.3'` | `'1.21.11'` |
 
 ---
 
@@ -97,7 +97,7 @@ rootProject.name = 'my-nms-plugin'
 name: ${name}
 version: '${version}'
 main: com.example.MyNmsPlugin
-api-version: '26.2'
+api-version: '26.3'
 description: '${description}'
 author: YourName
 
@@ -141,8 +141,8 @@ public final class MyNmsPlugin extends JavaPlugin {
 |--------------|--------|--------------------|----------------------|
 | `1.21.11-R0.1-SNAPSHOT` (**verified**) | 1.21.11 | `org.bukkit.craftbukkit` | `net.minecraft.server.level.ServerPlayer` |
 | `26.1.2.build.<n>-stable` | 26.1.2 | `org.bukkit.craftbukkit` | same as above |
-| `26.2.build.132-stable` (**default, verified**) | 26.2 | `org.bukkit.craftbukkit` | same as above |
-| `26.3.build.<n>-beta` | 26.3 (Paper still in beta) | `org.bukkit.craftbukkit` | same as above |
+| `26.2.build.135-stable` (no longer verified; last 26.2 build) | 26.2 | `org.bukkit.craftbukkit` | same as above |
+| `26.3.build.258-stable` (**default, verified**) | 26.3 | `org.bukkit.craftbukkit` | same as above |
 
 > From 26.x on, the Paper dev bundle version format changed to `<MC version>.build.<build number>-<channel>` (no longer `-R0.1-SNAPSHOT`). The latest build can be looked up at
 > https://repo.papermc.io/repository/maven-public/io/papermc/paper/dev-bundle/maven-metadata.xml
@@ -150,6 +150,13 @@ public final class MyNmsPlugin extends JavaPlugin {
 > Paper 1.20.5+ removed CraftBukkit's version-number relocation, so the package is always `org.bukkit.craftbukkit` (no `v1_21_R1` suffix); `v1_xx_Rx` only exists on Spigot and Paper 1.20.4 and earlier.
 >
 > Main differences from 1.21.11 → 26.x: `ServerBossEvent` constructor gains a UUID, vanilla entity constants moved to `EntityTypes`, `ServerboundInteractPacket` became a record with `ServerboundAttackPacket` split out, `ClientboundExplodePacket` constructor reworked (templates mark these with `// @1.21.11:` or `// @only`).
+>
+> Changes from 26.2 → 26.3 that affect the templates (26.2 is no longer a verified target; 26.2 users can follow the 26.3 code except for these lines):
+> - `LivingEntity#swing(InteractionHand)` was removed; use `swing(hand, SwingAnimation.DEFAULT, false)` (`net.minecraft.world.item.component.SwingAnimation`; the `boolean` is `sendToSwingingEntity`, which the old one-argument form passed as `false`)
+> - Packets: `ServerboundSwingPacket` was replaced by the field-less `ServerboundPunchPacket`; `ClientboundExplodePacket` gained a trailing `boolean playSound`; new `ClientboundSwingAnimationPacket`, `ClientboundPostEffectsPacket`, `ClientboundAddTransientBlockPacket`
+> - Item components: `minecraft:swing_animation` and `minecraft:map_color` were removed; `attack_animation`, `interact_animation`, `mob_visibility`, `villager_food` and others were added (see `nms-data-component`)
+> - Block entity NBT: block states are saved as `id` / `properties` (was `Name` / `Properties`); signs gained `allow_op_features`; furnace and brewing stand timers are ints; decorated pot `sherds` is an object
+> - Upgrading a world to 26.3 is one-way; back up before testing a plugin on a copy of a production world
 >
 > Common NMS changes when upgrading from 1.21.3 and earlier to 1.21.11 / 26.x (all skill templates already account for them):
 > - `ResourceLocation` → `Identifier`; vanilla `EntityType.XXX` constants moved to `EntityTypes`; `Entity.moveTo()` → `snapTo()`; `Level.isClientSide` field → `isClientSide()`
@@ -196,7 +203,20 @@ NMS is the part of a plugin most likely to break across versions (even across Pa
 
 ---
 
-## 9. Related Skills
+## 9. Spigot Compatibility
+
+Every NMS skill except `nms-reflection-bridge` is **Paper only**:
+
+- The Paperweight dev bundle exists only for Paper; Spigot plugins cannot use it.
+- Paper hard-forked from Spigot on 2024-12-13 and no longer pulls new Spigot API, so CraftBukkit internals of the two servers drift apart.
+- From 26.1 on, neither Mojang nor Spigot ships obfuscated server jars, and Paper dropped its remapper. Plugins built against Spigot-mapped (obfuscated) names do not run on 26.x at all.
+- Spigot 26.3 runs on Java 25 or 26 (`javaVersions` in `hub.spigotmc.org/versions/26.3.json`).
+
+Each `SKILL.md` states its Spigot status in its version section. To target Spigot from the same jar, isolate the calls behind `nms-reflection-bridge` and test on a Spigot server built with BuildTools `--rev 26.3`.
+
+---
+
+## 10. Related Skills
 
 | Skill ID | Purpose |
 |--------|------|
@@ -211,7 +231,7 @@ For common needs that do not require NMS (Dialog, SQLite, cross-plugin API, pack
 
 ---
 
-## 10. Further Reference
+## 11. Further Reference
 
 - **Paperweight docs**: https://github.com/PaperMC/paperweight
 - **Paper development guide**: https://docs.papermc.io/paper/dev/getting-started/paper-plugins

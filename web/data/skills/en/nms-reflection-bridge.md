@@ -13,6 +13,7 @@ Provide NMS access that does not depend on Paperweight userdev, using Java refle
 - Paper 1.20.5+ (uses Mojang mappings natively, no remap needed)
 - No Paperweight compile dependency
 - Only `paper-api` or `spigot-api` is required
+- **Spigot**: Not verified on Spigot — the reflection approach is the route for Spigot, but this repository has not runtime-tested it on Spigot 26.3; Spigot 26.x also ships unobfuscated, so look classes up by their Mojang names
 
 ---
 

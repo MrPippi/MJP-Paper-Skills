@@ -6,7 +6,7 @@
 
 使用 Mojang 官方命名的底层 NMS 与纯 Paper API，适用于任何能读取 `SKILL.md` 的 AI 编程工具
 
-[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.2-2ea44f)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
 [![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
@@ -25,7 +25,7 @@ AI 编程工具经常在 Paper 插件上出现细微错误：过时或已混淆�
 
 ## 亮点
 
-- **经过编译验证**：CI 会在每次变更时，针对 Paper **1.21.11** 和 **26.2** 编译每个完整模板；版本专属的行会在行内标注。
+- **经过编译验证**：CI 会在每次变更时，针对 Paper **1.21.11** 和 **26.3** 编译每个完整模板；版本专属的行会在行内标注。
 - **Mojang 官方名称**：NMS 代码使用 Paperweight userdev，以及 Minecraft 自 26.1 起以未混淆形式发布的名称。
 - **线程安全的设计**：每个技能都会说明每次调用在哪个线程执行（主线程、Netty IO 或异步）。
 - **不限工具**：开放的 [Agent Skills](https://agentskills.io) 格式可用于 Claude Code、OpenAI Codex、Cursor、GitHub Copilot、Gemini CLI 等工具。
@@ -114,7 +114,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## 技能目录
 
-共 31 个技能，均已针对 Paper 1.21.11 和 26.2 完成编译验证。可在[文档网站](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)按条件筛选并查看完整模板；机器可读的索引为 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)。
+共 31 个技能，均已针对 Paper 1.21.11 和 26.3 完成编译验证。可在[文档网站](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)按条件筛选并查看完整模板；机器可读的索引为 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)。
 
 ### NMS（16 个技能，需要 Paperweight userdev）
 
@@ -181,9 +181,9 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | 项目 | 支持范围 |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 和 26.2（模板默认使用 26.2；1.21.11 的差异以 `// @1.21.11:` 标注） |
-| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.2.build.132-stable` |
-| Java | 21 (1.21.11) / 25 (26.2) |
+| Minecraft / Paper | 1.21.11 和 26.3（模板默认使用 26.3；1.21.11 的差异以 `// @1.21.11:` 标注） |
+| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
+| Java | 21 (1.21.11) / 25 (26.3) |
 | 构建 | Gradle 8.11.2+（已验证 9.8.1），Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24`（仅 NMS 技能；无需 `reobfJar`） |
 | Shadow（可选） | `com.gradleup.shadow` `9.6.1`，用于多模块构建（`nms-version-adapter`） |
@@ -223,11 +223,11 @@ MJP-Paper-Skills/
 2. 镜像到 `.claude/skills/` 下的相同路径，然后运行 `node scripts/sync-skill-references.mjs` 生成其 `references/` 文件夹（每当 `PLATFORM.md` 或 `_shared/` 文件变更时重新运行）。
 3. 将条目添加到两份 `skills-registry.yml` 中。
 4. 添加网站页面 `web/data/skills/<slug>.md` 及其英文正文 `web/data/skills/en/<slug>.md`，然后更新 `web/tests/skills-api.data.test.ts` 中的预期列表。
-5. 确认模板可针对 Paper 1.21.11 和 26.2 编译。每个涉及 `Skills/` 的 Pull Request，CI 都会运行此检查；如需在本地运行（26.2 用 JDK 25，1.21.11 用 JDK 21）：
+5. 确认模板可针对 Paper 1.21.11 和 26.3 编译。每个涉及 `Skills/` 的 Pull Request，CI 都会运行此检查；如需在本地运行（26.3 用 JDK 25，1.21.11 用 JDK 21）：
 
    ```bash
-   node scripts/extract-skill-java.mjs 26.2
-   cd verify && ./gradlew compileSkills -Pmc=26.2
+   node scripts/extract-skill-java.mjs 26.3
+   cd verify && ./gradlew compileSkills -Pmc=26.3
    ```
 
 完整流程与仓库不变量记录在 [`CLAUDE.md`](CLAUDE.md) 中。如需开发文档网站：

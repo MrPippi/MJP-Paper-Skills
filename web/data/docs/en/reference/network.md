@@ -1,6 +1,6 @@
 # NMS Network & Netty Pipeline Reference
 
-Applicable versions: Paper 1.21.11 / 26.2 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
+Applicable versions: Paper 1.21.11 / 26.3 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
 Package roots: `net.minecraft.network`, `io.netty.channel`
 
 > For packet interception usage, see `Skills/nms/nms-packet-interceptor/SKILL.md`

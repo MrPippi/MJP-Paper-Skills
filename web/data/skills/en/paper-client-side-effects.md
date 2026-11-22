@@ -9,9 +9,10 @@ When you need an effect that only one player can see, **use the Paper API first,
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both)
 - Pure Paper API, no Paperweight needed, no ProtocolLib / PacketEvents needed
 - The preference source is obtained through `paper-service-api`
+- **Spigot**: Core portable — per-player world border, time, weather and `hideEntity` exist in Spigot; replace Adventure, `Tick` and the Paper world border events (`io.papermc.paper.event.world.border`)
 
 ---
 
@@ -64,6 +65,15 @@ public void reconcile(Player player) {
 - Red frame: on world change call `setWorldBorder(null)` first and then recompute; recopy when the real border changes; restore when disabled; use a periodic scan for health changes
 - Check night vision with `PotionEffect#isInfinite()`, not "has night vision"
 - On join, `hidePlayer` recomputes in both directions and `showPlayer` runs before logout; it also removes the player from the TAB list
+
+### Screen post effect (PostEffectService, 26.3+)
+
+```java
+// 26.3 added Player#postEffects() (the API behind vanilla /posteffect); 1.21.11 has none
+player.postEffects().add(Key.key("example", "fear"));      // synced to the client on the next tick
+player.postEffects().remove(Key.key("example", "fear"));   // remove only your own key
+// The list is saved in the player data file: remove temporary effects on expiry, quit and onDisable
+```
 
 ---
 

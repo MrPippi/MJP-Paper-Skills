@@ -26,9 +26,10 @@ Core rules (breaking any one of them causes trouble on a production server):
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified; the code in this skill is identical for both, with no `// @1.21.11:` difference lines)
+- Paper 1.21.11 / 26.3 (both compile-verified; the code in this skill is identical for both, with no `// @1.21.11:` difference lines)
 - Pure Paper API, no Paperweight required
 - The server needs **packetevents** (compiled against `packetevents-spigot:2.13.0`) or **ProtocolLib** (compiled against `5.3.0`); the MC versions actually supported depend on the version of that plugin on the server, so upgrade it before upgrading MC
+- **Spigot**: Core portable — PacketEvents and ProtocolLib both support Spigot; replace Adventure and `ItemStack#editMeta`
 
 ## Triggers
 
@@ -68,7 +69,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
     compileOnly 'com.github.retrooper:packetevents-spigot:2.13.0'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.3.0'
 }
@@ -79,7 +80,7 @@ dependencies {
 ```yaml
 name: Example
 main: com.example.filter.FilterPlugin
-api-version: '26.2'
+api-version: '26.3'
 softdepend: [packetevents, ProtocolLib]
 ```
 

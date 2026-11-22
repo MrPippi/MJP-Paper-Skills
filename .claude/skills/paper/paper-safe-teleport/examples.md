@@ -81,7 +81,7 @@ public final class TeleportPlugin extends JavaPlugin {
 name: SafeTeleport
 main: com.example.teleport.TeleportPlugin
 version: '1.0.0'
-api-version: '26.2'
+api-version: '26.3'
 commands:
   rtp:
     description: Teleport to a random safe location

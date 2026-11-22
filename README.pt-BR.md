@@ -6,7 +6,7 @@
 
 NMS de baixo nível com os nomes oficiais da Mojang e Paper API pura, para qualquer ferramenta de programação com IA que leia `SKILL.md`
 
-[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.2-2ea44f)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
 [![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
@@ -25,7 +25,7 @@ Ferramentas de programação com IA costumam errar detalhes em plugins do Paper:
 
 ## Destaques
 
-- **Compilação verificada**: a CI compila todo modelo completo contra o Paper **1.21.11** e **26.2** a cada alteração; as linhas específicas de cada versão são marcadas no próprio código.
+- **Compilação verificada**: a CI compila todo modelo completo contra o Paper **1.21.11** e **26.3** a cada alteração; as linhas específicas de cada versão são marcadas no próprio código.
 - **Nomes oficiais da Mojang**: o código NMS usa o Paperweight userdev e os nomes que o Minecraft distribui sem ofuscação desde a 26.1.
 - **Seguro entre threads por design**: cada skill informa em qual thread cada chamada é executada (principal, Netty IO ou assíncrona).
 - **Independente de ferramenta**: o formato aberto [Agent Skills](https://agentskills.io) funciona com Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI e outras.
@@ -114,7 +114,7 @@ Descreva a funcionalidade em linguagem natural. A ferramenta compara o seu pedid
 
 ## Catálogo de skills
 
-31 skills, todas com compilação verificada contra o Paper 1.21.11 e 26.2. Explore-as com filtros e modelos completos no [site de documentação](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); o índice legível por máquina é [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
+31 skills, todas com compilação verificada contra o Paper 1.21.11 e 26.3. Explore-as com filtros e modelos completos no [site de documentação](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); o índice legível por máquina é [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
 
 ### NMS (16 skills, exige Paperweight userdev)
 
@@ -181,9 +181,9 @@ Para APIs além dos modelos, a [referência rápida de NMS](docs/paper-nms) cobr
 
 | Item | Suportado |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 e 26.2 (os modelos usam 26.2 por padrão; as diferenças da 1.21.11 são marcadas com `// @1.21.11:`) |
-| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.2.build.132-stable` |
-| Java | 21 (1.21.11) / 25 (26.2) |
+| Minecraft / Paper | 1.21.11 e 26.3 (os modelos usam 26.3 por padrão; as diferenças da 1.21.11 são marcadas com `// @1.21.11:`) |
+| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
+| Java | 21 (1.21.11) / 25 (26.3) |
 | Build | Gradle 8.11.2+ (verificado com 9.8.1), Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24` (somente skills de NMS; `reobfJar` não é necessário) |
 | Shadow (opcional) | `com.gradleup.shadow` `9.6.1`, para builds multimódulo (`nms-version-adapter`) |
@@ -223,11 +223,11 @@ Contribuições são bem-vindas. Para adicionar uma skill:
 2. Espelhe-a no mesmo caminho em `.claude/skills/` e depois execute `node scripts/sync-skill-references.mjs` para gerar a pasta `references/` dela (execute-o novamente sempre que um `PLATFORM.md` ou um arquivo de `_shared/` mudar).
 3. Adicione a entrada nos dois arquivos `skills-registry.yml`.
 4. Adicione a página do site `web/data/skills/<slug>.md` e o seu corpo em inglês `web/data/skills/en/<slug>.md`; depois atualize a lista esperada em `web/tests/skills-api.data.test.ts`.
-5. Garanta que os modelos compilem contra o Paper 1.21.11 e 26.2. A CI executa isso em todo pull request que altere `Skills/`; para executar localmente (JDK 25 para 26.2, JDK 21 para 1.21.11):
+5. Garanta que os modelos compilem contra o Paper 1.21.11 e 26.3. A CI executa isso em todo pull request que altere `Skills/`; para executar localmente (JDK 25 para 26.3, JDK 21 para 1.21.11):
 
    ```bash
-   node scripts/extract-skill-java.mjs 26.2
-   cd verify && ./gradlew compileSkills -Pmc=26.2
+   node scripts/extract-skill-java.mjs 26.3
+   cd verify && ./gradlew compileSkills -Pmc=26.3
    ```
 
 O [`CLAUDE.md`](CLAUDE.md) documenta o processo completo e os invariantes do repositório. Para trabalhar no site de documentação:

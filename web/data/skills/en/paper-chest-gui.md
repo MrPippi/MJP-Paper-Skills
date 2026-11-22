@@ -9,9 +9,10 @@ Build chest-style menus with the pure Bukkit / Paper API without letting players
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both)
 - Pure Paper API, no Paperweight needed
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Core portable — `InventoryHolder` and the click guard are Bukkit API; replace Adventure names/titles, `ItemStack#editMeta` and the `TOOLTIP_DISPLAY` data component
 
 ---
 

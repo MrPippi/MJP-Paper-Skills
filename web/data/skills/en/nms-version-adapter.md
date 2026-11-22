@@ -10,6 +10,7 @@ Define an abstract Adapter interface for common NMS operations, provide a concre
 
 - Paper 1.21.11 / 26.x (adapter examples use 26.2 / 26.3)
 - A multi-module Gradle build is recommended (each version in its own module, compiled with Paperweight)
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper
 
 ---
 

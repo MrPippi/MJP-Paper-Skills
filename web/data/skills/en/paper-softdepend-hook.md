@@ -8,9 +8,10 @@ Let a plugin gain an extra feature when a third-party plugin is installed and st
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified, no version differences)
+- Paper 1.21.11 / 26.3 (both compile-verified, no version differences)
 - Pure Paper API; VaultAPI 1.7.1, PlaceholderAPI 2.11.6 and packetevents-spigot 2.13.0 are all `compileOnly`
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Core portable — Vault and PlaceholderAPI support Spigot; replace Adventure messages
 
 ---
 

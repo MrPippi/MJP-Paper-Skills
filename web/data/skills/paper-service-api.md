@@ -32,9 +32,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
 - 純 Paper API，不需要 Paperweight
-- Java 21（1.21.11）／25（26.2）
+- Java 21（1.21.11）／25（26.3）
+- **Spigot**：核心可移植——`ServicesManager` 是 Bukkit API；需替換 Adventure 訊息
 
 ---
 

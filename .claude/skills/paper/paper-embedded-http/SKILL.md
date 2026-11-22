@@ -24,9 +24,10 @@ Core design:
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (uses only the JDK `jdk.httpserver` module, Gson, and the Bukkit scheduler; identical on both versions)
+- Paper 1.21.11 / 26.3 (uses only the JDK `jdk.httpserver` module, Gson, and the Bukkit scheduler; identical on both versions)
 - Pure Paper API; Paperweight is not required
 - `com.sun.net.httpserver` belongs to the `jdk.httpserver` module, which ships with the Paper server's JRE; no extra Gradle configuration is needed to compile
+- **Spigot**: Works on Spigot — the template uses only the JDK `HttpServer`, Gson and the Bukkit scheduler (not runtime-tested on Spigot)
 
 ## Triggers
 

@@ -38,6 +38,7 @@ featured: false
 - Paper 1.20.5+（原生使用 Mojang mappings，無需 remap）
 - 不需 Paperweight 編譯依賴
 - 僅需 `paper-api` 或 `spigot-api`
+- **Spigot**：尚未在 Spigot 驗證——Spigot 相容要走反射這條路，但本專案未在 Spigot 26.3 實際執行測試；Spigot 26.x 同樣不混淆，類別一律以 Mojang 名稱查找
 
 ---
 

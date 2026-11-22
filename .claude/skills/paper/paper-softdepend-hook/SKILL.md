@@ -22,9 +22,10 @@ The solution is a three-layer split:
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (identical on both versions, no version-specific lines)
+- Paper 1.21.11 / 26.3 (identical on both versions, no version-specific lines)
 - Pure Paper API; soft dependencies are obtained via `compileOnly`: VaultAPI 1.7.1, PlaceholderAPI 2.11.6, packetevents-spigot 2.13.0
 - Paperweight is not required
+- **Spigot**: Core portable — Vault and PlaceholderAPI support Spigot; replace Adventure messages
 
 ## Triggers
 
@@ -60,7 +61,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). Soft
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
     compileOnly('com.github.MilkBowl:VaultAPI:1.7.1') { exclude group: 'org.bukkit' }
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'com.github.retrooper:packetevents-spigot:2.13.0'
@@ -72,7 +73,7 @@ dependencies {
 ```yaml
 name: Market
 main: com.example.market.MarketPlugin
-api-version: '26.2'
+api-version: '26.3'
 softdepend: [Vault, PlaceholderAPI, packetevents]
 ```
 

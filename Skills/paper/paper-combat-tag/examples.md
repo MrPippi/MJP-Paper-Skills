@@ -272,7 +272,7 @@ public final class CombatTagHook {
 ```yaml
 name: Duel
 main: com.example.duel.DuelPlugin
-api-version: '26.2'
+api-version: '26.3'
 softdepend: [CombatTag]
 ```
 

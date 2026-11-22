@@ -20,9 +20,10 @@ This is the NMS code most likely to break across versions, so the template also 
 
 ## NMS Version Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified; version differences are marked with a trailing `// @1.21.11:`)
+- Paper 1.21.11 / 26.3 (both compile-verified; version differences are marked with a trailing `// @1.21.11:`)
 - Paperweight userdev (see [`references/paper-nms-platform.md`](references/paper-nms-platform.md))
 - Depends on Paper-patched constructors and methods (`ServerGamePacketListenerImpl`, `CommonListenerCookie.createInitial`, the CraftBukkit overload of `addFreshEntity`); **signatures may change even between Paper builds of the same MC version** -> the first call must catch `LinkageError`
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper (see `references/paper-nms-platform.md` §9)
 
 ## Triggers
 
@@ -35,7 +36,7 @@ This is the NMS code most likely to break across versions, so the template also 
 | Parameter | Example | Description |
 |------|------|------|
 | `package_name` | `com.example.bot.nms` | Dedicated NMS package (only this package may import NMS) |
-| `supported_versions` | `1.21.11`, `26.2` | MC versions allowed to enable the feature |
+| `supported_versions` | `1.21.11`, `26.3` | MC versions allowed to enable the feature |
 | `name_rule` | `<player>_Bot` | Fake player name rule (max 16 characters) |
 | `skin_source` | the challenger | Player the skin is taken from |
 
@@ -83,7 +84,7 @@ import java.util.Set;
  */
 public final class NmsGuard {
 
-    private static final Set<String> SUPPORTED = Set.of("1.21.11", "26.2");
+    private static final Set<String> SUPPORTED = Set.of("1.21.11", "26.3");
 
     private NmsGuard() {}
 
@@ -302,7 +303,7 @@ public final class FakePlayer {
 
     /** Vanilla melee: swing + Player#attack; damage, crits, knockback, and shield breaking are all computed by vanilla. */
     public void attack(Entity target) {
-        handle.swing(InteractionHand.MAIN_HAND);
+        handle.swing(InteractionHand.MAIN_HAND, net.minecraft.world.item.component.SwingAnimation.DEFAULT, false); // @1.21.11: handle.swing(InteractionHand.MAIN_HAND);
         handle.attack(((CraftEntity) target).getHandle());
     }
 

@@ -11,7 +11,7 @@ export const zhTW: Translations = {
     switchLang: 'Switch to English',
   },
   footer: {
-    tagline: 'Paper 1.21.11 / 26.2 插件開發的 AI Agent Skills：NMS 底層與純 Paper API，兩版皆編譯驗證，適用任何支援 SKILL.md 的 AI 工具。',
+    tagline: 'Paper 1.21.11 / 26.3 插件開發的 AI Agent Skills：NMS 底層與純 Paper API，兩版皆編譯驗證，適用任何支援 SKILL.md 的 AI 工具。',
     docs: '文件',
     resources: '資源',
     gettingStarted: '開始使用',
@@ -27,7 +27,7 @@ export const zhTW: Translations = {
     titleLead: '一句話，',
     titleAccent: '寫出 Paper 插件。',
     heroDescription:
-      '31 個專為 Paper 插件開發打造的 AI Agent Skills，Claude Code、Codex、Cursor、Copilot 都能用 —— 從 NMS 封包、Netty 攔截、自定義實體，到 Dialog、SQLite、跨插件 API 與 PvP 玩法。每個範本都對 1.21.11 與 26.2 實際編譯驗證。',
+      '31 個專為 Paper 插件開發打造的 AI Agent Skills，Claude Code、Codex、Cursor、Copilot 都能用 —— 從 NMS 封包、Netty 攔截、自定義實體，到 Dialog、SQLite、跨插件 API 與 PvP 玩法。每個範本都對 1.21.11 與 26.3 實際編譯驗證。',
     ctaPrimary: '開始使用',
     ctaSecondary: '瀏覽 Skills',
     statsSkills: 'Skills',
@@ -149,7 +149,7 @@ export const zhTW: Translations = {
       },
       {
         q: '支援哪些 Minecraft 版本？',
-        a: '所有範本都對 Paper 1.21.11 與 26.2 實際編譯驗證。NMS 技能透過 Paperweight userdev；Paper API 技能只需 paper-api。兩版寫法不同處以 // @1.21.11: 標註。',
+        a: '所有範本都對 Paper 1.21.11 與 26.3 實際編譯驗證。NMS 技能透過 Paperweight userdev；Paper API 技能只需 paper-api。兩版寫法不同處以 // @1.21.11: 標註。',
       },
       {
         q: 'NMS 與 Paper API 技能該選哪個？',

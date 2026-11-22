@@ -34,7 +34,7 @@ plugins {
 }
 
 dependencies {
-    paperweight.paperDevBundle('26.2.build.132-stable')
+    paperweight.paperDevBundle('26.3.build.258-stable')
 }
 
 java {

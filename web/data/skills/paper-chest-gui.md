@@ -4,7 +4,7 @@ title: Paper Chest GUI
 titleZh: 箱子介面 GUI
 description: Build chest-inventory GUIs with the Bukkit API - holder marker interface, one cancelling listener, per-click revalidation, paging, gui.yml icons and safe shutdown.
 descriptionZh: 以 Bukkit API 建立箱子介面：InventoryHolder 標記介面、單一 GuiListener 防刷、每次點擊重新驗證、分頁與去彈跳、gui.yml 圖示、onDisable 關閉所有選單。
-version: "1.0.0"
+version: "1.1.0"
 status: active
 category: paper-ui
 categoryLabel: Paper 介面
@@ -17,7 +17,7 @@ triggerKeywords:
   - "createInventory"
   - "分頁"
   - "gui.yml"
-updatedAt: "2026-10-09"
+updatedAt: "2026-11-22"
 githubPath: Skills/paper/paper-chest-gui/SKILL.md
 featured: false
 ---
@@ -32,9 +32,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
 - 純 Paper API，不需要 Paperweight
-- Java 21（1.21.11）／25（26.2）
+- Java 21（1.21.11）／25（26.3）
+- **Spigot**：核心可移植——`InventoryHolder` 與點擊防護是 Bukkit API；需替換 Adventure 名稱／標題、`ItemStack#editMeta` 與 `TOOLTIP_DISPLAY` 資料元件
 
 ---
 

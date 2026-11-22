@@ -9,9 +9,10 @@ Minigames and duels need throwaway worlds, or arenas that are restored after eve
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both)
 - Pure Paper API, no Paperweight needed
 - The old GameRule constants are deprecated; the templates instead look rules up by snake_case key in `Registry.GAME_RULE` (identical on both versions)
+- **Spigot**: Paper only — uses `Entity#teleportAsync` and Paper's world storage layout
 
 ---
 
@@ -38,7 +39,6 @@ public final class VoidChunkGenerator extends ChunkGenerator {
 World world = WorldCreator.name(name)
         .generator(generator)
         .generateStructures(false)
-        .keepSpawnLoaded(TriState.FALSE)
         .createWorld();
 rules.apply(world);   // Apply game rules immediately after creation
 ```
@@ -46,8 +46,9 @@ rules.apply(world);   // Apply game rules immediately after creation
 ### Template copy and deletion (WorldFolders, async)
 
 ```java
-// Copy: skip uid.dat and session.lock; write level.dat last
-// Delete: delete level.dat last, so a half-deleted folder is never mistaken for a world
+// 26.x keeps world data in <main world>/dimensions/minecraft/<name>/ (1.21.11: <world container>/<name>/); resolve paths with WorldFolders.dataRoot / getWorldPath()
+// Copy: skip the world UUID file (26.x data/paper/metadata.dat, 1.21.11 uid.dat) and session.lock; write to <name>.copying, then rename atomically
+// Delete: rename to <name>.deleting first; purgeStaleAsync clears leftovers and .copying / .deleting debris at startup (verified on a running Paper 26.3 server)
 WorldFolders.copyTemplate(template, target);
 WorldFolders.deleteWorld(folder);
 ```
@@ -56,7 +57,7 @@ WorldFolders.deleteWorld(folder);
 
 ```java
 // Record each cell's BlockData before its first change; restoring is limited per tick by block count and a time budget
-cells.putIfAbsent(block.getBlockKey(), block.getBlockData());
+cells.putIfAbsent(ChangeRecorder.key(block), block.getBlockData());   // own x/y/z packing; Block#getBlockKey is deprecated
 block.setBlockData(original, false);
 sweeper.sweepAll(world);   // Leftover entities: dropped items, arrows, TNT minecarts, crystals, etc.
 ```

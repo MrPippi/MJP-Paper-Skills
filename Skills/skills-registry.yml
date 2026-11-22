@@ -1,5 +1,5 @@
-version: "7.1.0"
-updated: "2026-10-09"
+version: "7.2.0"
+updated: "2026-11-22"
 description: "MJP-Paper-Skills — Minecraft Paper Agent Skills / 技能索引：NMS（paper-nms）與純 Paper API（paper-api），Paper 1.21.11 / 26.x"
 
 skills:
@@ -40,7 +40,7 @@ skills:
       - "send packet"
 
   - id: nms-packet-interceptor
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     platform: paper-nms
     category: nms-packet
@@ -437,7 +437,7 @@ skills:
       - "BlockEntityTicker"
 
   - id: nms-data-component
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     platform: paper-nms
     category: nms-data
@@ -530,7 +530,7 @@ skills:
       - "每人 boss bar"
 
   - id: nms-fake-player
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     platform: paper-nms
     category: nms-player
@@ -609,7 +609,7 @@ skills:
       - "金額 k m b"
 
   - id: paper-chest-gui
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     platform: paper-api
     category: paper-ui
@@ -655,7 +655,7 @@ skills:
       - "gui.yml"
 
   - id: paper-client-side-effects
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     platform: paper-api
     category: paper-network
@@ -692,9 +692,11 @@ skills:
       - "setPlayerTime"
       - "hidePlayer"
       - "EntityPotionEffectEvent"
+      - "posteffect"
+      - "postEffects"
 
   - id: paper-combat-tag
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     platform: paper-api
     category: paper-gameplay
@@ -815,7 +817,7 @@ skills:
       - "pause_screen_additions"
 
   - id: paper-disposable-world
-    version: "1.0.0"
+    version: "1.1.0"
     status: active
     platform: paper-api
     category: paper-world
@@ -827,7 +829,7 @@ skills:
         description: "範本所在 package"
         required: true
       - name: template_folder
-        description: "模板世界資料夾（含 level.dat）"
+        description: "模板：同 MC 版本競技場資料夾（World#getWorldPath()）的複本，含 region/"
         required: false
       - name: pool_size
         description: "預先產生的閒置世界數"
@@ -837,7 +839,7 @@ skills:
         required: true
     outputs:
       - name: "DisposableWorlds.java"
-        description: "建立／複製／卸載／刪除主流程（level.dat 守衛）"
+        description: "建立／複製／卸載／刪除主流程（殘留資料守衛、26.x dimensions 路徑）"
       - name: "WorldFolders.java"
         description: "非同步複製模板與刪除資料夾"
       - name: "ArenaPool.java"
@@ -1205,15 +1207,15 @@ platforms:
     name: "Paper NMS"
     description: "Paper 1.21.11 / 26.x + Paperweight userdev + Mojang 官方命名"
     platform_file: paper-nms/PLATFORM.md
-    mc_versions: ["1.21.11", "26.2"]
-    java_version: "21 (1.21.11) / 25 (26.2)"
+    mc_versions: ["1.21.11", "26.3"]
+    java_version: "21 (1.21.11) / 25 (26.3)"
     build_tool: gradle
   - id: paper-api
     name: "Paper API"
     description: "Paper 1.21.11 / 26.x 純 Paper API（paper-api compileOnly，不需 Paperweight）"
     platform_file: paper-api/PLATFORM.md
-    mc_versions: ["1.21.11", "26.2"]
-    java_version: "21 (1.21.11) / 25 (26.2)"
+    mc_versions: ["1.21.11", "26.3"]
+    java_version: "21 (1.21.11) / 25 (26.3)"
     build_tool: gradle
 
 shared:

@@ -8,9 +8,10 @@ Give a plugin its own economy core where money is never miscounted and never van
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (same code on both versions, compile-verified)
+- Paper 1.21.11 / 26.3 (same code on both versions, compile-verified)
 - Pure Paper API + `compileOnly` VaultAPI 1.7.1, no Paperweight needed
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Core portable — the ledger and Vault provider use Bukkit and Vault only; replace Adventure messages
 
 ---
 

@@ -4,7 +4,7 @@ title: Paper Combat Tag
 titleZh: PvP 戰鬥標記
 description: PvP combat tagging with a Bukkit-free core service (UUID + timestamps, JUnit-testable), a damage attribution matrix, command whitelist, teleport block, combat-logout punishment and a CombatTagApi published via ServicesManager.
 descriptionZh: PvP 戰鬥標記：純邏輯核心服務（UUID + 時間戳、可 JUnit）、傷害歸因矩陣、指令白名單、傳送封鎖、戰鬥登出處罰，並以 ServicesManager 公開 CombatTagApi。
-version: "1.0.0"
+version: "1.1.0"
 status: active
 category: paper-gameplay
 categoryLabel: Paper 玩法
@@ -17,7 +17,7 @@ triggerKeywords:
   - "戰鬥中登出"
   - "damage attribution"
   - "CombatTagApi"
-updatedAt: "2026-10-09"
+updatedAt: "2026-11-22"
 githubPath: Skills/paper/paper-combat-tag/SKILL.md
 featured: false
 ---
@@ -32,9 +32,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
 - 純 Paper API，不需要 Paperweight
-- Java 21（1.21.11）／25（26.2）
+- Java 21（1.21.11）／25（26.3）
+- **Spigot**：核心可移植——需替換 Adventure 訊息與 `PlayerKickEvent.Cause`
 
 ---
 

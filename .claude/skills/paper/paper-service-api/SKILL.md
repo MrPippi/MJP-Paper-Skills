@@ -18,8 +18,9 @@ The key concern is handling "the two jars are different versions": when the cons
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (uses only the Bukkit `ServicesManager`, identical on both versions)
+- Paper 1.21.11 / 26.3 (uses only the Bukkit `ServicesManager`, identical on both versions)
 - Pure Paper API, no Paperweight needed
+- **Spigot**: Core portable — `ServicesManager` is Bukkit API; replace Adventure messages
 
 ## Triggers
 
@@ -52,7 +53,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). In a
 ```groovy
 // shop/build.gradle
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
     compileOnly project(':wallet')   // only so WalletApi is visible at compile time; must not be packaged into the jar
 }
 ```
