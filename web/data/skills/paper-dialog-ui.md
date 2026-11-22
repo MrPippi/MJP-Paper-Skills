@@ -34,9 +34,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證，範本兩版相同）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，範本兩版相同）
 - 純 Paper API，不需要 Paperweight
 - `api-version` 至少 `1.21.7`
+- **Spigot**：僅 Paper——Dialog API（`io.papermc.paper.dialog`、registry 事件）不存在於 Spigot-API 26.3
 
 ---
 

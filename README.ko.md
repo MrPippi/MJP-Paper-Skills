@@ -6,7 +6,7 @@
 
 공식 Mojang 이름을 사용하는 저수준 NMS와 순수 Paper API를 지원하며, `SKILL.md`를 읽는 모든 AI 코딩 도구에서 사용할 수 있습니다
 
-[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.2-2ea44f)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
 [![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
@@ -25,7 +25,7 @@ AI 코딩 도구는 Paper 플러그인에서 미묘한 실수를 자주 합니�
 
 ## 주요 특징
 
-- **컴파일 검증 완료**: CI가 변경이 있을 때마다 완성된 모든 템플릿을 Paper **1.21.11**과 **26.2** 모두에서 컴파일합니다. 버전별로 다른 줄은 인라인으로 표시되어 있습니다.
+- **컴파일 검증 완료**: CI가 변경이 있을 때마다 완성된 모든 템플릿을 Paper **1.21.11**과 **26.3** 모두에서 컴파일합니다. 버전별로 다른 줄은 인라인으로 표시되어 있습니다.
 - **공식 Mojang 이름**: NMS 코드는 Paperweight userdev와, 26.1부터 Minecraft가 난독화 없이 제공하는 이름을 사용합니다.
 - **스레드 안전 설계**: 각 스킬은 모든 호출이 어느 스레드(메인, Netty IO, 비동기)에서 실행되는지 명시합니다.
 - **도구에 종속되지 않음**: 개방형 [Agent Skills](https://agentskills.io) 형식은 Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI 등에서 동작합니다.
@@ -114,7 +114,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## 스킬 카탈로그
 
-31개의 스킬은 모두 Paper 1.21.11과 26.2를 대상으로 컴파일 검증되었습니다. 필터와 전체 템플릿은 [문서 사이트](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)에서 확인할 수 있으며, 기계가 읽을 수 있는 색인은 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)입니다.
+31개의 스킬은 모두 Paper 1.21.11과 26.3를 대상으로 컴파일 검증되었습니다. 필터와 전체 템플릿은 [문서 사이트](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)에서 확인할 수 있으며, 기계가 읽을 수 있는 색인은 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)입니다.
 
 ### NMS (스킬 16개, Paperweight userdev 필요)
 
@@ -181,9 +181,9 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | 항목 | 지원 |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 및 26.2 (템플릿은 26.2가 기본이며, 1.21.11과 다른 부분은 `// @1.21.11:`로 표시) |
-| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.2.build.132-stable` |
-| Java | 21 (1.21.11) / 25 (26.2) |
+| Minecraft / Paper | 1.21.11 및 26.3 (템플릿은 26.3가 기본이며, 1.21.11과 다른 부분은 `// @1.21.11:`로 표시) |
+| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
+| Java | 21 (1.21.11) / 25 (26.3) |
 | 빌드 | Gradle 8.11.2+ (9.8.1에서 검증), Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24` (NMS 스킬 전용, `reobfJar` 불필요) |
 | Shadow (선택 사항) | `com.gradleup.shadow` `9.6.1`, 멀티 모듈 빌드용 (`nms-version-adapter`) |
@@ -223,11 +223,11 @@ MJP-Paper-Skills/
 2. `.claude/skills/` 아래 동일한 경로에 미러링한 다음, `node scripts/sync-skill-references.mjs`를 실행하여 `references/` 폴더를 생성합니다(`PLATFORM.md` 또는 `_shared/` 파일이 변경될 때마다 다시 실행).
 3. 두 `skills-registry.yml` 파일 모두에 항목을 추가합니다.
 4. 사이트 페이지 `web/data/skills/<slug>.md`와 영어 본문 `web/data/skills/en/<slug>.md`를 추가한 다음, `web/tests/skills-api.data.test.ts`의 기대 목록을 업데이트합니다.
-5. 템플릿이 Paper 1.21.11과 26.2에서 컴파일되는지 확인합니다. `Skills/`를 건드리는 모든 풀 리퀘스트에서 CI가 이를 실행합니다. 로컬에서 실행하려면 (26.2는 JDK 25, 1.21.11은 JDK 21):
+5. 템플릿이 Paper 1.21.11과 26.3에서 컴파일되는지 확인합니다. `Skills/`를 건드리는 모든 풀 리퀘스트에서 CI가 이를 실행합니다. 로컬에서 실행하려면 (26.3는 JDK 25, 1.21.11은 JDK 21):
 
    ```bash
-   node scripts/extract-skill-java.mjs 26.2
-   cd verify && ./gradlew compileSkills -Pmc=26.2
+   node scripts/extract-skill-java.mjs 26.3
+   cd verify && ./gradlew compileSkills -Pmc=26.3
    ```
 
 전체 절차와 저장소 불변 규칙은 [`CLAUDE.md`](CLAUDE.md)에 문서화되어 있습니다. 문서 사이트 작업은 다음과 같이 진행합니다.

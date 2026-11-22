@@ -13,7 +13,7 @@ MJP-Paper-Skills (Minecraft Paper Agent Skills) 是一套 Paper 插件開發的 
 - **NMS 技能**（`Skills/nms/`）：Paper NMS（net.minecraft.server）底層開發，需 Paperweight userdev
 - **Paper API 技能**（`Skills/paper/`）：純 Paper API（`paper-api` compileOnly），涵蓋 Dialog、SQLite、跨插件 API、軟依賴、封包過濾等插件集常見模式
 
-目標 MC 版本：**1.21.11** 與 **26.2**（兩版皆編譯驗證；範本預設 26.2，差異以 `// @1.21.11:` 標註）
+目標 MC 版本：**1.21.11** 與 **26.3**（兩版皆編譯驗證；範本預設 26.3，差異以 `// @1.21.11:` 標註）
 目標命名：**Mojang 官方名稱**（Minecraft 26.1 起不再混淆；透過 Paperweight userdev）
 執行時目錄：**`.claude/skills/`**（Claude Code 專用）
 規範來源：**`Skills/`**（authoritative source，與 `.claude/skills/` 內容相同）
@@ -31,14 +31,14 @@ MJP-Paper-Skills/
 ├── .github/workflows/
 │   ├── nextjs.yml                       ← main push：tsc + test + build + 部署 GitHub Pages
 │   ├── ci.yml                           ← PR：tsc + test + build（不部署）
-│   └── skills-compile.yml               ← 範本對 26.2／1.21.11 編譯（改到 Skills/、verify/ 時）
+│   └── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯（改到 Skills/、verify/ 時）
 ├── .claude/
 │   └── skills/                          ← Claude Code 執行時（31 個技能，與 Skills/ 同步）
 │       ├── skills-registry.yml          ← 與 Skills/ 相同
 │       ├── _shared/
 │       └── nms/
 ├── Skills/                              ← Canonical source
-│   ├── skills-registry.yml              ← v7.1.0，31 個技能（paper-nms + paper-api）
+│   ├── skills-registry.yml              ← v7.2.0，31 個技能（paper-nms + paper-api）
 │   ├── _shared/
 │   │   ├── nms-threading.md
 │   │   ├── nms-obfuscation.md
@@ -89,20 +89,20 @@ MJP-Paper-Skills/
 
 | 項目 | 內容 |
 |------|------|
-| MC 版本 | 1.21.11、26.2 |
-| Paper Dev Bundle | `26.2.build.132-stable`（預設）、`1.21.11-R0.1-SNAPSHOT`（26.3 目前為 beta） |
+| MC 版本 | 1.21.11、26.3 |
+| Paper Dev Bundle | `26.3.build.258-stable`（預設）、`1.21.11-R0.1-SNAPSHOT` |
 | Paperweight | `io.papermc.paperweight.userdev` 2.0.0-beta.24+ |
 | 命名 | Mojang 官方名稱（26.1 起原版不再混淆；Paper runtime 直接使用） |
-| Java | 25（26.2）／21（1.21.11） |
-| 建置工具 | Gradle 8.11.2+（Groovy DSL；Paperweight 2.x 需求） |
-| Javadoc | https://jd.papermc.io/paper/26.2/ 、 https://jd.papermc.io/paper/1.21.11/ |
+| Java | 25（26.3）／21（1.21.11） |
+| 建置工具 | Gradle 9.7.1+（Groovy DSL；paperweight userdev 2.0.0-beta.24 需求，9.8.1 已驗證） |
+| Javadoc | https://jd.papermc.io/paper/26.3/ 、 https://jd.papermc.io/paper/1.21.11/ |
 | 平台檔案 | `Skills/paper-nms/PLATFORM.md` |
 
 ---
 
 ## Skills Index
 
-所有技能以 `Skills/skills-registry.yml`（v7.1.0）為準（共 31 個：NMS 16 個、Paper API 15 個）。✅ = 已同步至 `.claude/skills/`。
+所有技能以 `Skills/skills-registry.yml`（v7.2.0）為準（共 31 個：NMS 16 個、Paper API 15 個）。✅ = 已同步至 `.claude/skills/`。
 
 **NMS 技能**（`platform: paper-nms`，`Skills/nms/`）
 
@@ -151,9 +151,9 @@ MJP-Paper-Skills/
 
 ### 環境與版本
 
-- **MC 版本**：1.21.11、26.2
+- **MC 版本**：1.21.11、26.3
 - **建置工具**：Gradle（Groovy DSL）— 不用 Maven
-- **Java**：25（26.2）／21（1.21.11）
+- **Java**：25（26.3）／21（1.21.11）
 - **Paperweight**：預設所有 NMS skill 使用 Paperweight userdev
 - **描述檔**：預設 `paper-plugin.yml`（非 `plugin.yml`）以確保 NMS 載入順序
 - **註解**：所有存取 NMS 的類別加 `@SuppressWarnings("UnstableApiUsage")`
@@ -203,7 +203,7 @@ plugins {
 }
 
 dependencies {
-    paperweight.paperDevBundle('26.2.build.132-stable')
+    paperweight.paperDevBundle('26.3.build.258-stable')
 }
 
 java {
@@ -260,7 +260,7 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 6. 若涉及新平台，建立 `Skills/<platform>/PLATFORM.md`
 7. 驗證觸發關鍵字無與既有技能衝突
 8. 在 `web/data/skills/<slug>.md` 新增網站頁面、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），並更新 `web/tests/skills-api.data.test.ts` 的預期清單
-9. 範本對 1.21.11 與 26.2 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.2 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；examples.md 的同名類別會覆蓋 SKILL.md 版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
+9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；examples.md 的同名類別會覆蓋 SKILL.md 版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
 
 ---
 
@@ -354,7 +354,7 @@ npm run build         # 靜態匯出至 web/out/（robots.txt / sitemap.xml 由 
 
 2. **技能自給自足**：使用者可用 `npx skills add MrPippi/MJP-Paper-Skills --skill <id>` 單獨安裝技能，只會複製該技能資料夾。各技能需要的 `PLATFORM.md` 與 `_shared/*.md` 由 `scripts/sync-skill-references.mjs` 複製到 `<skill>/references/`（產生檔，不可手改）。修改 `Skills/paper-*/PLATFORM.md` 或 `Skills/_shared/` 後必須重跑腳本；`web/tests/skill-references.test.ts` 會以 `--check` 檢查。
 
-3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.2** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.2 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。
+3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.3** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.3 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。
 
 4. **Mojang 官方名稱強制**：不產生 Spigot/混淆映射的代碼。
 

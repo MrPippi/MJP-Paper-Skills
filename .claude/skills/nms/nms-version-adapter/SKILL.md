@@ -18,6 +18,7 @@ Define an abstract Adapter interface for common NMS operations, provide a concre
 - Supported range: Paper 1.21.11 / 26.x (the examples show two adapters, 26.2 and 26.3; a 1.21.11 adapter is written the same way, with the dev bundle changed to `1.21.11-R0.1-SNAPSHOT` and Java 21)
 - Recommended together with `nms-reflection-bridge` or a multi-module Gradle build
 - Adapter implementations may use Paperweight (requires multi-module) or pure reflection
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper (see `references/paper-nms-platform.md` §9)
 
 ## Triggers
 

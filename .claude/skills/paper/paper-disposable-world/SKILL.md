@@ -26,9 +26,10 @@ The three most dangerous silent failures are all guarded against in the template
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2; pure Paper API, no Paperweight needed
+- Paper 1.21.11 / 26.3; pure Paper API, no Paperweight needed
 - **GameRule**: the old constants in `org.bukkit.GameRule` (`DO_DAYLIGHT_CYCLE`, `DO_MOB_SPAWNING`, etc.) are `@Deprecated` in both versions, and vanilla rules were changed to snake_case registry keys (`advance_time`, `spawn_mobs`...). This template always uses `Registry.GAME_RULE.get(NamespacedKey.minecraft(key))`, which is identical in both versions and does not depend on the old constants; a key that cannot be found only logs a warning and does not make world creation fail
-- `ChunkGenerator.shouldGenerate*()`, `WorldCreator.keepSpawnLoaded(TriState)`, and `Block.getBlockKey(x, y, z)` have identical signatures in both versions (verified with javap)
+- No deprecated API: `ChunkGenerator#shouldGenerateBedrock()` (no effect since 1.19.2), `WorldCreator#keepSpawnLoaded(TriState)` (no effect since 1.21.9, marked for removal) and the `Block#getBlockKey` family (only encodes y -512..511) are not used; `ChangeRecorder` packs its own block keys
+- **Spigot**: Paper only — uses `Entity#teleportAsync` and Paper's world storage layout
 
 ## Triggers
 
@@ -67,7 +68,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). Only
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
 }
 ```
 
@@ -99,11 +100,6 @@ public final class VoidChunkGenerator extends ChunkGenerator {
 
     @Override
     public boolean shouldGenerateSurface() {
-        return false;
-    }
-
-    @Override
-    public boolean shouldGenerateBedrock() {
         return false;
     }
 
@@ -326,7 +322,6 @@ public final class WorldFolders {
 ```java
 package com.example.arena;
 
-import net.kyori.adventure.util.TriState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -485,7 +480,6 @@ public final class DisposableWorlds {
                 .environment(World.Environment.NORMAL)
                 .generator(generator)
                 .generateStructures(false)
-                .keepSpawnLoaded(TriState.FALSE)
                 .createWorld();
         if (world == null) {
             throw new IllegalStateException("createWorld returned null for " + name);
@@ -696,7 +690,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Records the baseline of "which cells a match changed": key = {@code Block.getBlockKey(x, y, z)}, value = the BlockData **before the first change**.
+ * Records the baseline of "which cells a match changed": key = {@link #key(Block)} (x/y/z packed into a long), value = the BlockData **before the first change**.
  * A cell changed ten times records only the first ({@code putIfAbsent}), so what is written back on restore is the state before the match started.
  *
  * <p>Everything runs on the main thread (event handlers and restore alike). Uses {@link EventPriority#MONITOR}:
@@ -708,6 +702,13 @@ import java.util.UUID;
 public final class ChangeRecorder implements Listener {
 
     public static final int MAX_CELLS = 500_000;
+
+    // Same layout as vanilla BlockPos#asLong: 26 bits x | 26 bits z | 12 bits y (y -2048..2047).
+    // Bukkit's Block#getBlockKey family is deprecated (it only encodes y -512..511), so the template packs its own keys.
+    private static final int XZ_BITS = 26;
+    private static final int Y_BITS = 12;
+    private static final long XZ_MASK = (1L << XZ_BITS) - 1;
+    private static final long Y_MASK = (1L << Y_BITS) - 1;
 
     private static final BlockFace[] ADJACENT = {
             BlockFace.UP, BlockFace.DOWN, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST
@@ -745,19 +746,34 @@ public final class ChangeRecorder implements Listener {
         return snapshot;
     }
 
+    // ---- Keys ----
+
+    public static long key(Block block) {
+        return ((block.getX() & XZ_MASK) << (XZ_BITS + Y_BITS))
+                | ((block.getZ() & XZ_MASK) << Y_BITS)
+                | (block.getY() & Y_MASK);
+    }
+
+    public static Block blockAt(World world, long key) {
+        int x = (int) (key >> (XZ_BITS + Y_BITS));                       // arithmetic shifts restore the sign
+        int z = (int) (key << (64 - XZ_BITS - Y_BITS) >> (64 - XZ_BITS));
+        int y = (int) (key << (64 - Y_BITS) >> (64 - Y_BITS));
+        return world.getBlockAt(x, y, z);
+    }
+
     // ---- Recording ----
 
     private void record(Block block) {
         Map<Long, BlockData> cells = baselines.get(block.getWorld().getUID());
         if (cells != null) {
-            put(block.getWorld(), cells, block.getBlockKey(), block.getBlockData());
+            put(block.getWorld(), cells, key(block), block.getBlockData());
         }
     }
 
     private void recordOriginal(Block position, BlockData original) {
         Map<Long, BlockData> cells = baselines.get(position.getWorld().getUID());
         if (cells != null) {
-            put(position.getWorld(), cells, position.getBlockKey(), original);
+            put(position.getWorld(), cells, key(position), original);
         }
     }
 
@@ -1046,7 +1062,7 @@ public final class ArenaResetService {
                     break;
                 }
                 long key = keys[cursor++];
-                Block block = world.getBlockAt(Block.getBlockKeyX(key), Block.getBlockKeyY(key), Block.getBlockKeyZ(key));
+                Block block = ChangeRecorder.blockAt(world, key);
                 BlockData original = baseline.get(key);
                 if (!block.getBlockData().equals(original)) {
                     block.setBlockData(original, false);

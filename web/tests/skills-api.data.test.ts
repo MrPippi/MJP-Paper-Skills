@@ -68,10 +68,20 @@ describe('getAllSkills (real data)', () => {
     for (const s of getAllSkills()) assert.equal(s.id, s.slug);
   });
 
-  it('marks every skill active at version 1.0.0 with string updatedAt', () => {
+  it('marks every skill active at its recorded version with string updatedAt', () => {
+    // Skills revised for Paper 26.3 (registry 7.2.0) are at 1.1.0; all others are still 1.0.0.
+    const revised = new Set([
+      'nms-data-component',
+      'nms-fake-player',
+      'nms-packet-interceptor',
+      'paper-chest-gui',
+      'paper-client-side-effects',
+      'paper-combat-tag',
+      'paper-disposable-world',
+    ]);
     for (const s of getAllSkills()) {
       assert.equal(s.status, 'active', s.slug);
-      assert.equal(s.version, '1.0.0', s.slug);
+      assert.equal(s.version, revised.has(s.slug) ? '1.1.0' : '1.0.0', s.slug);
       assert.match(s.updatedAt, /^\d{4}-\d{2}-\d{2}$/, s.slug);
     }
   });

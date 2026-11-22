@@ -29,9 +29,10 @@ Core design:
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (identical on both; uses `AsyncChatEvent`, Adventure, the Bukkit scheduler and JDK 21+ APIs such as `HttpClient#shutdownNow`)
+- Paper 1.21.11 / 26.3 (identical on both; uses `AsyncChatEvent`, Adventure, the Bukkit scheduler and JDK 21+ APIs such as `HttpClient#shutdownNow`)
 - Pure Paper API, no Paperweight needed
 - Discord API v10, Gateway `encoding=json` (no zlib compression)
+- **Spigot**: Core portable — the JDK webhook/Gateway client is server-independent; chat capture uses Paper `AsyncChatEvent` (Spigot: `AsyncPlayerChatEvent`) and Adventure
 
 ## Triggers
 
@@ -64,8 +65,8 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). **No
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
-    testImplementation 'io.papermc.paper:paper-api:26.2.build.132-stable' // Gson for the core tests
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
+    testImplementation 'io.papermc.paper:paper-api:26.3.build.258-stable' // Gson for the core tests
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -2056,7 +2057,7 @@ inbound:
 name: DiscordBridge
 version: '${version}'
 main: com.example.discordbridge.DiscordBridgePlugin
-api-version: '26.2'
+api-version: '26.3'
 description: Bridges in-game chat with one Discord channel (webhook out, Gateway in).
 ```
 

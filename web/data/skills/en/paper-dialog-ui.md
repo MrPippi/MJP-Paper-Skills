@@ -9,9 +9,10 @@ Use the Paper Dialog API (1.21.7+) for notices, confirmations, multi-button and 
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both, templates identical on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both, templates identical on both)
 - Pure Paper API, no Paperweight needed
 - `api-version` at least `1.21.7`
+- **Spigot**: Paper only — the Dialog API (`io.papermc.paper.dialog`, registry events) does not exist in Spigot-API 26.3
 
 ---
 

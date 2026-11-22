@@ -34,9 +34,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
 - 純 Paper API，不需要 Paperweight
-- 唯一差異：`CommandSourceStack#getPlayerOrThrow()` 只在 26.2；1.21.11 以 `getExecutor()` 判斷
+- 唯一差異：`CommandSourceStack#getPlayerOrThrow()` 在 26.2 起才有（已於 26.3 驗證）；1.21.11 以 `getExecutor()` 判斷
+- **Spigot**：僅 Paper——`io.papermc.paper.command.brigadier` 與 `LifecycleEvents.COMMANDS` 是 Paper API；Spigot 只有 `CommandExecutor`
 
 ---
 

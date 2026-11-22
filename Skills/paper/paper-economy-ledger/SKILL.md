@@ -23,8 +23,9 @@ Provide an economy core you can drop straight into a plugin. The point: money mu
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (uses only the Bukkit API and Vault 1.7.1; the code is identical on both versions, with no version-specific lines)
+- Paper 1.21.11 / 26.3 (uses only the Bukkit API and Vault 1.7.1; the code is identical on both versions, with no version-specific lines)
 - Pure Paper API, no Paperweight needed; `Ledger`, `Escrow`, formatting and parsing do not depend on Bukkit at all and can be tested directly with JUnit
+- **Spigot**: Core portable — the ledger and Vault provider use Bukkit and Vault only; replace Adventure messages
 
 ## Triggers
 
@@ -60,7 +61,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). Vaul
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
     compileOnly('com.github.MilkBowl:VaultAPI:1.7.1') { exclude group: 'org.bukkit' }
 
     testImplementation platform('org.junit:junit-bom:5.12.2')
@@ -76,7 +77,7 @@ tasks.withType(Test).configureEach { useJUnitPlatform() }
 ```yaml
 name: Economy
 main: com.example.economy.EconomyPlugin
-api-version: '26.2'
+api-version: '26.3'
 softdepend: [Vault]
 ```
 

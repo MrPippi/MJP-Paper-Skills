@@ -3,10 +3,10 @@
 Skills under `Skills/paper/` use only the **Paper API** (`paper-api` compileOnly); they need no Paperweight and never touch `net.minecraft` / `org.bukkit.craftbukkit`.
 When NMS is needed, use the skills in `Skills/nms/` and [`Skills/paper-nms/PLATFORM.md`](../paper-nms/PLATFORM.md) instead.
 
-- **MC versions**: **1.21.11** and **26.2** (both compile-verified; templates default to 26.2, differences are marked with an end-of-line `// @1.21.11:`, same rules as the paper-nms platform)
-- **Java**: 1.21.11 → 21; 26.2 → 25
-- **Build tool**: Gradle 8.11.2+ (Groovy DSL examples; Kotlin DSL is equivalent)
-- **Javadoc**: https://jd.papermc.io/paper/26.2/ | https://jd.papermc.io/paper/1.21.11/
+- **MC versions**: **1.21.11** and **26.3** (both compile-verified; templates default to 26.3, differences are marked with an end-of-line `// @1.21.11:`, same rules as the paper-nms platform)
+- **Java**: 1.21.11 → 21; 26.3 → 25
+- **Build tool**: Gradle 9.7.1+ recommended (Groovy DSL examples; Kotlin DSL is equivalent; 9.8.1 verified, same baseline as the paper-nms platform)
+- **Javadoc**: https://jd.papermc.io/paper/26.3/ | https://jd.papermc.io/paper/1.21.11/
 
 ---
 
@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
 
     // Soft dependencies (provided by the corresponding plugins on the server; must not be bundled into the jar)
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
@@ -54,11 +54,11 @@ tasks.withType(JavaCompile).configureEach {
 }
 ```
 
-| Item | 26.2 (default) | 1.21.11 |
+| Item | 26.3 (default) | 1.21.11 |
 |------|-------------|---------|
-| `paper-api` version | `26.2.build.132-stable` | `1.21.11-R0.1-SNAPSHOT` |
+| `paper-api` version | `26.3.build.258-stable` | `1.21.11-R0.1-SNAPSHOT` |
 | Java toolchain / `options.release` | `25` | `21` |
-| `api-version` in `plugin.yml` / `paper-plugin.yml` | `'26.2'` | `'1.21.11'` |
+| `api-version` in `plugin.yml` / `paper-plugin.yml` | `'26.3'` | `'1.21.11'` |
 
 > The dependency versions in the table above are the ones actually used by BlockoSMP / Bydsmp and compile-verified in this repository.
 
@@ -70,7 +70,7 @@ tasks.withType(JavaCompile).configureEach {
 name: Example
 version: '${version}'
 main: com.example.ExamplePlugin
-api-version: '26.2'
+api-version: '26.3'
 softdepend: [Vault, PlaceholderAPI, packetevents]
 libraries:
   - org.xerial:sqlite-jdbc:3.49.1.0
@@ -98,6 +98,26 @@ permissions:
 | Cross-plugin | Interoperate only through interfaces published via ServicesManager; see `paper-service-api` |
 | Soft dependencies | Separate Hook / Bridge to avoid class loading failures; see `paper-softdepend-hook` |
 | Project rules take precedence | Before generating code, read the target project's `CLAUDE.md` / `docs/` rules (naming, layering, testing approach); when a template conflicts with project rules, the project wins |
+
+---
+
+## 3a. Spigot Compatibility
+
+The templates target Paper. Spigot-API 26.3 contains only the `org.bukkit` and `org.spigotmc` packages (checked against `hub.spigotmc.org/javadocs/spigot/`). Anything outside them is unavailable on Spigot:
+
+| Paper-only API | Used by |
+|------|------|
+| Adventure / MiniMessage (`net.kyori.*`) — Spigot has no native Adventure | almost every skill (messages) |
+| `io.papermc.paper.*` (Dialog, Brigadier `Commands`, lifecycle, registry events, data components, `AsyncChatEvent`, world border events, `Tick`) | `paper-dialog-ui`, `paper-brigadier-command`, `paper-chest-gui`, `paper-client-side-effects`, `paper-discord-bridge` |
+| `Entity#teleportAsync`, `World#getChunkAtAsync`, `ItemStack#editMeta`, `Bukkit#getMinecraftVersion`, `PlayerKickEvent.Cause`, `org.bukkit.GameRules` | `paper-safe-teleport`, `paper-disposable-world`, `paper-combat-tag`, `paper-chest-gui`, `paper-packetevents-filter` |
+
+Each `SKILL.md` states its Spigot status in its version section with one of three levels:
+
+- **Paper only**: the core relies on Paper API.
+- **Core portable**: the logic works on Spigot after you replace Adventure messages and the listed Paper calls.
+- **Works on Spigot**: no Paper API in the template.
+
+Paper stopped importing new Spigot API after its 2024-12-13 hard fork, so APIs added to Spigot since then (for example `ImbueRecipe`, `DyeRecipe`) may not exist on Paper, and the reverse also holds.
 
 ---
 

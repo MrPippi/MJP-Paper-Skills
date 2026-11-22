@@ -13,11 +13,29 @@ description: "操作 Minecraft DataComponentType（1.20.5+） 物品組件系統
 
 Work with the `DataComponentType` item component system introduced in Minecraft 1.20.5. Read and write components such as `CustomData`, `MaxStackSize`, `Enchantments` and `AttributeModifiers` directly, replacing the legacy NBT `getTag()`/`setTag()` pattern.
 
+**Try the Paper API first.** Paper exposes most components without NMS through `io.papermc.paper.datacomponent.DataComponentTypes` and `ItemStack#setData` / `getData` (present on 1.21.11 and 26.3; Paper 26.3 removed the experimental marker from most of it). Use this NMS skill only for:
+
+- components Paper does not expose. On 26.3, `brewing_fuel`, `cooking_fuel`, `compostable` and `block_transformer` exist in `DataComponents` but not in `DataComponentTypes`
+- raw `CustomData` NBT
+
+### Component changes 26.2 → 26.3
+
+Compared from the `net.minecraft.core.component.DataComponents` fields of the 26.2 and 26.3 dev bundles:
+
+| Change | Components |
+|------|------|
+| Added | `attack_animation`, `interact_animation`, `mob_visibility`, `villager_food`, `brewing_fuel`, `cooking_fuel` (replaces the `#brewing_fuel` item tag), `compostable`, `block_transformer`, `provides_pottery_pattern`, `sign_text_front`, `sign_text_back`, `waxed` |
+| Removed | `swing_animation` (split into `attack_animation` / `interact_animation`), `map_color` |
+| Reshaped | `pot_decorations` is an object (`back` / `left` / `right` / `front`, each optional) instead of a list of four |
+
+Code that names a removed component no longer compiles on 26.3. Guard it with `// @1.21.11:` (one line) or `// @only 1.21.11` (one block).
+
 ## NMS Version Requirements
 
-- Paper 1.21.11 / 26.2(DataComponent was added in 1.20.5+)
+- Paper 1.21.11 / 26.3(DataComponent was added in 1.20.5+)
 - Paperweight userdev 2.0.0-beta.24+
 - Mojang official names (Minecraft is no longer obfuscated since 26.1)
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper (see `references/paper-nms-platform.md` §9)
 
 ## Triggers
 
@@ -43,7 +61,7 @@ See [`references/paper-nms-platform.md`](references/paper-nms-platform.md). Key 
 
 ```groovy
 dependencies {
-    paperweight.paperDevBundle('26.2.build.132-stable')
+    paperweight.paperDevBundle('26.3.build.258-stable')
 }
 ```
 
@@ -242,3 +260,5 @@ src/main/java/com/example/
 | `CustomData` data is lost | Written with the legacy `getTag()` (removed in 1.20.5+) | Use `CustomDataHelper.setString()` instead |
 | `CustomModelData.value()` does not exist | Since 1.21.4 it is four lists: floats / flags / strings / colors | Access the lists via `floats()` etc. (see `getCustomModelData()`) |
 | Component change has no effect | You modified an NMS copy, not the original object | Return the result via `CraftItemStack.asBukkitCopy()` and update the inventory |
+| `DataComponents.SWING_ANIMATION` / `MAP_COLOR` cannot be found | Removed in 26.3 | Use `ATTACK_ANIMATION` / `INTERACT_ANIMATION` on 26.3; keep the old line behind `// @1.21.11:` |
+| The same thing is possible without NMS | Paper has a data component API | Prefer `ItemStack#setData(DataComponentTypes.X, ...)`; it survives Minecraft updates better than NMS |

@@ -35,10 +35,11 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證，程式碼兩版相同）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，程式碼兩版相同）
 - 純 Paper API，不需要 Paperweight
 - 伺服器安裝 packetevents（編譯對象 2.13.0）或 ProtocolLib（5.3.0）
-- Java 21（1.21.11）／25（26.2）
+- Java 21（1.21.11）／25（26.3）
+- **Spigot**：核心可移植——PacketEvents 與 ProtocolLib 都支援 Spigot；需替換 Adventure 與 `ItemStack#editMeta`
 
 ---
 

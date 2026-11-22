@@ -210,7 +210,7 @@ name: PauseMenu
 version: '${version}'
 main: com.example.menu.PauseMenuPlugin
 bootstrapper: com.example.menu.PauseMenuBootstrap
-api-version: '26.2'
+api-version: '26.3'
 ```
 
 Deployment checks:

@@ -9,9 +9,10 @@ After players fight each other they enter a combat state: while in it, commands,
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both)
 - Pure Paper API, no Paperweight needed
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Core portable — replace Adventure messages and `PlayerKickEvent.Cause`
 
 ---
 

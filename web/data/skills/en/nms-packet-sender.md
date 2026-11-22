@@ -14,10 +14,11 @@ First check whether the Paper API can do it: per-player world border / time / we
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (both versions compile-verified; version differences are marked with trailing `// @1.21.11:` comments)
+- Paper 1.21.11 / 26.3 (both versions compile-verified; version differences are marked with trailing `// @1.21.11:` comments)
 - Paperweight userdev 2.0.0-beta.24+
 - Official Mojang names (no longer obfuscated since Minecraft 26.1)
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper
 
 ---
 

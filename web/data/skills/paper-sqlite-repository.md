@@ -34,9 +34,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
 - 純 Paper API，不需要 Paperweight
 - `org.xerial:sqlite-jdbc` 含 JNI，**不可 shade**：`compileOnly` + `plugin.yml` 的 `libraries:`
+- **Spigot**：核心可移植——只用 JDBC 與 Bukkit 排程器；需替換 Adventure 訊息
 
 ---
 

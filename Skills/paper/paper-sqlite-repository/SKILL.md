@@ -22,9 +22,10 @@ The example domain of this skill is the player home.
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2(uses only the Bukkit scheduler and JDBC; identical on both versions)
+- Paper 1.21.11 / 26.3(uses only the Bukkit scheduler and JDBC; identical on both versions)
 - Pure Paper API; Paperweight is not needed
 - The `org.xerial:sqlite-jdbc` driver contains a JNI native library: **do not shade/relocate it**; let the server download it through `libraries:` in `plugin.yml`
+- **Spigot**: Core portable — JDBC and the Bukkit scheduler only; replace Adventure messages
 
 ## Triggers
 
@@ -61,7 +62,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). The 
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
     compileOnly 'org.xerial:sqlite-jdbc:3.49.1.0'
     testImplementation 'org.xerial:sqlite-jdbc:3.49.1.0'
     testImplementation platform('org.junit:junit-bom:5.11.4')
@@ -76,7 +77,7 @@ test { useJUnitPlatform() }
 ```yaml
 name: Homes
 main: com.example.homes.HomesPlugin
-api-version: '26.2'
+api-version: '26.3'
 libraries:
   - org.xerial:sqlite-jdbc:3.49.1.0
 ```

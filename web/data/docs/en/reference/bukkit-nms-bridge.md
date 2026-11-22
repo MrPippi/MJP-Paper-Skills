@@ -1,6 +1,6 @@
 # Bukkit ↔ NMS Bridge Reference
 
-Applicable versions: Paper 1.21.11 / 26.2 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
+Applicable versions: Paper 1.21.11 / 26.3 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
 Bridge package: `org.bukkit.craftbukkit.*`
 
 > Paper 1.20.5+ removed CraftBukkit's version relocation, so the package is fixed as `org.bukkit.craftbukkit` (no `v1_21_R1` suffix); `v1_xx_Rx` exists only on Spigot and Paper 1.20.4 and earlier.
@@ -165,7 +165,7 @@ public static Object getHandle(Player player) throws ReflectiveOperationExceptio
 
 | MC version | CraftBukkit package (Paper) | Paper Dev Bundle |
 |--------|------------------------|-----------------|
-| 26.2 | `org.bukkit.craftbukkit` | `26.2.build.132-stable` |
+| 26.3 | `org.bukkit.craftbukkit` | `26.3.build.258-stable` |
 | 26.3 | `org.bukkit.craftbukkit` | `26.3.build.<n>-beta` |
 
 > Other servers such as Spigot may use a different CraftBukkit package name; for cross-platform use, resolve it dynamically with `getCraftBukkitPackage()` above.

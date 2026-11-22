@@ -44,9 +44,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版相同；用 `AsyncChatEvent`、Adventure、Bukkit 排程器）
+- Paper 1.21.11 / 26.3（兩版相同；用 `AsyncChatEvent`、Adventure、Bukkit 排程器）
 - 純 Paper API，不需要 Paperweight；`java.net.http` 屬 JDK、Gson 隨 paper-api 提供，不需額外依賴
 - Discord API v10，Gateway `encoding=json`（不壓縮）
+- **Spigot**：核心可移植——JDK webhook／Gateway 客戶端與伺服器無關；聊天擷取用的是 Paper `AsyncChatEvent`（Spigot 用 `AsyncPlayerChatEvent`）與 Adventure
 
 ---
 

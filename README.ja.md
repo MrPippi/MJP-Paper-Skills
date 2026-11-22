@@ -6,7 +6,7 @@
 
 Mojang 公式名称を使う低レベルな NMS と純粋な Paper API に対応。`SKILL.md` を読み込むあらゆる AI コーディングツールで利用できます
 
-[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.2-2ea44f)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
 [![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
@@ -25,7 +25,7 @@ AI コーディングツールは、Paper プラグインで細かな間違い�
 
 ## 特長
 
-- **コンパイル検証済み**：CI が変更のたびに、完成したすべてのテンプレートを Paper **1.21.11** と **26.2** の両方でコンパイルします。バージョン固有の行はインラインで明示されています。
+- **コンパイル検証済み**：CI が変更のたびに、完成したすべてのテンプレートを Paper **1.21.11** と **26.3** の両方でコンパイルします。バージョン固有の行はインラインで明示されています。
 - **Mojang 公式名称**：NMS コードは Paperweight userdev と、26.1 以降 Minecraft が難読化せずに提供している名称を使います。
 - **スレッドセーフな設計**：各スキルは、すべての呼び出しがどのスレッド（メイン、Netty IO、非同期）で実行されるかを明記しています。
 - **ツールに依存しない**：オープンな [Agent Skills](https://agentskills.io) 形式は、Claude Code、OpenAI Codex、Cursor、GitHub Copilot、Gemini CLI などで動作します。
@@ -114,7 +114,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## スキルカタログ
 
-31 個のスキルはすべて、Paper 1.21.11 と 26.2 に対してコンパイル検証済みです。フィルターや完全なテンプレートは[ドキュメントサイト](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)で確認できます。機械可読なインデックスは [`Skills/skills-registry.yml`](Skills/skills-registry.yml) です。
+31 個のスキルはすべて、Paper 1.21.11 と 26.3 に対してコンパイル検証済みです。フィルターや完全なテンプレートは[ドキュメントサイト](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)で確認できます。機械可読なインデックスは [`Skills/skills-registry.yml`](Skills/skills-registry.yml) です。
 
 ### NMS（16 スキル、Paperweight userdev が必要）
 
@@ -181,9 +181,9 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | 項目 | 対応状況 |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 と 26.2（テンプレートは 26.2 が既定。1.21.11 との差異は `// @1.21.11:` で明示） |
-| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.2.build.132-stable` |
-| Java | 21 (1.21.11) / 25 (26.2) |
+| Minecraft / Paper | 1.21.11 と 26.3（テンプレートは 26.3 が既定。1.21.11 との差異は `// @1.21.11:` で明示） |
+| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
+| Java | 21 (1.21.11) / 25 (26.3) |
 | ビルド | Gradle 8.11.2+（9.8.1 で検証済み）、Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24`（NMS スキルのみ。`reobfJar` は不要） |
 | Shadow（任意） | `com.gradleup.shadow` `9.6.1`（マルチモジュールビルド用、`nms-version-adapter`） |
@@ -223,11 +223,11 @@ MJP-Paper-Skills/
 2. `.claude/skills/` 配下の同じパスにミラーリングし、`node scripts/sync-skill-references.mjs` を実行して `references/` フォルダを生成する（`PLATFORM.md` や `_shared/` のファイルを変更するたびに再実行する）。
 3. 両方の `skills-registry.yml` にエントリを追加する。
 4. サイトページ `web/data/skills/<slug>.md` と、その英語本文 `web/data/skills/en/<slug>.md` を追加し、`web/tests/skills-api.data.test.ts` の期待リストを更新する。
-5. テンプレートが Paper 1.21.11 と 26.2 でコンパイルできることを確認する。`Skills/` に触れるすべてのプルリクエストで CI がこれを実行する。ローカルで実行する場合は（26.2 は JDK 25、1.21.11 は JDK 21）：
+5. テンプレートが Paper 1.21.11 と 26.3 でコンパイルできることを確認する。`Skills/` に触れるすべてのプルリクエストで CI がこれを実行する。ローカルで実行する場合は（26.3 は JDK 25、1.21.11 は JDK 21）：
 
    ```bash
-   node scripts/extract-skill-java.mjs 26.2
-   cd verify && ./gradlew compileSkills -Pmc=26.2
+   node scripts/extract-skill-java.mjs 26.3
+   cd verify && ./gradlew compileSkills -Pmc=26.3
    ```
 
 [`CLAUDE.md`](CLAUDE.md) に、完全な手順とリポジトリの不変条件が記載されています。ドキュメントサイトの開発は次のとおりです。

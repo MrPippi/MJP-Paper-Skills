@@ -20,9 +20,10 @@ Inject a custom `ChannelDuplexHandler` into the player's Netty connection pipeli
 
 ## NMS Version Requirements
 
-- Paper 1.21.11 / 26.2(both versions compile-verified; version differences are marked with a trailing `// @1.21.11:`)
+- Paper 1.21.11 / 26.3(both versions compile-verified; version differences are marked with a trailing `// @1.21.11:`)
 - Paperweight userdev 2.0.0-beta.24+
 - Netty 4.x(bundled with Paper)
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper (see `references/paper-nms-platform.md` §9)
 
 ## Triggers
 

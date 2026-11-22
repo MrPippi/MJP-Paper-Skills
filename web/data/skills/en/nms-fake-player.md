@@ -8,9 +8,10 @@ Create a fake player that is a real `ServerPlayer` but has no client. Damage, cr
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (both versions compile-verified; version differences are marked with a trailing `// @1.21.11:`)
+- Paper 1.21.11 / 26.3 (both versions compile-verified; version differences are marked with a trailing `// @1.21.11:`)
 - Paperweight userdev
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper
 
 ---
 

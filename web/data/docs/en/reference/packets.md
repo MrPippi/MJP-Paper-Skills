@@ -1,6 +1,6 @@
 # NMS Packet Reference
 
-Applicable versions: Paper 1.21.11 / 26.2 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
+Applicable versions: Paper 1.21.11 / 26.3 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
 Package root: `net.minecraft.network.protocol`
 
 > For packet sending usage, see `Skills/nms/nms-packet-sender/SKILL.md`
@@ -206,7 +206,7 @@ ClientboundBlockUpdatePacket packet = new ClientboundBlockUpdatePacket(
 
 #### `ClientboundExplodePacket`
 
-> The class name is `ClientboundExplodePacket` (not ~~ClientboundExplosionPacket~~). This constructor changed in both 1.21.2 and 26.x; the following is the 26.2 version.
+> The class name is `ClientboundExplodePacket` (not ~~ClientboundExplosionPacket~~). This constructor changed in both 1.21.2 and 26.x; the following is the 26.3 version (26.3 appended `boolean playSound`; on 26.2 drop the last argument; the 1.21.11 constructor differs further).
 
 ```java
 import net.minecraft.core.particles.ParticleTypes;
@@ -223,7 +223,8 @@ ClientboundExplodePacket packet = new ClientboundExplodePacket(
     java.util.Optional.empty(),        // Player knockback
     ParticleTypes.EXPLOSION_EMITTER,   // Explosion particles
     SoundEvents.GENERIC_EXPLODE,       // Sound
-    WeightedList.of()                  // Block debris particles (empty = none)
+    WeightedList.of(),                 // Block debris particles (empty = none)
+    true                               // playSound: whether to play the sound (added in 26.3)
 );
 ```
 
@@ -328,10 +329,10 @@ if (msg instanceof ServerboundMovePlayerPacket.PosRot move) {
 ### Interaction
 
 #### `ServerboundInteractPacket` / `ServerboundAttackPacket`
-**26.2**: `ServerboundInteractPacket` became a record, and attacking was split into a separate `ServerboundAttackPacket`.
+**26.2+**: `ServerboundInteractPacket` became a record, and attacking was split into a separate `ServerboundAttackPacket`.
 
 ```java
-// @only 26.2
+// @only 26.3
 import net.minecraft.network.protocol.game.ServerboundAttackPacket;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.world.InteractionHand;
@@ -420,12 +421,25 @@ if (msg instanceof ServerboundPlayerActionPacket action) {
 }
 ```
 
-#### `ServerboundSwingPacket`
+#### `ServerboundPunchPacket` (26.3) / `ServerboundSwingPacket` (1.21.11, 26.2)
+
+26.3 removed `ServerboundSwingPacket`; a left-click swing is now `ServerboundPunchPacket`, which has no fields (the server always treats it as the main hand and fires `PlayerArmSwingEvent`).
+
 ```java
+// @only 26.3
+import net.minecraft.network.protocol.game.ServerboundPunchPacket;
+
+if (msg instanceof ServerboundPunchPacket) {
+    // The player left-clicked (no hand field)
+}
+```
+
+```java
+// @only 1.21.11
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 
 if (msg instanceof ServerboundSwingPacket swing) {
-    InteractionHand hand = swing.getHand(); // Which hand swung
+    InteractionHand hand = swing.getHand(); // Which hand was swung (same on 26.2)
 }
 ```
 

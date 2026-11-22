@@ -9,9 +9,10 @@ Minigames and duels need throwaway worlds, or arenas that are restored after eve
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both)
 - Pure Paper API, no Paperweight needed
 - The old GameRule constants are deprecated; the templates instead look rules up by snake_case key in `Registry.GAME_RULE` (identical on both versions)
+- **Spigot**: Paper only — uses `Entity#teleportAsync` and Paper's world storage layout
 
 ---
 
@@ -38,7 +39,6 @@ public final class VoidChunkGenerator extends ChunkGenerator {
 World world = WorldCreator.name(name)
         .generator(generator)
         .generateStructures(false)
-        .keepSpawnLoaded(TriState.FALSE)
         .createWorld();
 rules.apply(world);   // Apply game rules immediately after creation
 ```
@@ -56,7 +56,7 @@ WorldFolders.deleteWorld(folder);
 
 ```java
 // Record each cell's BlockData before its first change; restoring is limited per tick by block count and a time budget
-cells.putIfAbsent(block.getBlockKey(), block.getBlockData());
+cells.putIfAbsent(ChangeRecorder.key(block), block.getBlockData());   // own x/y/z packing; Block#getBlockKey is deprecated
 block.setBlockData(original, false);
 sweeper.sweepAll(world);   // Leftover entities: dropped items, arrows, TNT minecarts, crystals, etc.
 ```

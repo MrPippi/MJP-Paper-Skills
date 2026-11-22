@@ -33,9 +33,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
 - 純 Paper API（JDK `jdk.httpserver` + paper-api 附帶的 Gson），不需要 Paperweight
-- Java 21（1.21.11）／25（26.2）
+- Java 21（1.21.11）／25（26.3）
+- **Spigot**：Spigot 可用——範本只用 JDK `HttpServer`、Gson 與 Bukkit 排程器（未在 Spigot 實際執行測試）
 
 ---
 

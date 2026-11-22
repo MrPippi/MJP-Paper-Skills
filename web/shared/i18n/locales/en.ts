@@ -11,7 +11,7 @@ export const en: Translations = {
     switchLang: '切換為繁體中文',
   },
   footer: {
-    tagline: 'AI agent skills for Paper 1.21.11 / 26.2 plugin development — NMS and pure Paper API, compile-verified on both versions, for any tool that reads SKILL.md.',
+    tagline: 'AI agent skills for Paper 1.21.11 / 26.3 plugin development — NMS and pure Paper API, compile-verified on both versions, for any tool that reads SKILL.md.',
     docs: 'Docs',
     resources: 'Resources',
     gettingStarted: 'Get started',
@@ -27,7 +27,7 @@ export const en: Translations = {
     titleLead: 'One prompt.',
     titleAccent: 'A working Paper plugin.',
     heroDescription:
-      '31 agent skills built for Paper plugin development, for Claude Code, Codex, Cursor, Copilot and more — from NMS packets, Netty interception and custom entities to Dialogs, SQLite, cross-plugin APIs and PvP gameplay. Every template is compile-verified against 1.21.11 and 26.2.',
+      '31 agent skills built for Paper plugin development, for Claude Code, Codex, Cursor, Copilot and more — from NMS packets, Netty interception and custom entities to Dialogs, SQLite, cross-plugin APIs and PvP gameplay. Every template is compile-verified against 1.21.11 and 26.3.',
     ctaPrimary: 'Get started',
     ctaSecondary: 'Browse skills',
     statsSkills: 'Skills',
@@ -149,7 +149,7 @@ export const en: Translations = {
       },
       {
         q: 'Which Minecraft versions are supported?',
-        a: 'Every template is compile-verified against Paper 1.21.11 and 26.2. NMS skills use Paperweight userdev; Paper API skills need only paper-api. Lines that differ carry an inline // @1.21.11: alternative.',
+        a: 'Every template is compile-verified against Paper 1.21.11 and 26.3. NMS skills use Paperweight userdev; Paper API skills need only paper-api. Lines that differ carry an inline // @1.21.11: alternative.',
       },
       {
         q: 'NMS or Paper API skills?',

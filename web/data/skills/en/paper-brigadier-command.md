@@ -11,9 +11,10 @@ Simple commands that need no completion can still stay in `plugin.yml` under `co
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both)
 - Pure Paper API, no Paperweight needed
-- Only difference: `CommandSourceStack#getPlayerOrThrow()` exists only in 26.2; on 1.21.11 use `getExecutor()` to decide
+- Only difference: `CommandSourceStack#getPlayerOrThrow()` exists on 26.2+ (verified on 26.3); on 1.21.11 use `getExecutor()` to decide
+- **Spigot**: Paper only — `io.papermc.paper.command.brigadier` and `LifecycleEvents.COMMANDS` are Paper API; Spigot only has `CommandExecutor`
 
 ---
 

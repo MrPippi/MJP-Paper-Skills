@@ -23,9 +23,10 @@ The second template shows how to register a static Dialog from a `PluginBootstra
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (the Dialog API is available since Paper 1.21.7; both versions are compile-verified and the template code is identical on both)
+- Paper 1.21.11 / 26.3 (the Dialog API is available since Paper 1.21.7; both versions are compile-verified and the template code is identical on both)
 - Pure Paper API, no Paperweight needed
 - A plugin using Dialogs needs `api-version` of at least `1.21.7`
+- **Spigot**: Paper only — the Dialog API (`io.papermc.paper.dialog`, registry events) does not exist in Spigot-API 26.3
 
 ## Triggers
 
@@ -64,7 +65,7 @@ name: PauseMenu
 version: '${version}'
 main: com.example.menu.PauseMenuPlugin
 bootstrapper: com.example.menu.PauseMenuBootstrap
-api-version: '26.2'   # 1.21.11 server: '1.21.11'
+api-version: '26.3'   # 1.21.11 server: '1.21.11'
 ```
 
 ## Code Template

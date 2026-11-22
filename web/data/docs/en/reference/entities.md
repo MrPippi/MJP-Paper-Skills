@@ -1,6 +1,6 @@
 # NMS Entity & AI Reference
 
-Applicable versions: Paper 1.21.11 / 26.2 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
+Applicable versions: Paper 1.21.11 / 26.3 (Mojang official names; vanilla is no longer obfuscated since 26.1). Where the two versions differ, the code is marked with an end-of-line `// @1.21.11:` comment or a `// @only <version>` block.
 Package root: `net.minecraft.world.entity`
 
 > For custom entity usage, see `Skills/nms/nms-custom-entity/SKILL.md`
