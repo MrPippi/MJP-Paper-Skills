@@ -165,8 +165,8 @@ public static Object getHandle(Player player) throws ReflectiveOperationExceptio
 
 | MC version | CraftBukkit package (Paper) | Paper Dev Bundle |
 |--------|------------------------|-----------------|
+| 1.21.11 | `org.bukkit.craftbukkit` | `1.21.11-R0.1-SNAPSHOT` |
 | 26.3 | `org.bukkit.craftbukkit` | `26.3.build.258-stable` |
-| 26.3 | `org.bukkit.craftbukkit` | `26.3.build.<n>-beta` |
 
 > Other servers such as Spigot may use a different CraftBukkit package name; for cross-platform use, resolve it dynamically with `getCraftBukkitPackage()` above.
 

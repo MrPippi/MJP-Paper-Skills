@@ -187,10 +187,11 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | Параметр | Поддерживается |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 и 26.3 (шаблоны по умолчанию написаны под 26.3; отличия 1.21.11 помечены `// @1.21.11:`) |
+| Minecraft / Paper | 1.21.11 и 26.3 (шаблоны по умолчанию написаны под 26.3; отличия 1.21.11 помечены `// @1.21.11:`) (`paper-world-clock` только 26.3) |
+| Spigot | Не поддерживается как цель. В каждом `SKILL.md` указано: только Paper, ядро переносимо или работает на Spigot (проверено по Spigot-API 26.3) |
 | Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
 | Java | 21 (1.21.11) / 25 (26.3) |
-| Сборка | Gradle 8.11.2+ (проверено на 9.8.1), Groovy DSL |
+| Сборка | Gradle 9.7.1+ (проверено на 9.8.1), Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24` (только навыки NMS; `reobfJar` не нужен) |
 | Shadow (необязательно) | `com.gradleup.shadow` `9.6.1`, для многомодульных сборок (`nms-version-adapter`) |
 | Мягкие зависимости | VaultAPI 1.7.1, PlaceholderAPI 2.11.6, packetevents 2.13.0, ProtocolLib 5.3.0, sqlite-jdbc 3.49.1.0 |

@@ -187,10 +187,11 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | 項目 | 対応状況 |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 と 26.3（テンプレートは 26.3 が既定。1.21.11 との差異は `// @1.21.11:` で明示） |
+| Minecraft / Paper | 1.21.11 と 26.3（テンプレートは 26.3 が既定。1.21.11 との差異は `// @1.21.11:` で明示）（`paper-world-clock` は 26.3 のみ） |
+| Spigot | 対象外。各 `SKILL.md` に Paper 専用・コア移植可・Spigot で動作のいずれかを明記（Spigot-API 26.3 で確認） |
 | Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
 | Java | 21 (1.21.11) / 25 (26.3) |
-| ビルド | Gradle 8.11.2+（9.8.1 で検証済み）、Groovy DSL |
+| ビルド | Gradle 9.7.1+（9.8.1 で検証済み）、Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24`（NMS スキルのみ。`reobfJar` は不要） |
 | Shadow（任意） | `com.gradleup.shadow` `9.6.1`（マルチモジュールビルド用、`nms-version-adapter`） |
 | ソフト依存関係 | VaultAPI 1.7.1、PlaceholderAPI 2.11.6、packetevents 2.13.0、ProtocolLib 5.3.0、sqlite-jdbc 3.49.1.0 |

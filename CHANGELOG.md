@@ -5,6 +5,13 @@
 
 ## [Unreleased]
 
+### Fixed — 文件與網站跟上 26.3 更新
+
+- `nms-version-adapter` 範例：`adapter-v26_2` 模組誤用 26.3 dev bundle（26.3 更新時的批次替換造成），改回 `26.2.build.135-stable`；`adapter-v26_3` 由 beta 改為 `26.3.build.258-stable`
+- `docs/paper-nms`：`bukkit-nms-bridge` 版本表改為 1.21.11／26.3；`entities` 補上 26.2 起的史萊姆系階層（`cubemob`、`AbstractCubeMob`）與 26.2 新增 Attribute、`KNOCKBACK_RESISTANCE` 新範圍；`packets` 新增「26.3 新增」封包表，並註明 26.3 的 `ClientboundAnimatePacket` 已沒有揮手動作（`PLATFORM.md` 同步）
+- README（8 種語言）：Gradle 需求改為 9.7.1+；相容性表新增 Spigot 列與 `paper-world-clock` 僅 26.3 的例外
+- 網站：頁尾版本改為 1.21.11 · 26.3；FAQ 新增「可以用在 Spigot 嗎？」並註明 world-clock 例外；`web/README.md` 依賴表改為實際套件（Next.js 16.4.6、unified／rehype／Shiki 管線），`npm audit` 0 個漏洞；新增技能步驟補上英文內文、平台數與像素字型
+
 ### Added — paper-custom-recipes、paper-menu-type-gui、paper-datapack-bundling、paper-world-clock（registry 7.4.0，共 37 個技能）
 
 - `paper-custom-recipes`（paper-gameplay）：有形狀／無形狀合成、`RecipeChoice.itemType`、`TransmuteRecipe` 升級保留附魔、26.3 `BrewingRecipe`（1.21.11 `PotionMix`）；26.3 改用 `addRecipes`／`removeRecipes` 與 `RecipeChoice.exactChoice`（舊寫法在 26.3 淘汰）。實機發現 `/minecraft:reload` 會清掉插件配方，範本在 `ServerResourcesReloadedEvent` 重新註冊

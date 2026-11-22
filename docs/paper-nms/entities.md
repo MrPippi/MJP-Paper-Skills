@@ -27,7 +27,7 @@ net.minecraft.world.entity.Entity
         │   │   ├── Creeper
         │   │   ├── Spider
         │   │   ├── Enderman
-        │   │   └── Slime（繼承 Mob 直接）
+        │   │   └── cubemob.Slime／MagmaCube／SulfurCube（26.2 起繼承 AbstractCubeMob → AgeableMob；1.21.11 為 monster.Slime 直接繼承 Mob，MagmaCube 繼承 Slime）
         │   └── net.minecraft.world.entity.npc.*          ← NPC
         │       └── Villager, Wandering Trader
         └── net.minecraft.world.entity.boss.*
@@ -215,11 +215,16 @@ look.setLookAt(x, y, z);
 | `FLYING_SPEED` | 飛行速度 | 0 – 1024 |
 | `ARMOR` | 防具值 | 0 – 30 |
 | `ARMOR_TOUGHNESS` | 防具韌性 | 0 – 20 |
-| `KNOCKBACK_RESISTANCE` | 擊退抵抗（1.0=完全免疫） | 0 – 1 |
+| `KNOCKBACK_RESISTANCE` | 擊退抵抗（1.0=完全免疫；負值會加大擊退） | 26.2 起 -2 – 1（1.21.11：0 – 1） |
 | `FOLLOW_RANGE` | 追蹤/感知範圍 | 0 – 2048 |
 | `SPAWN_REINFORCEMENTS_CHANCE` | 喚援機率（Zombie） | 0 – 1 |
 | `MAX_ABSORPTION` | 吸收效果上限 | 0 – 2048 |
 | `LUCK` | 幸運值 | -1024 – 1024 |
+| `AIR_DRAG_MODIFIER` | 空氣阻力倍率（26.2 新增） | 0 – 2048，預設 1 |
+| `FRICTION_MODIFIER` | 地面摩擦倍率（26.2 新增） | 0 – 2048，預設 1 |
+| `BOUNCINESS` | 落地反彈程度（26.2 新增） | 0 – 1，預設 0 |
+| `NAME_TAG_DISTANCE` | 名牌可見距離（26.2 新增） | 0 – 512，預設 64 |
+| `BELOW_NAME_DISTANCE` | 名牌下方計分可見距離（26.2 新增） | 0 – 512，預設 10 |
 
 ### 設定屬性
 

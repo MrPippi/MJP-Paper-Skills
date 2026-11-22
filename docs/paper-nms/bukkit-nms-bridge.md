@@ -165,8 +165,8 @@ public static Object getHandle(Player player) throws ReflectiveOperationExceptio
 
 | MC 版本 | CraftBukkit 套件（Paper） | Paper Dev Bundle |
 |--------|------------------------|-----------------|
+| 1.21.11 | `org.bukkit.craftbukkit` | `1.21.11-R0.1-SNAPSHOT` |
 | 26.3 | `org.bukkit.craftbukkit` | `26.3.build.258-stable` |
-| 26.3 | `org.bukkit.craftbukkit` | `26.3.build.<n>-beta` |
 
 > Spigot 等其他伺服器的 CraftBukkit 套件名可能不同，跨平台時用上方的 `getCraftBukkitPackage()` 動態取得。
 

@@ -299,6 +299,18 @@ ClientboundDisconnectPacket packet =
 
 ---
 
+### Added in 26.3
+
+| Packet | Constructor | Vanilla use |
+|------|--------|----------|
+| `ClientboundSwingAnimationPacket` | `(Entity entity, InteractionHand hand, SwingAnimation animation)` | Swing animation sent by `LivingEntity#swing(hand, animation, ...)`. Since 26.3 `ClientboundAnimatePacket` only has `WAKE_UP` / `CRITICAL_HIT` / `MAGIC_CRITICAL_HIT`; swings use this packet |
+| `ClientboundPostEffectsPacket` | `(List<Identifier> postEffects)` (common protocol) | Sets the player's screen post effects; the Paper API is `Player#postEffects()` (see `paper-client-side-effects`) |
+| `ClientboundAddTransientBlockPacket` | `(BlockPos pos, BlockState blockState)` | Sent to tracking players when a falling block (`FallingBlockEntity`) lands |
+
+On the serverbound side, 26.3 replaced `ServerboundSwingPacket` with the field-less `ServerboundPunchPacket` (see Player Action below).
+
+---
+
 ## Serverbound Packets (Client → Server)
 
 ### Movement

@@ -11,19 +11,20 @@ MJP-Paper-Skills 官方網站，提供 Skills 瀏覽、搜尋與詳細頁功能�
 
 | 套件 | 版本（lockfile） | 用途 |
 |------|-----------------|------|
-| `next` | 16.4.0 | App Router、static export |
+| `next` | 16.4.6 | App Router、static export |
 | `react` / `react-dom` | 19.3.0 | UI |
 | `gray-matter` | 4.0.3 | 解析 `data/skills/*.md` frontmatter |
-| `remark` / `remark-gfm` / `remark-html` | 15.0.1 / 4.0.1 / 16.0.1 | Markdown → HTML（預設 sanitize） |
+| `unified` / `remark-parse` / `remark-gfm` / `remark-rehype` | 11.0.5 / 11.0.0 / 4.0.1 / 11.1.2 | Markdown → HAST |
+| `rehype-sanitize` / `rehype-slug` / `rehype-stringify` | 6.0.0 / 6.0.0 / 10.0.1 | 清理、標題錨點、輸出 HTML |
+| `shiki` / `@shikijs/rehype` | 4.5.0 | 建置時程式碼高亮（淺色／深色雙主題） |
+| `hast-util-to-string` / `unist-util-visit` | 3.0.1 / 5.1.0 | 擷取標題、走訪語法樹 |
 | `fuse.js` | 7.5.0 | 客戶端模糊搜尋 |
-| `@tailwindcss/typography` | 0.5.20 | 文章排版 |
 | `tailwindcss` / `@tailwindcss/postcss` | 4.3.3 | 樣式（dev） |
 | `typescript` | 6.0.3 | 型別檢查（dev） |
 | `tsx` | 4.23.15 | 執行 TypeScript 測試（dev） |
-| `@types/node` / `@types/react` / `@types/react-dom` | 24.19.1 / 19.3.0 / 19.3.0 | 型別（dev） |
+| `@types/node` / `@types/react` / `@types/react-dom` / `@types/hast` | 24.19.1 / 19.3.0 / 19.3.0 / 3.0.5 | 型別（dev） |
 
-`package.json` 另以 `overrides` 將 `postcss-selector-parser` 鎖在 `^7.1.6`（`@tailwindcss/typography` 仍依賴有漏洞的 6.x）。
-`npm audit` 目前剩 4 個 moderate（`sprintf-js`，經 `gray-matter` → `js-yaml@3` 引入，上游無修補版）。
+`npm audit`：0 個漏洞（2026-11-23）。`package.json` 的 `overrides` 仍保留 `postcss-selector-parser: ^7.1.6`，但目前已沒有套件依賴它（原本是 `@tailwindcss/typography`，已移除）。
 
 ## 本機開發
 
@@ -57,8 +58,10 @@ npm run dev
 ## 新增 Skill
 
 1. 在 `data/skills/` 新增 `{skill-id}.md`，填入 YAML frontmatter（參考現有檔案）
-2. 更新 `tests/skills-api.data.test.ts` 的預期 slug 清單與分類數
-3. `npm test && npm run build`
+2. 在 `data/skills/en/{skill-id}.md` 新增英文內文（只含內文、不得有中文）
+3. 更新 `tests/skills-api.data.test.ts` 的預期 slug 清單與分類數，以及 `tests/platform.test.ts` 的平台技能數
+4. 若 `tests/pixel-font.test.ts` 回報缺字，執行 `python scripts/pixel-font.py <Cubic_11.ttf>` 重新產生像素字型子集
+5. `npm test && npm run build`
 
 ## 部署
 

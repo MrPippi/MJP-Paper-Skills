@@ -90,7 +90,7 @@ plugins {
 }
 
 dependencies {
-    paperweight.paperDevBundle('26.3.build.258-stable')
+    paperweight.paperDevBundle('26.2.build.135-stable')   // last 26.2 build
     compileOnly project(':core')
 }
 
@@ -105,7 +105,7 @@ plugins {
 }
 
 dependencies {
-    paperweight.paperDevBundle('26.3.build.166-beta')
+    paperweight.paperDevBundle('26.3.build.258-stable')
     compileOnly project(':core')
 }
 
