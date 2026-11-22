@@ -252,7 +252,7 @@ description: "中英雙語描述（含 NMS Paperweight 要求）"
 ## Fallback
 ```
 
-**長範本拆檔**：`SKILL.md` 目標 800 行以內。完整範本過長時，`## Code Template` 只留「先讀 `template.md`」的指示與檔案索引表（檔名、套件、職責），完整程式碼放同目錄的 `template.md`（不含 frontmatter，標題 `# <Skill Title> — Code Template`，每個檔案一個 `##` 段落）。`template.md` 與 `SKILL.md` 是同一個技能、同一組編譯；不可放進 `references/`（那是腳本產生的資料夾）。範例：`paper-discord-bridge`。
+**長範本拆檔**：`SKILL.md` 目標 800 行以內。完整範本過長時，`## Code Template` 只留「先讀 `template.md`」的指示與檔案索引表（檔名、套件、職責），完整程式碼放同目錄的 `template.md`（不含 frontmatter，標題 `# <Skill Title> — Code Template`，每個檔案一個 `##` 段落）。`template.md` 與 `SKILL.md` 是同一個技能、同一組編譯；不可放進 `references/`（那是腳本產生的資料夾）。規則、陷阱說明等非檔案小節留在 `SKILL.md` 的索引表之後。已拆分：`paper-discord-bridge`、`paper-economy-ledger`、`paper-combat-tag`、`paper-disposable-world`、`paper-packetevents-filter`、`paper-softdepend-hook`、`paper-client-side-effects`、`paper-chest-gui`。
 
 技能內文（SKILL.md、examples.md、`PLATFORM.md`、`_shared/`）一律英文，包含程式碼註解與字串；frontmatter `description` 與 registry 維持中英雙語。
 

@@ -1,6 +1,6 @@
 # examples — paper-chest-gui
 
-The examples below reuse the `com.example.shop.gui` classes from `SKILL.md` (`ShopMenu`, `PagedListMenu`, `Menus`, `Icons`, `LatestOnly`, `PlayerItems`).
+The examples below reuse the `com.example.shop.gui` classes from `template.md` (`ShopMenu`, `PagedListMenu`, `Menus`, `Icons`, `LatestOnly`, `PlayerItems`).
 In practice, player-visible strings go in `lang.yml`/`gui.yml`; the examples write `Component.text` directly for brevity.
 
 ## Example 1: Paged listing menu (async load, last open wins)
