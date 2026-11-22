@@ -52,7 +52,10 @@ MJP-Paper-Skills/
 │   └── paper/                           ← Paper API 技能（每個含 SKILL.md + examples.md + references/）
 ├── scripts/
 │   ├── sync-skill-references.mjs        ← 產生各技能 references/（PLATFORM.md、_shared 副本）
-│   └── extract-skill-java.mjs           ← 抽出完整 Java 範本（套用 @1.21.11／@only）供 verify/ 編譯
+│   ├── extract-skill-java.mjs           ← 抽出完整 Java 範本（套用 @1.21.11／@only、依 mc_versions 跳過）供 verify/ 編譯，並列出片段 import
+│   ├── sync-catalog.mjs                 ← 依 registry 改寫各處技能數量／版本；--check 檢查網站頁、README 目錄、Skills Index
+│   ├── canary-bundle.mjs                ← 找出 Paper 最新 dev bundle（skills-canary.yml 用）
+│   └── lib/registry.mjs                 ← 不依賴 YAML 套件的 registry 讀取（各腳本與網站測試共用）
 ├── verify/                              ← Gradle 專案：對指定版本 dev bundle 編譯抽出的範本
 ├── docs/
 │   └── paper-nms/                       ← NMS API 速查表（深度參考資料）
@@ -268,7 +271,7 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 5. 將新條目加入 `Skills/skills-registry.yml` 與 `.claude/skills/skills-registry.yml`
 6. 若涉及新平台，建立 `Skills/<platform>/PLATFORM.md`
 7. 驗證觸發關鍵字無與既有技能衝突
-8. 在 `web/data/skills/<slug>.md` 新增網站頁面、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），並更新 `web/tests/skills-api.data.test.ts` 的預期清單
+8. 在 `web/data/skills/<slug>.md` 新增網站頁面（frontmatter 的 `version`、`category` 與 registry 一致；只支援部分版本時加 `mcVersions`）、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），在 8 份 README 目錄、本檔 Skills Index、`Skills/paper-api/PLATFORM.md` 技能清單各加一列，然後執行 `node scripts/sync-catalog.mjs` 更新各處技能數量與 registry 版本。網站測試的預期值直接讀 registry，不必手改；`web/tests/catalog.test.ts` 以 `--check` 檢查以上是否一致
 9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；片段（以及 `docs/paper-nms/`）的 import 由 `./gradlew checkSnippetImports -Pmc=<版本>` 對同一 classpath 檢查類別是否存在（`com.example.*` 與 JDK 除外）；`SKILL.md` 與 `template.md` 合為一組，examples.md 的同名類別會覆蓋該組版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
 
 ---

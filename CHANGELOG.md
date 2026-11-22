@@ -5,6 +5,14 @@
 
 ## [Unreleased]
 
+### Added — 自動化與檢查
+
+- `scripts/sync-catalog.mjs`：依 `Skills/skills-registry.yml` 改寫 README（8 種語言）、CLAUDE.md、網站文案與文件頁中的技能數量與 registry 版本；`--check` 另外檢查技能資料夾、兩份 registry、網站頁（含 frontmatter 版本／分類／`mcVersions`）、README 目錄列、Skills Index 與 paper-api 技能清單，由 `web/tests/catalog.test.ts` 執行；網站測試的預期值改為直接讀 registry
+- 片段 import 檢查：抽取腳本列出沒有 `package` 的程式片段（含 `docs/paper-nms/`）的 import，`verify` 的 `checkSnippetImports` 依各版本 classpath 確認類別存在，加入 `skills-compile.yml`
+- `skills-canary.yml`：每週一（或手動）讀 Paper 最新 dev bundle，比固定版本新時（新 build 或下一版 beta）先編譯並檢查片段，不擋 PR；`verify` 支援 `-Pbundle=<版本>`
+- registry `mc_versions` 正式化：抽取腳本依此跳過不支援的版本，網站技能頁顯示支援的 Minecraft 版本（frontmatter `mcVersions`）
+- `scripts/lib/registry.mjs`：不依賴 YAML 套件的 registry 讀取，供上述腳本與網站測試共用
+
 ### Changed — 長範本拆到 template.md
 
 - `paper-discord-bridge`：`SKILL.md` 由 2136 行縮為 176 行，完整範本（11 個類別、2 個 JUnit 測試、`config.yml`／`plugin.yml`）移到同目錄 `template.md`；`SKILL.md` 的 Code Template 改為「先讀 `template.md`」指示與檔案索引表。技能 ID、registry、網站頁面不變

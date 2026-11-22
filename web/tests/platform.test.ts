@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { getPlatform, categoryIconFor, groupSkillsByPlatform, PLATFORMS } from '../features/skills/lib/platform';
 import { getAllSkills } from '../features/skills/api/skills';
 import { PIXEL_ICONS } from '../shared/ui/pixel-icons';
+import { readRegistry } from './helpers/registry';
 
 const base = { githubPath: '', category: 'general' };
 
@@ -18,9 +19,11 @@ describe('getPlatform', () => {
     assert.equal(getPlatform(base), 'paper-api');
   });
 
-  it('classifies the real data as 16 NMS + 21 Paper API', () => {
+  it('classifies the real data like the registry platforms', () => {
     const counts = groupSkillsByPlatform(getAllSkills()).map((g) => [g.platform, g.skills.length]);
-    assert.deepEqual(counts, [['paper-nms', 16], ['paper-api', 21]]);
+    const registry = readRegistry().skills;
+    const expected = ['paper-nms', 'paper-api'].map((p) => [p, registry.filter((s) => s.platform === p).length]);
+    assert.deepEqual(counts, expected);
   });
 });
 
