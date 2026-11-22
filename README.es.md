@@ -8,7 +8,7 @@ NMS de bajo nivel con los nombres oficiales de Mojang y Paper API puro, para cua
 
 [![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
-[![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
+[![Skills](https://img.shields.io/badge/skills-33-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
 [![Skills compile](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml/badge.svg)](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml)
 [![License: MIT](https://img.shields.io/github/license/MrPippi/MJP-Paper-Skills)](LICENSE)
@@ -29,7 +29,7 @@ Las herramientas de programación con IA suelen cometer errores sutiles en los p
 - **Nombres oficiales de Mojang**: el código NMS usa Paperweight userdev y los nombres que Minecraft distribuye sin ofuscar desde la 26.1.
 - **Seguro entre hilos por diseño**: cada skill indica en qué hilo se ejecuta cada llamada (principal, Netty IO o asíncrono).
 - **Independiente de la herramienta**: el formato abierto [Agent Skills](https://agentskills.io) funciona con Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI y más.
-- **Dos vertientes**: 16 skills de NMS para trabajo de bajo nivel y 15 skills de Paper API que solo necesitan `paper-api`.
+- **Dos vertientes**: 16 skills de NMS para trabajo de bajo nivel y 17 skills de Paper API que solo necesitan `paper-api`.
 - **Documentación legible**: cada skill también se publica en el [sitio de documentación](https://mrpippi.github.io/MJP-Paper-Skills), en inglés y chino tradicional.
 
 ## Contenido
@@ -114,7 +114,7 @@ Describe la funcionalidad con lenguaje natural. La herramienta compara tu petici
 
 ## Catálogo de skills
 
-31 skills, todos verificados por compilación con Paper 1.21.11 y 26.3. Explóralos con filtros y plantillas completas en el [sitio de documentación](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); el índice legible por máquina es [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
+33 skills, todos verificados por compilación con Paper 1.21.11 y 26.3. Explóralos con filtros y plantillas completas en el [sitio de documentación](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); el índice legible por máquina es [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
 
 ### NMS (16 skills, requiere Paperweight userdev)
 
@@ -137,7 +137,7 @@ Describe la funcionalidad con lenguaje natural. La herramienta compara tu petici
 | Puente | [`nms-reflection-bridge`](Skills/nms/nms-reflection-bridge/SKILL.md) | Acceso a NMS mediante reflexión, sin Paperweight |
 | Puente | [`nms-version-adapter`](Skills/nms/nms-version-adapter/SKILL.md) | Patrón Adapter para soporte NMS multiversión |
 
-### Paper API (15 skills, requiere solo `paper-api`)
+### Paper API (17 skills, requiere solo `paper-api`)
 
 | Categoría | Skill | Qué hace |
 |----------|-------|--------------|
@@ -154,6 +154,8 @@ Describe la funcionalidad con lenguaje natural. La herramienta compara tu petici
 | Jugabilidad | [`paper-combat-tag`](Skills/paper/paper-combat-tag/SKILL.md) | Marca de combate PvP con atribución de daño y gestión de desconexión en combate |
 | Jugabilidad | [`paper-safe-teleport`](Skills/paper/paper-safe-teleport/SKILL.md) | Búsqueda de ubicaciones seguras, teletransporte aleatorio, teletransporte asíncrono y tiempos de espera |
 | Jugabilidad | [`paper-economy-ledger`](Skills/paper/paper-economy-ledger/SKILL.md) | Libro contable multimoneda, depósito en garantía y un proveedor de economía para Vault |
+| Jugabilidad | [`paper-registry-events`](Skills/paper/paper-registry-events/SKILL.md) | Encantamientos y tipos de daño personalizados desde un bootstrapper, cambios a entradas vanilla y etiquetas |
+| Jugabilidad | [`paper-data-components`](Skills/paper/paper-data-components/SKILL.md) | Componentes de ítems sin NMS: comida, armas, planeo y tooltips, con IDs en PDC |
 | Comandos | [`paper-brigadier-command`](Skills/paper/paper-brigadier-command/SKILL.md) | Comandos Brigadier registrados mediante `LifecycleEvents.COMMANDS` |
 | Mundo | [`paper-disposable-world`](Skills/paper/paper-disposable-world/SKILL.md) | Mundos desechables y reinicio de arenas |
 
@@ -199,12 +201,12 @@ Las plantillas canónicas de `build.gradle` y `paper-plugin.yml` están en los d
 MJP-Paper-Skills/
 ├── .claude/skills/           # Carpeta de skills lista para copiar (refleja Skills/, salvo las carpetas PLATFORM)
 ├── Skills/                   # Fuentes canónicas de los skills
-│   ├── skills-registry.yml   # Índice de los 31 skills (paper-nms + paper-api)
+│   ├── skills-registry.yml   # Índice de los 33 skills (paper-nms + paper-api)
 │   ├── _shared/              # Reglas de hilos y nomenclatura compartidas por todos los skills
 │   ├── paper-nms/PLATFORM.md # Plantillas de build.gradle / paper-plugin.yml para NMS, tabla de versiones
 │   ├── paper-api/PLATFORM.md # Configuración de compilación de Paper API, coordenadas de dependencias suaves
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (16 skills de NMS)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (15 skills de Paper API)
+│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (17 skills de Paper API)
 ├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (comprobación de compilación)
 ├── verify/                   # Proyecto Gradle que compila las plantillas extraídas para cada versión
 ├── docs/paper-nms/           # Referencia rápida de la API de NMS

@@ -18,7 +18,7 @@ MJP-Paper-Skills (Minecraft Paper Agent Skills) 是一套 Paper 插件開發的 
 執行時目錄：**`.claude/skills/`**（Claude Code 專用）
 規範來源：**`Skills/`**（authoritative source，與 `.claude/skills/` 內容相同）
 
-Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 31 個技能頁面。
+Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 33 個技能頁面。
 
 ### Repository Layout
 
@@ -33,12 +33,12 @@ MJP-Paper-Skills/
 │   ├── ci.yml                           ← PR：tsc + test + build（不部署）
 │   └── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯（改到 Skills/、verify/ 時）
 ├── .claude/
-│   └── skills/                          ← Claude Code 執行時（31 個技能，與 Skills/ 同步）
+│   └── skills/                          ← Claude Code 執行時（33 個技能，與 Skills/ 同步）
 │       ├── skills-registry.yml          ← 與 Skills/ 相同
 │       ├── _shared/
 │       └── nms/
 ├── Skills/                              ← Canonical source
-│   ├── skills-registry.yml              ← v7.2.0，31 個技能（paper-nms + paper-api）
+│   ├── skills-registry.yml              ← v7.3.0，33 個技能（paper-nms + paper-api）
 │   ├── _shared/
 │   │   ├── nms-threading.md
 │   │   ├── nms-obfuscation.md
@@ -60,7 +60,7 @@ MJP-Paper-Skills/
 │       ├── network.md                   ← Netty pipeline 結構與執行緒模型
 │       └── bukkit-nms-bridge.md         ← Bukkit ↔ NMS 橋接轉換表
 └── web/                                 ← Next.js 文件站
-    └── data/skills/                     ← 31 個技能 .md（已完整）
+    └── data/skills/                     ← 33 個技能 .md（已完整）
 ```
 
 ---
@@ -102,7 +102,7 @@ MJP-Paper-Skills/
 
 ## Skills Index
 
-所有技能以 `Skills/skills-registry.yml`（v7.2.0）為準（共 31 個：NMS 16 個、Paper API 15 個）。✅ = 已同步至 `.claude/skills/`。
+所有技能以 `Skills/skills-registry.yml`（v7.3.0）為準（共 33 個：NMS 16 個、Paper API 17 個）。✅ = 已同步至 `.claude/skills/`。
 
 **NMS 技能**（`platform: paper-nms`，`Skills/nms/`）
 
@@ -142,6 +142,8 @@ MJP-Paper-Skills/
 | `paper-combat-tag` | paper-gameplay | PvP 戰鬥標記（傷害歸屬、指令白名單、離線處理） | ✅ |
 | `paper-safe-teleport` | paper-gameplay | 安全落點搜尋、RTP、非同步傳送與冷卻 | ✅ |
 | `paper-economy-ledger` | paper-gameplay | 多幣別帳本、託管、Vault 提供者 | ✅ |
+| `paper-registry-events` | paper-gameplay | bootstrap 以 RegistryEvents 新增自訂附魔／傷害類型、修改原版項目與標籤 | ✅ |
+| `paper-data-components` | paper-gameplay | Paper Data Component API 物品元件（食物、武器、滑翔、提示框、PDC 識別） | ✅ |
 | `paper-brigadier-command` | paper-command | Brigadier 指令（LifecycleEvents.COMMANDS、k/m/b 金額） | ✅ |
 | `paper-disposable-world` | paper-world | 拋棄式世界與競技場重置 | ✅ |
 
@@ -266,7 +268,7 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 
 ## Web App (`web/`)
 
-Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 31 個技能（每個一個 `.md`）。
+Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 33 個技能（每個一個 `.md`）。
 
 ```bash
 cd web

@@ -11,13 +11,12 @@ categoryLabel: NMS UI
 categoryLabelEn: NMS UI
 tags: [nms, inventory, gui, container, menu, abstractcontainermenu, mojang-mapped]
 triggerKeywords:
-  - "自定義 GUI"
   - "custom menu"
   - "AbstractContainerMenu"
   - "自定義容器"
-  - "custom inventory"
   - "NMS GUI"
   - "container menu"
+  - "slot intercept"
 updatedAt: "2026-04-30"
 githubPath: Skills/nms/nms-custom-menu/SKILL.md
 featured: true

@@ -28,8 +28,9 @@ Implement custom container GUIs by extending NMS `AbstractContainerMenu`. Suppor
 
 ## Triggers
 
-- "自定義 GUI", "custom menu", "AbstractContainerMenu", "自定義容器", "custom inventory"
-- "NMS GUI", "container menu", "slot intercept", "inventory nms", "自定義箱子 GUI"
+- "custom menu", "AbstractContainerMenu", "自定義容器", "NMS GUI", "container menu"
+- "slot intercept", "inventory nms", "custom MenuType"
+- For a regular chest GUI use `paper-chest-gui`; for forms use `paper-dialog-ui`
 
 ## Inputs
 

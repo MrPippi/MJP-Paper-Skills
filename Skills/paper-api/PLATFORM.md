@@ -108,7 +108,7 @@ The templates target Paper. Spigot-API 26.3 contains only the `org.bukkit` and `
 | Paper-only API | Used by |
 |------|------|
 | Adventure / MiniMessage (`net.kyori.*`) — Spigot has no native Adventure | almost every skill (messages) |
-| `io.papermc.paper.*` (Dialog, Brigadier `Commands`, lifecycle, registry events, data components, `AsyncChatEvent`, world border events, `Tick`) | `paper-dialog-ui`, `paper-brigadier-command`, `paper-chest-gui`, `paper-client-side-effects`, `paper-discord-bridge` |
+| `io.papermc.paper.*` (Dialog, Brigadier `Commands`, lifecycle, registry events, data components, `AsyncChatEvent`, world border events, `Tick`) | `paper-dialog-ui`, `paper-brigadier-command`, `paper-chest-gui`, `paper-client-side-effects`, `paper-discord-bridge`, `paper-registry-events`, `paper-data-components` |
 | `Entity#teleportAsync`, `World#getChunkAtAsync`, `ItemStack#editMeta`, `Bukkit#getMinecraftVersion`, `PlayerKickEvent.Cause`, `org.bukkit.GameRules` | `paper-safe-teleport`, `paper-disposable-world`, `paper-combat-tag`, `paper-chest-gui`, `paper-packetevents-filter` |
 
 Each `SKILL.md` states its Spigot status in its version section with one of three levels:
@@ -132,10 +132,13 @@ Paper stopped importing new Spigot API after its 2024-12-13 hard fork, so APIs a
 | `paper-service-api` | paper-integration | ServicesManager cross-plugin API |
 | `paper-softdepend-hook` | paper-integration | Soft-dependency Hook / Bridge + PlaceholderAPI expansion |
 | `paper-embedded-http` | paper-integration | Embedded HTTP API (JDK HttpServer) |
+| `paper-discord-bridge` | paper-integration | Two-way Discord chat bridge with only the JDK |
 | `paper-packetevents-filter` | paper-network | PacketEvents / ProtocolLib packet filtering |
 | `paper-client-side-effects` | paper-network | Effects shown to a single player only (virtual world border, time, weather, hidden players) |
 | `paper-combat-tag` | paper-gameplay | PvP combat tagging |
 | `paper-safe-teleport` | paper-gameplay | Safe landing-spot search and async teleport (RTP) |
 | `paper-economy-ledger` | paper-gameplay | Multi-currency ledger + Vault provider |
+| `paper-registry-events` | paper-gameplay | Custom enchantments / damage types from a bootstrapper, vanilla changes, tags |
+| `paper-data-components` | paper-gameplay | Data component API: food, weapons, gliding, tooltips, PDC item ids |
 | `paper-brigadier-command` | paper-command | Brigadier commands (LifecycleEvents.COMMANDS) |
 | `paper-disposable-world` | paper-world | Disposable worlds / arena reset |

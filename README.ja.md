@@ -8,7 +8,7 @@ Mojang 公式名称を使う低レベルな NMS と純粋な Paper API に対応
 
 [![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
-[![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
+[![Skills](https://img.shields.io/badge/skills-33-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
 [![Skills compile](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml/badge.svg)](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml)
 [![License: MIT](https://img.shields.io/github/license/MrPippi/MJP-Paper-Skills)](LICENSE)
@@ -29,7 +29,7 @@ AI コーディングツールは、Paper プラグインで細かな間違い�
 - **Mojang 公式名称**：NMS コードは Paperweight userdev と、26.1 以降 Minecraft が難読化せずに提供している名称を使います。
 - **スレッドセーフな設計**：各スキルは、すべての呼び出しがどのスレッド（メイン、Netty IO、非同期）で実行されるかを明記しています。
 - **ツールに依存しない**：オープンな [Agent Skills](https://agentskills.io) 形式は、Claude Code、OpenAI Codex、Cursor、GitHub Copilot、Gemini CLI などで動作します。
-- **2 つのトラック**：低レベルな作業向けの NMS スキル 16 個と、`paper-api` だけで動作する Paper API スキル 15 個があります。
+- **2 つのトラック**：低レベルな作業向けの NMS スキル 16 個と、`paper-api` だけで動作する Paper API スキル 17 個があります。
 - **読みやすいドキュメント**：すべてのスキルは[ドキュメントサイト](https://mrpippi.github.io/MJP-Paper-Skills)でも公開されており、英語と繁体字中国語で読めます。
 
 ## 目次
@@ -114,7 +114,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## スキルカタログ
 
-31 個のスキルはすべて、Paper 1.21.11 と 26.3 に対してコンパイル検証済みです。フィルターや完全なテンプレートは[ドキュメントサイト](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)で確認できます。機械可読なインデックスは [`Skills/skills-registry.yml`](Skills/skills-registry.yml) です。
+33 個のスキルはすべて、Paper 1.21.11 と 26.3 に対してコンパイル検証済みです。フィルターや完全なテンプレートは[ドキュメントサイト](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)で確認できます。機械可読なインデックスは [`Skills/skills-registry.yml`](Skills/skills-registry.yml) です。
 
 ### NMS（16 スキル、Paperweight userdev が必要）
 
@@ -137,7 +137,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | ブリッジ | [`nms-reflection-bridge`](Skills/nms/nms-reflection-bridge/SKILL.md) | Paperweight を使わない、リフレクションベースの NMS アクセス |
 | ブリッジ | [`nms-version-adapter`](Skills/nms/nms-version-adapter/SKILL.md) | マルチバージョン NMS 対応のためのアダプターパターン |
 
-### Paper API（15 スキル、`paper-api` のみ必要）
+### Paper API（17 スキル、`paper-api` のみ必要）
 
 | カテゴリ | スキル | 内容 |
 |----------|-------|--------------|
@@ -154,6 +154,8 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | ゲームプレイ | [`paper-combat-tag`](Skills/paper/paper-combat-tag/SKILL.md) | ダメージの帰属と戦闘中ログアウトの処理を備えた PvP 戦闘タグ |
 | ゲームプレイ | [`paper-safe-teleport`](Skills/paper/paper-safe-teleport/SKILL.md) | 安全な地点の探索、ランダムテレポート、非同期テレポート、クールダウン |
 | ゲームプレイ | [`paper-economy-ledger`](Skills/paper/paper-economy-ledger/SKILL.md) | 多通貨の帳簿、エスクロー、Vault エコノミープロバイダー |
+| ゲームプレイ | [`paper-registry-events`](Skills/paper/paper-registry-events/SKILL.md) | ブートストラップでカスタムエンチャントとダメージタイプを追加し、バニラの項目やタグを変更 |
+| ゲームプレイ | [`paper-data-components`](Skills/paper/paper-data-components/SKILL.md) | NMS なしでアイテムコンポーネントを操作：食べ物、武器、滑空、ツールチップ、PDC による識別 |
 | コマンド | [`paper-brigadier-command`](Skills/paper/paper-brigadier-command/SKILL.md) | `LifecycleEvents.COMMANDS` で登録する Brigadier コマンド |
 | ワールド | [`paper-disposable-world`](Skills/paper/paper-disposable-world/SKILL.md) | 使い捨てワールドとアリーナのリセット |
 
@@ -199,12 +201,12 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 MJP-Paper-Skills/
 ├── .claude/skills/           # コピーしてすぐ使えるスキルフォルダ（PLATFORM フォルダを除き Skills/ のミラー）
 ├── Skills/                   # 正規のスキルソース
-│   ├── skills-registry.yml   # 全 31 スキルのインデックス（paper-nms + paper-api）
+│   ├── skills-registry.yml   # 全 33 スキルのインデックス（paper-nms + paper-api）
 │   ├── _shared/              # すべてのスキルで共通のスレッドと命名のルール
 │   ├── paper-nms/PLATFORM.md # NMS 用 build.gradle / paper-plugin.yml テンプレート、バージョン表
 │   ├── paper-api/PLATFORM.md # Paper API のビルド設定、ソフト依存関係の座標
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/（NMS スキル 16 個）
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/（Paper API スキル 15 個）
+│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/（Paper API スキル 17 個）
 ├── scripts/                  # sync-skill-references.mjs（references/）、extract-skill-java.mjs（コンパイルチェック）
 ├── verify/                   # 抽出したテンプレートをバージョンごとにコンパイルする Gradle プロジェクト
 ├── docs/paper-nms/           # NMS API クイックリファレンス

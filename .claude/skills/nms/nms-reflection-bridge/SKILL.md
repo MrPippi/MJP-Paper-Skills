@@ -14,6 +14,8 @@ description: "反射式 NMS 存取橋接：避開 CraftBukkit 編譯期依賴（
 Provides NMS access that does **not depend on Paperweight userdev**. It uses Java reflection plus cached Method/Field handles so one JAR can run on multiple NMS versions (for example 26.1, 26.2, 26.3).
 
 > If the project targets a single version, the native Paperweight API (`nms-packet-sender` etc.) is simpler. This skill is for cross-version distribution.
+>
+> Since 26.1 Paper and Spigot both ship unobfuscated Mojang names, so a Paperweight-built plugin already covers every Paper 26.x build of one version. The main remaining reason for this skill is one jar that must also run on **Spigot** or on **pre-26.1** servers (Spigot 1.21.11 and older use obfuscated names at runtime).
 
 ## NMS Version Requirements
 
@@ -25,7 +27,7 @@ Provides NMS access that does **not depend on Paperweight userdev**. It uses Jav
 ## Triggers
 
 - 「reflection bridge」「反射橋接」「NMS reflection」
-- 「跨版本 NMS」「cross-version」「版本無關」
+- 「跨版本 NMS」「cross-version」「版本無關」「Spigot 相容」「spigot compatibility」
 - 「避開 Paperweight」「no paperweight」
 
 ## Inputs

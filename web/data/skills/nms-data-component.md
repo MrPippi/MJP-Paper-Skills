@@ -11,16 +11,14 @@ categoryLabel: NMS 資料
 categoryLabelEn: NMS Data
 tags: [nms, data-component, item, customdata, enchantments, mojang-mapped]
 triggerKeywords:
-  - "DataComponent"
-  - "data component"
-  - "物品組件"
-  - "1.21 item data"
-  - "ItemStack component"
-  - "DataComponentType"
+  - "NMS DataComponent"
+  - "DataComponents"
+  - "CustomData"
   - "CustomData component"
   - "component map"
-  - "DataComponents"
-  - "組件讀寫"
+  - "NMS 物品組件"
+  - "cooking_fuel"
+  - "brewing_fuel"
 updatedAt: "2026-11-22"
 githubPath: Skills/nms/nms-data-component/SKILL.md
 featured: false

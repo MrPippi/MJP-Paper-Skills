@@ -39,9 +39,9 @@ Code that names a removed component no longer compiles on 26.3. Guard it with `/
 
 ## Triggers
 
-- "DataComponent", "data component", "物品組件", "1.21 item data", "ItemStack component"
-- "DataComponentType", "CustomData component", "component map", "item component"
-- "DataComponents", "組件讀寫", "component api"
+- "NMS DataComponent", "DataComponents", "CustomData", "CustomData component", "component map"
+- "NMS 物品組件", "cooking_fuel", "brewing_fuel", "compostable", "block_transformer" (components the Paper API does not expose)
+- For ordinary item components use `paper-data-components` (Paper API, no NMS)
 
 ## Inputs
 
