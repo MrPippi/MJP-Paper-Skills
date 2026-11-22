@@ -4,7 +4,7 @@ title: Paper Client-Side Effects
 titleZh: 玩家端視覺效果
 description: Per-player illusions with the Paper API only — virtual world border vignette, personal time and weather, hidePlayer visibility and night vision — kept correct by a central EffectState and reconcile() after join, world change, respawn, border change and effect removal.
 descriptionZh: 只用 Paper API 做每位玩家各自看到的效果：虛擬世界邊界紅框、個人時間／天氣、hidePlayer 可見性與夜視，由中央 EffectState 在加入、換世界、重生、邊界變動與效果被移除後 reconcile。
-version: "1.0.0"
+version: "1.1.0"
 status: active
 category: paper-network
 categoryLabel: Paper 網路
@@ -19,7 +19,9 @@ triggerKeywords:
   - "hidePlayer"
   - "EntityPotionEffectEvent"
   - "restore effect"
-updatedAt: "2026-10-09"
+  - "posteffect"
+  - "postEffects"
+updatedAt: "2026-11-22"
 githubPath: Skills/paper/paper-client-side-effects/SKILL.md
 featured: false
 ---
@@ -34,9 +36,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
 - 純 Paper API，不需要 Paperweight、不需要 ProtocolLib／PacketEvents
 - 偏好來源透過 `paper-service-api` 取得
+- **Spigot**：核心可移植——每人獨立的世界邊界、時間、天氣與 `hideEntity` 在 Spigot 都有；需替換 Adventure、`Tick` 與 Paper 的世界邊界事件
 
 ---
 
@@ -89,6 +92,15 @@ public void reconcile(Player player) {
 - 紅框：換世界先 `setWorldBorder(null)` 再重算；真邊界變動時重抄；停用時還原；血量變化用定時掃描
 - 夜視判斷用 `PotionEffect#isInfinite()`，不是「有沒有夜視」
 - `hidePlayer` 加入時兩個方向都重算、登出前先 `showPlayer`；它會連 TAB 名單一起移除
+
+### 畫面後製效果（PostEffectService，26.3+）
+
+```java
+// 26.3 新增 Player#postEffects()（原版 /posteffect 背後的 API）；1.21.11 沒有
+player.postEffects().add(Key.key("example", "fear"));      // 下一個 tick 同步到客戶端
+player.postEffects().remove(Key.key("example", "fear"));   // 只移除自己加的 key
+// 清單會存進玩家存檔：暫時效果必須在到期、退出、onDisable 時自行移除
+```
 
 ---
 

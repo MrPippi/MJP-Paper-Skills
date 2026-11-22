@@ -22,8 +22,9 @@ Load a plugin's `config.yml` and `lang.yml` consistently, with reload support, s
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (Bukkit `YamlConfiguration` and Adventure MiniMessage are identical on both versions; no version-specific lines)
+- Paper 1.21.11 / 26.3 (Bukkit `YamlConfiguration` and Adventure MiniMessage are identical on both versions; no version-specific lines)
 - Pure Paper API; Paperweight is not needed
+- **Spigot**: Paper only — the language layer is built on Adventure MiniMessage, which Spigot does not ship
 
 ## Triggers
 
@@ -64,7 +65,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). Only
 name: Home
 version: '${version}'
 main: com.example.home.HomePlugin
-api-version: '26.2'
+api-version: '26.3'
 commands:
   homeadmin:
     description: Administrative commands

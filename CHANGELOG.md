@@ -9,6 +9,29 @@
 
 - Web 依賴 Next.js 16.4.0 → 16.4.6（`npm audit`：16.0.0–16.4.4 受影響，含 GHSA-2464-fhr4-w9xw 圖片最佳化 RCE、GHSA-p3m5-59mp-jv5r、GHSA-673q-mjm6-r5xr 等）；升級前 `next build` 會因 SecurityFatalError 中止，升級後 tsc、測試、靜態匯出皆通過
 
+### Changed — 目標版本改為 Paper 26.3 + 1.21.11（registry 7.2.0）
+
+- 驗證目標由 26.2／1.21.11 改為 **26.3／1.21.11**：dev bundle／paper-api `26.3.build.258-stable`、`api-version: '26.3'`、Javadoc 連結、CI matrix、`verify/`、抽取腳本預設版本同步更新；26.2 不再驗證（`PLATFORM.md` 列出 26.2 → 26.3 的差異）
+- 建置基準改為 Gradle 9.7.1+（paperweight userdev 2.0.0-beta.24 的最低需求；原寫 8.11.2+ 有誤）
+- `verify/` 編譯改開 `-Xlint:deprecation,removal`；26.3 與 1.21.11 皆零錯誤、零淘汰警告
+- 每個 `SKILL.md` 與網站頁新增 **Spigot** 相容性（僅 Paper／核心可移植／Spigot 可用），`PLATFORM.md` 新增 Spigot 相容段落（對照 Spigot-API 26.3 Javadoc）
+
+### Fixed — 26.3 不相容與淘汰 API
+
+- `nms-fake-player`：26.3 移除 `LivingEntity#swing(InteractionHand)`，改用 `swing(hand, SwingAnimation.DEFAULT, false)`（26.3 原本編譯失敗）
+- `nms-packet-interceptor`：26.3 以 `ServerboundPunchPacket` 取代 `ServerboundSwingPacket`
+- `paper-combat-tag`：`PotionEffectTypeCategory`（26.3 標記 for removal）改用 `PotionEffectType#getEffectCategory()`
+- `paper-chest-gui`：移除 `InventoryAction.HOTBAR_MOVE_AND_READD`；`ItemFlag.HIDE_ADDITIONAL_TOOLTIP` 改用 `TOOLTIP_DISPLAY` 資料元件
+- `paper-disposable-world`：移除無作用的 `keepSpawnLoaded`、`shouldGenerateBedrock`；`Block#getBlockKey` 改為自行打包座標
+- `paper-disposable-world`：修正 26.x 存檔路徑。26.x 把 `WorldCreator` 建立的世界存在 `<主世界>/dimensions/minecraft/<名稱>/`，沒有 `level.dat`，世界 UUID 改存在 `data/paper/metadata.dat`；原範本照舊版結構去世界容器找資料，導致崩潰殘留永遠清不掉、從 26.x 世界做的範本一律被拒。改為 `WorldFolders.dataRoot` 依版本決定路徑，範本以 `region/` 判斷，複製時略過 UUID 檔，並改用 `.copying` / `.deleting` 原子改名取代「`level.dat` 最後寫／最後刪」。已在 Paper 26.3（build 258）實機驗證 18 項檢查
+- `paper-client-side-effects`：`WorldBorder#setSize(double, long)` 改用 `changeSize(double, long)`
+- `docs/paper-nms/packets.md`：`ClientboundExplodePacket` 補上 26.3 新增的 `playSound` 參數；揮手封包改寫為 26.3／1.21.11 兩版
+
+### Added — 26.3 新內容
+
+- `paper-client-side-effects` 範例 4：26.3 `Player#postEffects()` 畫面後製效果（會存進玩家資料，需自行移除）
+- `nms-data-component`：26.2 → 26.3 元件增刪表（由兩版 dev bundle 比對），並說明優先使用 Paper Data Component API
+
 ### Added — paper-discord-bridge（registry 7.1.0，共 31 個技能）
 
 - 新技能 `paper-discord-bridge`（paper-integration）：只用 JDK `HttpClient`／`WebSocket` 的 Discord 雙向聊天橋接，不需 JDA 或 DiscordSRV。遊戲 → Discord 以 webhook 佇列送出（daemon 執行緒、429 照 `Retry-After` 重送一次、`allowed_mentions` 為空、Markdown／提及跳脫）；Discord → 遊戲以純邏輯 Gateway 狀態機（HELLO、抖動心跳、IDENTIFY／RESUME、op 7／9、致命關閉碼、退避）在單一執行緒運作，入站回主執行緒、經 `AccountLinks` 檢查後送進聊天；token 與 webhook 網址不進 log

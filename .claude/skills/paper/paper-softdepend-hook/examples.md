@@ -266,13 +266,13 @@ class SoftDependBoundaryTest {
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
     compileOnly('com.github.MilkBowl:VaultAPI:1.7.1') { exclude group: 'org.bukkit' }
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'com.github.retrooper:packetevents-spigot:2.13.0'
 
     // paper-api is also needed in tests, otherwise JavaPlugin and Listener cannot be loaded; do not add the soft dependencies
-    testImplementation 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    testImplementation 'io.papermc.paper:paper-api:26.3.build.258-stable'
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

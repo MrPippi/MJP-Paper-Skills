@@ -8,9 +8,10 @@ Implement teleportation that never drops a player into lava, the void or a wall:
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified)
+- Paper 1.21.11 / 26.3 (both compile-verified)
 - Pure Paper API, no Paperweight needed
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Paper only — the core relies on `World#getChunkAtAsync` and `Entity#teleportAsync`
 
 ---
 

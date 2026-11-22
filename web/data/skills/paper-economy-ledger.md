@@ -33,9 +33,10 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版程式碼相同，皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版程式碼相同，皆經編譯驗證）
 - 純 Paper API + `compileOnly` VaultAPI 1.7.1，不需要 Paperweight
-- Java 21（1.21.11）／25（26.2）
+- Java 21（1.21.11）／25（26.3）
+- **Spigot**：核心可移植——帳本與 Vault 提供者只用 Bukkit 與 Vault；需替換 Adventure 訊息
 
 ---
 

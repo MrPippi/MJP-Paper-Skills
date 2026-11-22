@@ -20,9 +20,10 @@ Extend an NMS Mob class and override `registerGoals()` to add custom `Pathfinder
 
 ## NMS Version Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified; version differences are marked with a trailing `// @1.21.11:`)
+- Paper 1.21.11 / 26.3 (both compile-verified; version differences are marked with a trailing `// @1.21.11:`)
 - Paperweight userdev 2.0.0-beta.24+
 - Requires `paper-plugin.yml` (ensures loading before Bukkit plugins)
+- **Spigot**: Paper only — built on the Paperweight dev bundle, which exists only for Paper (see `references/paper-nms-platform.md` §9)
 
 ## Triggers
 

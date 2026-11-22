@@ -21,7 +21,7 @@ interface HomePageClientProps {
   referenceDocs: DocLink[];
 }
 
-const MC_VERSIONS = ['1.21.11', '26.2'];
+const MC_VERSIONS = ['1.21.11', '26.3'];
 const STEP_ICONS: PixelIconName[] = ['chest', 'sign', 'command'];
 const FEATURED_LIMIT = 6;
 

@@ -1,6 +1,6 @@
 # NMS Packet 速查表 / NMS Packet Reference
 
-適用版本：Paper 1.21.11 / 26.2（Mojang 官方命名；26.1 起原版不再混淆）。兩版寫法不同處以 `// @1.21.11:` 行尾標註或 `// @only <版本>` 區塊區分
+適用版本：Paper 1.21.11 / 26.3（Mojang 官方命名；26.1 起原版不再混淆）。兩版寫法不同處以 `// @1.21.11:` 行尾標註或 `// @only <版本>` 區塊區分
 套件根：`net.minecraft.network.protocol`
 
 > 封包發送用法見 `Skills/nms/nms-packet-sender/SKILL.md`
@@ -206,7 +206,7 @@ ClientboundBlockUpdatePacket packet = new ClientboundBlockUpdatePacket(
 
 #### `ClientboundExplodePacket`
 
-> 類名為 `ClientboundExplodePacket`（非 ~~ClientboundExplosionPacket~~）。此建構子在 1.21.2、26.x 皆有改版，以下為 26.2 版本。
+> 類名為 `ClientboundExplodePacket`（非 ~~ClientboundExplosionPacket~~）。此建構子在 1.21.2、26.x 皆有改版，以下為 26.3 版本（26.3 在最後新增 `boolean playSound`，26.2 去掉最後一個參數即可；1.21.11 的建構子另有不同）。
 
 ```java
 import net.minecraft.core.particles.ParticleTypes;
@@ -223,7 +223,8 @@ ClientboundExplodePacket packet = new ClientboundExplodePacket(
     java.util.Optional.empty(),        // 玩家 knockback
     ParticleTypes.EXPLOSION_EMITTER,   // 爆炸粒子
     SoundEvents.GENERIC_EXPLODE,       // 音效
-    WeightedList.of()                  // 方塊碎屑粒子（空 = 無）
+    WeightedList.of(),                 // 方塊碎屑粒子（空 = 無）
+    true                               // playSound：是否播放音效（26.3 新增）
 );
 ```
 
@@ -328,10 +329,10 @@ if (msg instanceof ServerboundMovePlayerPacket.PosRot move) {
 ### Interaction / 互動
 
 #### `ServerboundInteractPacket` / `ServerboundAttackPacket`
-**26.2**：`ServerboundInteractPacket` 改為 record，攻擊拆成獨立的 `ServerboundAttackPacket`。
+**26.2+**：`ServerboundInteractPacket` 改為 record，攻擊拆成獨立的 `ServerboundAttackPacket`。
 
 ```java
-// @only 26.2
+// @only 26.3
 import net.minecraft.network.protocol.game.ServerboundAttackPacket;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.world.InteractionHand;
@@ -420,12 +421,25 @@ if (msg instanceof ServerboundPlayerActionPacket action) {
 }
 ```
 
-#### `ServerboundSwingPacket`
+#### `ServerboundPunchPacket`（26.3）/ `ServerboundSwingPacket`（1.21.11、26.2）
+
+26.3 移除 `ServerboundSwingPacket`，左鍵揮手改為不帶任何欄位的 `ServerboundPunchPacket`（伺服器一律當成主手處理，並觸發 `PlayerArmSwingEvent`）。
+
 ```java
+// @only 26.3
+import net.minecraft.network.protocol.game.ServerboundPunchPacket;
+
+if (msg instanceof ServerboundPunchPacket) {
+    // 玩家左鍵揮手（無 hand 欄位）
+}
+```
+
+```java
+// @only 1.21.11
 import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 
 if (msg instanceof ServerboundSwingPacket swing) {
-    InteractionHand hand = swing.getHand(); // 揮動哪隻手
+    InteractionHand hand = swing.getHand(); // 揮動哪隻手（26.2 同此寫法）
 }
 ```
 

@@ -25,8 +25,9 @@ The point is not how to display them, but how to keep players from duplicating i
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (same template for both; `InventoryView` became an interface in 26.2, and this skill only uses `event.getInventory()` and `player.getOpenInventory()`, so it compiles on both)
+- Paper 1.21.11 / 26.3 (same template for both; `InventoryView` became an interface in 26.2, and this skill only uses `event.getInventory()` and `player.getOpenInventory()`, so it compiles on both)
 - Pure Paper API, no Paperweight needed
+- **Spigot**: Core portable — `InventoryHolder` and the click guard are Bukkit API; replace Adventure names/titles, `ItemStack#editMeta` and the `TOOLTIP_DISPLAY` data component
 
 ## Triggers
 
@@ -178,6 +179,9 @@ public final class NavSlot {
 ```java
 package com.example.shop.gui;
 
+import io.papermc.paper.datacomponent.DataComponentType;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.TooltipDisplay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -185,7 +189,6 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -206,6 +209,28 @@ public final class Icons {
     }
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
+
+    /**
+     * Tooltip lines an icon never needs (attributes, potion effects, patterns...). The deprecated
+     * {@code ItemFlag.HIDE_ADDITIONAL_TOOLTIP} no longer exists in the game; the tooltip_display component replaces it.
+     */
+    private static final DataComponentType[] HIDDEN_TOOLTIP_PARTS = {
+            DataComponentTypes.ATTRIBUTE_MODIFIERS,
+            DataComponentTypes.POTION_CONTENTS,
+            DataComponentTypes.STORED_ENCHANTMENTS,
+            DataComponentTypes.BANNER_PATTERNS,
+            DataComponentTypes.FIREWORKS,
+            DataComponentTypes.FIREWORK_EXPLOSION,
+            DataComponentTypes.JUKEBOX_PLAYABLE,
+            DataComponentTypes.DYED_COLOR,
+            DataComponentTypes.TRIM,
+            DataComponentTypes.CONTAINER,
+            DataComponentTypes.BUNDLE_CONTENTS,
+            DataComponentTypes.WRITTEN_BOOK_CONTENT,
+            DataComponentTypes.POT_DECORATIONS,
+            DataComponentTypes.INSTRUMENT,
+            DataComponentTypes.MAP_ID,
+    };
 
     private final Map<String, Def> defs;
     private final Map<String, String> titles;
@@ -266,11 +291,13 @@ public final class Icons {
         stack.editMeta(meta -> {
             meta.displayName(name);
             meta.lore(lore);
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
             if (def.glow()) {
                 meta.setEnchantmentGlintOverride(true);
             }
         });
+        stack.setData(DataComponentTypes.TOOLTIP_DISPLAY, TooltipDisplay.tooltipDisplay()
+                .addHiddenComponents(HIDDEN_TOOLTIP_PARTS)
+                .build());
         return stack;
     }
 
@@ -604,7 +631,6 @@ public final class GuiListener implements Listener {
             InventoryAction.MOVE_TO_OTHER_INVENTORY,
             InventoryAction.COLLECT_TO_CURSOR,
             InventoryAction.HOTBAR_SWAP,
-            InventoryAction.HOTBAR_MOVE_AND_READD,
             InventoryAction.UNKNOWN);
 
     private static final Set<ClickType> GUARDED_CLICKS = EnumSet.of(

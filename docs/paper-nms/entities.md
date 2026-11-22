@@ -1,6 +1,6 @@
 # NMS 實體 & AI 速查表 / NMS Entity & AI Reference
 
-適用版本：Paper 1.21.11 / 26.2（Mojang 官方命名；26.1 起原版不再混淆）。兩版寫法不同處以 `// @1.21.11:` 行尾標註或 `// @only <版本>` 區塊區分
+適用版本：Paper 1.21.11 / 26.3（Mojang 官方命名；26.1 起原版不再混淆）。兩版寫法不同處以 `// @1.21.11:` 行尾標註或 `// @only <版本>` 區塊區分
 套件根：`net.minecraft.world.entity`
 
 > 自定義實體用法見 `Skills/nms/nms-custom-entity/SKILL.md`

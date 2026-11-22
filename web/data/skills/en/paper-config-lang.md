@@ -9,9 +9,10 @@ Make config and message loading consistent: parse `config.yml` once into an immu
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (compile-verified on both, no differing lines)
+- Paper 1.21.11 / 26.3 (compile-verified on both, no differing lines)
 - Pure Paper API, no Paperweight needed
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Paper only — the language layer is built on Adventure MiniMessage, which Spigot does not ship
 
 ---
 

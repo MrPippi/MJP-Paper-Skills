@@ -33,6 +33,7 @@ featured: false
 
 - Paper 1.21.11 / 26.x（adapter 範例以 26.2 / 26.3 示範）
 - 建議搭配 multi-module Gradle build（每個版本各自 module 使用 Paperweight 編譯）
+- **Spigot**：僅 Paper——建立在只有 Paper 提供的 Paperweight dev bundle 上
 
 ---
 

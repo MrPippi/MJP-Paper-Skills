@@ -10,10 +10,11 @@ If you need NMS packet classes or to rewrite the Netty pipeline yourself, use `n
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified, same code on both)
+- Paper 1.21.11 / 26.3 (both compile-verified, same code on both)
 - Pure Paper API, no Paperweight needed
 - Server has packetevents installed (compiled against 2.13.0) or ProtocolLib (5.3.0)
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Core portable — PacketEvents and ProtocolLib both support Spigot; replace Adventure and `ItemStack#editMeta`
 
 ---
 

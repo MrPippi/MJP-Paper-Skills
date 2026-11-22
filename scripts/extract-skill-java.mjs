@@ -4,7 +4,7 @@
  * from the skills and writes it as a source file for one Minecraft version, so
  * verify/ can compile the templates against that version's Paper dev bundle.
  *
- *   node scripts/extract-skill-java.mjs 26.2      # → verify/build/extracted/26.2/<group>/<skill>/<set>/...
+ *   node scripts/extract-skill-java.mjs 26.3      # → verify/build/extracted/26.3/<group>/<skill>/<set>/...
  *   node scripts/extract-skill-java.mjs 1.21.11
  *
  * Version markers (see Skills/paper-nms/PLATFORM.md):
@@ -19,8 +19,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const TARGETS = ['26.2', '1.21.11'];
-const DEFAULT_TARGET = '26.2';
+export const TARGETS = ['26.3', '1.21.11'];
+const DEFAULT_TARGET = '26.3';
 const GROUPS = ['nms', 'paper'];
 const SKILL_FILES = ['SKILL.md', 'examples.md'];
 

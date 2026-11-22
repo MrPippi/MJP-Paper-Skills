@@ -6,7 +6,7 @@
 
 Низкоуровневый NMS с официальными названиями Mojang и чистый Paper API — для любого ИИ-инструмента для программирования, который читает `SKILL.md`
 
-[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.2-2ea44f)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
 [![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
@@ -25,7 +25,7 @@
 
 ## Основные возможности
 
-- **Проверенная компиляция**: CI при каждом изменении компилирует каждый полный шаблон под Paper **1.21.11** и **26.2**; строки, зависящие от версии, помечены прямо в коде.
+- **Проверенная компиляция**: CI при каждом изменении компилирует каждый полный шаблон под Paper **1.21.11** и **26.3**; строки, зависящие от версии, помечены прямо в коде.
 - **Официальные названия Mojang**: код NMS использует Paperweight userdev и названия, с которыми Minecraft поставляется без обфускации начиная с 26.1.
 - **Потокобезопасность по умолчанию**: каждый навык указывает, в каком потоке выполняется каждый вызов (основной, Netty IO или асинхронный).
 - **Не привязано к инструменту**: открытый формат [Agent Skills](https://agentskills.io) работает с Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI и другими.
@@ -114,7 +114,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## Каталог навыков
 
-31 навыков, все с проверенной компиляцией на Paper 1.21.11 и 26.2. Просматривайте их с фильтрами и полными шаблонами на [сайте документации](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); машиночитаемый индекс — [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
+31 навыков, все с проверенной компиляцией на Paper 1.21.11 и 26.3. Просматривайте их с фильтрами и полными шаблонами на [сайте документации](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); машиночитаемый индекс — [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
 
 ### NMS (16 навыков, требуется Paperweight userdev)
 
@@ -181,9 +181,9 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | Параметр | Поддерживается |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 и 26.2 (шаблоны по умолчанию написаны под 26.2; отличия 1.21.11 помечены `// @1.21.11:`) |
-| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.2.build.132-stable` |
-| Java | 21 (1.21.11) / 25 (26.2) |
+| Minecraft / Paper | 1.21.11 и 26.3 (шаблоны по умолчанию написаны под 26.3; отличия 1.21.11 помечены `// @1.21.11:`) |
+| Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
+| Java | 21 (1.21.11) / 25 (26.3) |
 | Сборка | Gradle 8.11.2+ (проверено на 9.8.1), Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24` (только навыки NMS; `reobfJar` не нужен) |
 | Shadow (необязательно) | `com.gradleup.shadow` `9.6.1`, для многомодульных сборок (`nms-version-adapter`) |
@@ -223,11 +223,11 @@ MJP-Paper-Skills/
 2. Продублируйте его по тому же пути в `.claude/skills/`, затем выполните `node scripts/sync-skill-references.mjs`, чтобы сгенерировать его папку `references/` (запускайте заново при изменении `PLATFORM.md` или файла из `_shared/`).
 3. Добавьте запись в оба файла `skills-registry.yml`.
 4. Добавьте страницу сайта `web/data/skills/<slug>.md` и её английский текст `web/data/skills/en/<slug>.md`, затем обновите ожидаемый список в `web/tests/skills-api.data.test.ts`.
-5. Убедитесь, что шаблоны компилируются под Paper 1.21.11 и 26.2. CI запускает это для каждого pull request, затрагивающего `Skills/`; чтобы запустить локально (JDK 25 для 26.2, JDK 21 для 1.21.11):
+5. Убедитесь, что шаблоны компилируются под Paper 1.21.11 и 26.3. CI запускает это для каждого pull request, затрагивающего `Skills/`; чтобы запустить локально (JDK 25 для 26.3, JDK 21 для 1.21.11):
 
    ```bash
-   node scripts/extract-skill-java.mjs 26.2
-   cd verify && ./gradlew compileSkills -Pmc=26.2
+   node scripts/extract-skill-java.mjs 26.3
+   cd verify && ./gradlew compileSkills -Pmc=26.3
    ```
 
 [`CLAUDE.md`](CLAUDE.md) описывает полный процесс и инварианты репозитория. Чтобы работать над сайтом документации:

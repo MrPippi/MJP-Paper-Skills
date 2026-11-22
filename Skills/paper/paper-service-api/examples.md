@@ -110,7 +110,7 @@ include 'wallet', 'shop'
 
 // shop/build.gradle
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
     compileOnly project(':wallet')
 }
 ```
@@ -119,7 +119,7 @@ dependencies {
 ```yaml
 name: Shop
 main: com.example.shop.ShopPlugin
-api-version: '26.2'
+api-version: '26.3'
 softdepend: [Wallet]
 ```
 

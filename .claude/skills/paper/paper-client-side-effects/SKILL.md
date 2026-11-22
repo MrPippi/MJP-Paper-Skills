@@ -20,13 +20,16 @@ When you need an effect that "only one player can see" (low-health vignette, per
 | Personal weather | `Player#setPlayerWeather(WeatherType)` | `resetPlayerWeather()` |
 | Hide player | `Player#hidePlayer(Plugin, Player)` | `showPlayer(Plugin, Player)` |
 | Night vision | `addPotionEffect` with infinite duration | Reapply with `reconcile()` after events |
+| Screen post effect (26.3+) | `Player#postEffects().add(Key)` | `postEffects().remove(Key)`; persists in player data, so remove it on quit and disable (example 4) |
 
 The common root of these bugs is "**the effect is silently removed or replaced by something else after being applied**": the real border changed, the player changed worlds, died and respawned, drank milk, or `/effect clear` was run. The fix is to keep the "desired state" in a central `EffectState` and call `reconcile()` after every triggering event to reapply it, instead of patching each event separately.
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (the methods and events used here have identical signatures in both versions; both are compile-verified)
+- Paper 1.21.11 / 26.3 (the methods and events used here have identical signatures in both versions; both are compile-verified)
+- `Player#postEffects()` (example 4) exists only on 26.3 and is marked `// @only 26.3`
 - Pure Paper API; no Paperweight, ProtocolLib, or PacketEvents needed
+- **Spigot**: Core portable — per-player world border, time, weather and `hideEntity` exist in Spigot; replace Adventure, `Tick` and the Paper world border events (`io.papermc.paper.event.world.border`)
 
 ## Triggers
 
@@ -34,6 +37,7 @@ The common root of these bugs is "**the effect is silently removed or replaced b
 - 「個人時間」「個人天氣」「setPlayerTime」「setPlayerWeather」
 - 「隱藏玩家」「hidePlayer」「大廳顯示玩家」「per-viewer visibility」
 - 「夜視被牛奶清掉」「EntityPotionEffectEvent」「重新套用效果」「restore effect」
+- 「後製效果」「畫面濾鏡」「posteffect」「post effect」「postEffects」
 
 ## Inputs
 
@@ -65,7 +69,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). Only
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
 }
 ```
 
@@ -836,4 +840,5 @@ src/main/java/com/example/effects/
 | A hidden player disappears from the TAB list | Bukkit behavior of `hidePlayer` | Accept this behavior, or let a TAB plugin control it |
 | Adding an effect directly in an event has no effect / recurses infinitely | State not settled at event time; triggers itself | Always `reconcile` after `runTask`, and skip the infinite effect we applied ourselves |
 | `NoClassDefFoundError: SettingsApi` | Settings is not installed and the API type appears in a field/signature | Keep API types only inside a method body `try` (see `paper-service-api`) |
+| A post effect is still on the screen after relogging or a restart | Post effects are saved in the player data file | Remove the plugin's own key on quit, expiry and `onDisable` (example 4) |
 | Need something beyond screen-wide effects (fake blocks, fake entities) | The Paper API cannot do it | Only then switch to `nms-packet-sender` |

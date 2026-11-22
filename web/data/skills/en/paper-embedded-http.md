@@ -8,9 +8,10 @@ Let a plugin expose a small read-only web page / JSON API with zero dependencies
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified)
+- Paper 1.21.11 / 26.3 (both compile-verified)
 - Pure Paper API (JDK `jdk.httpserver` + the Gson bundled with paper-api), no Paperweight needed
-- Java 21 (1.21.11) / 25 (26.2)
+- Java 21 (1.21.11) / 25 (26.3)
+- **Spigot**: Works on Spigot — the template uses only the JDK `HttpServer`, Gson and the Bukkit scheduler (not runtime-tested on Spigot)
 
 ---
 

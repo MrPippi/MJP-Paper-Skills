@@ -17,10 +17,11 @@ Register commands with typed arguments, tab completion, and layered permissions 
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (both compile-verified; the templates default to 26.2, with differences marked by a trailing `// @1.21.11:`)
+- Paper 1.21.11 / 26.3 (both compile-verified; the templates default to 26.3, with differences marked by a trailing `// @1.21.11:`)
 - Pure Paper API (the Brigadier classes ship with `paper-api`), no Paperweight needed
-- The only difference: `CommandSourceStack#getPlayerOrThrow()` exists only on 26.2; on 1.21.11 check `getExecutor()` yourself
+- The only difference: `CommandSourceStack#getPlayerOrThrow()` exists on 26.2+ (verified on 26.3); on 1.21.11 check `getExecutor()` yourself
 - The remaining `Commands`, `ArgumentTypes`, `CustomArgumentType`, `MessageComponentSerializer`, and `LifecycleEvents.COMMANDS` signatures are identical on both versions
+- **Spigot**: Paper only — `io.papermc.paper.command.brigadier` and `LifecycleEvents.COMMANDS` are Paper API; Spigot only has `CommandExecutor`
 
 ## Triggers
 
@@ -61,7 +62,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). Only
 name: Example
 version: '${version}'
 main: com.example.command.ExamplePlugin
-api-version: '26.2'
+api-version: '26.3'
 
 # Do not declare commands:; commands are registered via LifecycleEvents.COMMANDS.
 # Always declare permissions here with an explicit default so server admins can see them and adjust them with a permissions plugin.
@@ -84,7 +85,7 @@ name: Example
 version: '${version}'
 main: com.example.command.ExamplePlugin
 bootstrapper: com.example.command.ExampleBootstrap
-api-version: '26.2'
+api-version: '26.3'
 ```
 
 - `paper-plugin.yml` has **no** `commands:` section; commands can only go through Brigadier
@@ -510,7 +511,7 @@ src/main/resources/
 
 - `getSender()`: whoever actually typed the command / the console / a command block; **use it for permission checks and replies**
 - `getExecutor()`: the entity the command "represents" (with `/execute as <entity> run ...` it is that entity); may be `null`; **use it for self-targeted actions (charging your own money, teleporting yourself)**
-- When a player is required: `CommandSupport.requirePlayer(source)` (calls `getPlayerOrThrow()` internally on 26.2; checks `getExecutor()` itself on 1.21.11)
+- When a player is required: `CommandSupport.requirePlayer(source)` (calls `getPlayerOrThrow()` internally on 26.x; checks `getExecutor()` itself on 1.21.11)
 - Commands the console may use (for example `reload`) must not call `requirePlayer`; reply to `getSender()` directly
 
 ## Thread Safety
@@ -536,5 +537,5 @@ src/main/resources/
 | Occasional `ConcurrentModificationException` in completion | Completion iterates a mutable collection off the main thread | Use an immutable snapshot |
 | Subcommand shows up in completion without permission | The child node has no `requires` | Give every node that needs a permission its own `.requires(...)` |
 | Odd permission results after `/execute as` | Permission checked with `getExecutor()` | Use `getSender()` for permissions and `getExecutor()` for the target |
-| Compiles on 26.2 but `getPlayerOrThrow` is not found on 1.21.11 | That method exists only on 26.2 | Follow the `// @1.21.11:` form in `CommandSupport.requirePlayer` |
+| Compiles on 26.3 but `getPlayerOrThrow` is not found on 1.21.11 | That method exists only on 26.2+ | Follow the `// @1.21.11:` form in `CommandSupport.requirePlayer` |
 | `paper-plugin.yml` fails to load | `commands:` is still present | Remove it; all commands go through Brigadier |

@@ -76,7 +76,7 @@ include 'plugin'
 plugins { id 'java' }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
 }
 
 java { toolchain.languageVersion = JavaLanguageVersion.of(25) }
@@ -90,7 +90,7 @@ plugins {
 }
 
 dependencies {
-    paperweight.paperDevBundle('26.2.build.132-stable')
+    paperweight.paperDevBundle('26.3.build.258-stable')
     compileOnly project(':core')
 }
 
@@ -123,7 +123,7 @@ dependencies {
     implementation project(':core')
     implementation project(':adapter-v26_2')
     implementation project(':adapter-v26_3')
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable'
 }
 
 shadowJar {

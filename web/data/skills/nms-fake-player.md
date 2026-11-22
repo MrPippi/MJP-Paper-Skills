@@ -4,7 +4,7 @@ title: NMS Fake Player
 titleZh: NMS 假玩家
 description: Client-less fake players (PvP bots, training dummies) backed by a real NMS ServerPlayer with vanilla combat and movement physics, confined NMS code and a version guard that disables only the bot feature.
 descriptionZh: 以真正的 NMS ServerPlayer 建立沒有客戶端的假玩家（PvP 機器人、訓練假人）：原版戰鬥與移動物理、NMS 限定在單一套件、版本不符時只停用機器人功能。
-version: "1.0.0"
+version: "1.1.0"
 status: active
 category: nms-player
 categoryLabel: NMS 玩家
@@ -17,7 +17,7 @@ triggerKeywords:
   - "機器人"
   - "訓練假人"
   - "ServerPlayer NPC"
-updatedAt: "2026-10-09"
+updatedAt: "2026-11-22"
 githubPath: Skills/nms/nms-fake-player/SKILL.md
 featured: true
 ---
@@ -32,9 +32,10 @@ featured: true
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.2（兩版皆經編譯驗證；版本差異以行尾 `// @1.21.11:` 標註）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證；版本差異以行尾 `// @1.21.11:` 標註）
 - Paperweight userdev
-- Java 21（1.21.11）／25（26.2）
+- Java 21（1.21.11）／25（26.3）
+- **Spigot**：僅 Paper——建立在只有 Paper 提供的 Paperweight dev bundle 上
 
 ---
 

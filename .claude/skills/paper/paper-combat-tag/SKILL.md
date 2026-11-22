@@ -22,8 +22,9 @@ Other plugins obtain `CombatTagApi` through `ServicesManager` (see [`paper-servi
 
 ## Paper Version Requirements
 
-- Paper 1.21.11 / 26.2 (identical on both; uses `DamageSource`, `PlayerKickEvent.Cause`, `PotionEffectTypeCategory`)
+- Paper 1.21.11 / 26.3 (identical on both; uses `DamageSource`, `PlayerKickEvent.Cause`, `PotionEffectType#getEffectCategory()`; the older `PotionEffectTypeCategory` is deprecated for removal in 26.3)
 - Pure Paper API, no Paperweight needed
+- **Spigot**: Core portable — replace Adventure messages and `PlayerKickEvent.Cause`
 
 ## Triggers
 
@@ -56,7 +57,7 @@ See [`references/paper-api-platform.md`](references/paper-api-platform.md). Test
 
 ```groovy
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:26.2.build.132-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
+    compileOnly 'io.papermc.paper:paper-api:26.3.build.258-stable' // 1.21.11: '1.21.11-R0.1-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -702,7 +703,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
 import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectTypeCategory;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
@@ -760,7 +761,7 @@ public final class PotionListener implements Listener {
 
     private static boolean hasHarmful(Collection<PotionEffect> effects) {
         for (PotionEffect effect : effects) {
-            if (effect.getType().getCategory() == PotionEffectTypeCategory.HARMFUL) {
+            if (effect.getType().getEffectCategory() == PotionEffectType.Category.HARMFUL) {
                 return true;
             }
         }
@@ -1243,7 +1244,7 @@ blocked-teleport-causes:     # empty = COMMAND, PLUGIN
 name: CombatTag
 version: 1.0.0
 main: com.example.combat.adapter.CombatTagPlugin
-api-version: '26.2'
+api-version: '26.3'
 permissions:
   combattag.bypass:
     description: Never gets combat tagged
