@@ -9,6 +9,7 @@
 
 - `paper-discord-bridge`：`SKILL.md` 由 2136 行縮為 176 行，完整範本（11 個類別、2 個 JUnit 測試、`config.yml`／`plugin.yml`）移到同目錄 `template.md`；`SKILL.md` 的 Code Template 改為「先讀 `template.md`」指示與檔案索引表。技能 ID、registry、網站頁面不變
 - `scripts/extract-skill-java.mjs`：`SKILL.md` 與 `template.md` 合為同一組編譯；`scripts/sync-skill-references.mjs` 與 `skill-references` 測試也會掃描 `template.md` 的 `references/` 連結
+- 其餘 7 個超過 800 行的技能同樣拆分（`SKILL.md` 行數 → 現在）：`paper-economy-ledger` 1458 → 176、`paper-combat-tag` 1295 → 155、`paper-disposable-world` 1293 → 162、`paper-packetevents-filter` 1058 → 159、`paper-softdepend-hook` 960 → 173、`paper-client-side-effects` 844 → 135、`paper-chest-gui` 814 → 163。規則類小節（Core Rules、The Listener Trap 等）留在 `SKILL.md`；examples.md 中「類別在 SKILL.md」的說明改指 `template.md`
 - CLAUDE.md：新增長範本拆檔規則
 
 ### Changed — 說明技能更新方式

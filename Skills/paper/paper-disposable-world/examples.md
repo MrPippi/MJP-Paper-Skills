@@ -10,7 +10,7 @@ pool_size: 2
 reset_mode: swap
 ```
 
-**Output — acquire a world and teleport players at start; move players out, then destroy at the end (`ArenaPool` and `DisposableWorlds` are in SKILL.md):**
+**Output — acquire a world and teleport players at start; move players out, then destroy at the end (`ArenaPool` and `DisposableWorlds` are in template.md):**
 ```java
 package com.example.arena;
 
