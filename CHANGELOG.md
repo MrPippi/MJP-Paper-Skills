@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+## [7.4.0] - 2026-11-23
+
+技能庫 registry 版本 `7.0.0` → `7.4.0`（7.1.0 paper-discord-bridge、7.2.0 目標版本改為 Paper 26.3 + 1.21.11、7.3.0 與 7.4.0 新增 26.x 技能）。共 37 個技能（NMS 16、Paper API 21）。
+
 ### Fixed — 文件與網站跟上 26.3 更新
 
 - `nms-version-adapter` 範例：`adapter-v26_2` 模組誤用 26.3 dev bundle（26.3 更新時的批次替換造成），改回 `26.2.build.135-stable`；`adapter-v26_3` 由 beta 改為 `26.3.build.258-stable`
