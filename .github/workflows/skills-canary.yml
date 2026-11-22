@@ -1,0 +1,65 @@
+# Early warning: compiles the templates against the newest Paper dev bundle (a newer 26.3 build,
+# or the next Minecraft version's beta once Paper publishes it) when it is newer than the bundle
+# pinned in verify/build.gradle. Scheduled and manual only, so it never blocks pull requests;
+# a failed run means the next upgrade needs template changes.
+name: Skills canary
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"   # Mondays 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canary:
+    name: Newest Paper dev bundle
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Find the newest dev bundle
+        id: bundle
+        run: node scripts/canary-bundle.mjs
+
+      - name: Setup Java 25
+        if: steps.bundle.outputs.newer == 'true'
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - name: Setup Gradle
+        if: steps.bundle.outputs.newer == 'true'
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Extract templates (26.x code path)
+        if: steps.bundle.outputs.newer == 'true'
+        run: node scripts/extract-skill-java.mjs 26.3
+
+      - name: Compile templates against the newest bundle
+        if: steps.bundle.outputs.newer == 'true'
+        working-directory: verify
+        run: ./gradlew compileSkills checkSnippetImports -Pmc=26.3 -Pbundle=${{ steps.bundle.outputs.bundle }} --continue
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Skills canary"
+            echo "- pinned: \`${{ steps.bundle.outputs.pinned }}\`"
+            echo "- newest: \`${{ steps.bundle.outputs.bundle }}\`"
+            if [ "${{ steps.bundle.outputs.newer }}" = "true" ]; then
+              echo "- compiled against the newest bundle: **${{ job.status }}**"
+            else
+              echo "- no newer 26.x bundle; nothing compiled"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

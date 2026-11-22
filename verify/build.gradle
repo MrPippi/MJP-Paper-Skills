@@ -23,6 +23,13 @@ def target = targets[mc]
 if (target == null) {
     throw new GradleException("Unknown -Pmc=${mc}; expected one of ${targets.keySet()}")
 }
+// -Pbundle=<version> compiles the same templates against another dev bundle
+// (used by .github/workflows/skills-canary.yml with the newest published bundle).
+def bundleOverride = providers.gradleProperty('bundle').orNull
+if (bundleOverride) {
+    target = target + [bundle: bundleOverride]
+    logger.lifecycle("Using dev bundle ${bundleOverride} instead of the pinned ${targets[mc].bundle}")
+}
 
 repositories {
     mavenCentral()

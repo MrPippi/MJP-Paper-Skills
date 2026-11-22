@@ -31,7 +31,8 @@ MJP-Paper-Skills/
 ├── .github/workflows/
 │   ├── nextjs.yml                       ← main push：tsc + test + build + 部署 GitHub Pages
 │   ├── ci.yml                           ← PR：tsc + test + build（不部署）
-│   └── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯（改到 Skills/、verify/ 時）
+│   ├── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯＋片段 import 檢查（改到 Skills/、verify/、docs/paper-nms/ 時）
+│   └── skills-canary.yml                ← 每週一：有更新的 Paper dev bundle（新 build 或下一版 beta）時先編譯一次，不擋 PR
 ├── .claude/
 │   └── skills/                          ← Claude Code 執行時（37 個技能，與 Skills/ 同步）
 │       ├── skills-registry.yml          ← 與 Skills/ 相同
