@@ -281,7 +281,7 @@ npm run build         # 靜態匯出至 web/out/（robots.txt / sitemap.xml 由 
 | Layer | Technology |
 |-------|-----------|
 | Runtime | Node.js 24（CI） |
-| Framework | Next.js 16.4.0（App Router） |
+| Framework | Next.js 16.4.6（App Router） |
 | UI | React 19.3.0, TypeScript 6.0（strict） |
 | Styling | Tailwind CSS v4（`app/globals.css` 的 `@theme static` token；淺色 Claude 象牙白 + 陶土橘、深色暖炭；`data-theme` 手動切換） |
 | Fonts | 標題 Inter + **昭源甜圓**（Chiron GoRound TC 700，Google Fonts unicode-range 分片）、內文 Inter + 系統中文字、程式碼 JetBrains Mono、像素點綴 **俐方體 11 號**（Cubic 11，自訂子集 `shared/fonts/`） |

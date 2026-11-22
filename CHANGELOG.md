@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+### Security — 升級 Next.js 至 16.4.6
+
+- Web 依賴 Next.js 16.4.0 → 16.4.6（`npm audit`：16.0.0–16.4.4 受影響，含 GHSA-2464-fhr4-w9xw 圖片最佳化 RCE、GHSA-p3m5-59mp-jv5r、GHSA-673q-mjm6-r5xr 等）；升級前 `next build` 會因 SecurityFatalError 中止，升級後 tsc、測試、靜態匯出皆通過
+
 ### Changed — 目標版本改為 Paper 26.3 + 1.21.11（registry 7.2.0）
 
 - 驗證目標由 26.2／1.21.11 改為 **26.3／1.21.11**：dev bundle／paper-api `26.3.build.258-stable`、`api-version: '26.3'`、Javadoc 連結、CI matrix、`verify/`、抽取腳本預設版本同步更新；26.2 不再驗證（`PLATFORM.md` 列出 26.2 → 26.3 的差異）
