@@ -153,7 +153,7 @@ public final class MyNmsPlugin extends JavaPlugin {
 >
 > Changes from 26.2 → 26.3 that affect the templates (26.2 is no longer a verified target; 26.2 users can follow the 26.3 code except for these lines):
 > - `LivingEntity#swing(InteractionHand)` was removed; use `swing(hand, SwingAnimation.DEFAULT, false)` (`net.minecraft.world.item.component.SwingAnimation`; the `boolean` is `sendToSwingingEntity`, which the old one-argument form passed as `false`)
-> - Packets: `ServerboundSwingPacket` was replaced by the field-less `ServerboundPunchPacket`; `ClientboundExplodePacket` gained a trailing `boolean playSound`; new `ClientboundSwingAnimationPacket`, `ClientboundPostEffectsPacket`, `ClientboundAddTransientBlockPacket`
+> - Packets: `ServerboundSwingPacket` was replaced by the field-less `ServerboundPunchPacket`; `ClientboundAnimatePacket` lost its swing actions (swings now use `ClientboundSwingAnimationPacket`); `ClientboundExplodePacket` gained a trailing `boolean playSound`; new `ClientboundSwingAnimationPacket`, `ClientboundPostEffectsPacket`, `ClientboundAddTransientBlockPacket`
 > - Item components: `minecraft:swing_animation` and `minecraft:map_color` were removed; `attack_animation`, `interact_animation`, `mob_visibility`, `villager_food` and others were added (see `nms-data-component`)
 > - Block entity NBT: block states are saved as `id` / `properties` (was `Name` / `Properties`); signs gained `allow_op_features`; furnace and brewing stand timers are ints; decorated pot `sherds` is an object
 > - Upgrading a world to 26.3 is one-way; back up before testing a plugin on a copy of a production world

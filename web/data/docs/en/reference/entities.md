@@ -27,7 +27,7 @@ net.minecraft.world.entity.Entity
         │   │   ├── Creeper
         │   │   ├── Spider
         │   │   ├── Enderman
-        │   │   └── Slime (extends Mob directly)
+        │   │   └── cubemob.Slime / MagmaCube / SulfurCube (since 26.2 they extend AbstractCubeMob → AgeableMob; on 1.21.11 monster.Slime extends Mob directly and MagmaCube extends Slime)
         │   └── net.minecraft.world.entity.npc.*          ← NPCs
         │       └── Villager, Wandering Trader
         └── net.minecraft.world.entity.boss.*
@@ -215,11 +215,16 @@ All constants are in `net.minecraft.world.entity.ai.attributes.Attributes`:
 | `FLYING_SPEED` | Flying speed | 0 – 1024 |
 | `ARMOR` | Armor value | 0 – 30 |
 | `ARMOR_TOUGHNESS` | Armor toughness | 0 – 20 |
-| `KNOCKBACK_RESISTANCE` | Knockback resistance (1.0=fully immune) | 0 – 1 |
+| `KNOCKBACK_RESISTANCE` | Knockback resistance (1.0 = fully immune; negative values increase knockback) | -2 – 1 since 26.2 (1.21.11: 0 – 1) |
 | `FOLLOW_RANGE` | Tracking/detection range | 0 – 2048 |
 | `SPAWN_REINFORCEMENTS_CHANCE` | Chance to summon reinforcements (Zombie) | 0 – 1 |
 | `MAX_ABSORPTION` | Absorption effect cap | 0 – 2048 |
 | `LUCK` | Luck value | -1024 – 1024 |
+| `AIR_DRAG_MODIFIER` | Air drag multiplier (added in 26.2) | 0 – 2048, default 1 |
+| `FRICTION_MODIFIER` | Ground friction multiplier (added in 26.2) | 0 – 2048, default 1 |
+| `BOUNCINESS` | How much the entity bounces on landing (added in 26.2) | 0 – 1, default 0 |
+| `NAME_TAG_DISTANCE` | Name tag visibility distance (added in 26.2) | 0 – 512, default 64 |
+| `BELOW_NAME_DISTANCE` | Below-name score visibility distance (added in 26.2) | 0 – 512, default 10 |
 
 ### Setting Attributes
 

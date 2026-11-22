@@ -187,10 +187,11 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | 項目 | 支援範圍 |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 與 26.3（範本預設為 26.3；1.21.11 的差異以 `// @1.21.11:` 標註） |
+| Minecraft / Paper | 1.21.11 與 26.3（範本預設為 26.3；1.21.11 的差異以 `// @1.21.11:` 標註）（`paper-world-clock` 僅 26.3） |
+| Spigot | 非目標平台。每個 `SKILL.md` 都標明僅 Paper、核心可移植或 Spigot 可用（對照 Spigot-API 26.3） |
 | Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
 | Java | 21 (1.21.11) / 25 (26.3) |
-| 建置 | Gradle 8.11.2+（已驗證 9.8.1），Groovy DSL |
+| 建置 | Gradle 9.7.1+（已驗證 9.8.1），Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24`（僅 NMS 技能；不需 `reobfJar`） |
 | Shadow（選用） | `com.gradleup.shadow` `9.6.1`，用於多模組建置（`nms-version-adapter`） |
 | 軟依賴 | VaultAPI 1.7.1、PlaceholderAPI 2.11.6、packetevents 2.13.0、ProtocolLib 5.3.0、sqlite-jdbc 3.49.1.0 |

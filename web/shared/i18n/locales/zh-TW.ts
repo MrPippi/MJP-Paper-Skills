@@ -149,7 +149,11 @@ export const zhTW: Translations = {
       },
       {
         q: '支援哪些 Minecraft 版本？',
-        a: '所有範本都對 Paper 1.21.11 與 26.3 實際編譯驗證。NMS 技能透過 Paperweight userdev；Paper API 技能只需 paper-api。兩版寫法不同處以 // @1.21.11: 標註。',
+        a: '所有範本都對 Paper 1.21.11 與 26.3 實際編譯驗證。NMS 技能透過 Paperweight userdev；Paper API 技能只需 paper-api。兩版寫法不同處以 // @1.21.11: 標註。唯一例外是 paper-world-clock，它用的 API 只有 26.3 有。',
+      },
+      {
+        q: '可以用在 Spigot 嗎？',
+        a: 'Spigot 不是目標平台。每個技能都標明 Spigot 狀態——僅 Paper、核心可移植或 Spigot 可用——並對照 Spigot-API 26.3 Javadoc 確認。NMS 技能需要只有 Paper 提供的 Paperweight dev bundle。',
       },
       {
         q: 'NMS 與 Paper API 技能該選哪個？',

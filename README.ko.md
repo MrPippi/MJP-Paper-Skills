@@ -187,10 +187,11 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 
 | 항목 | 지원 |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 및 26.3 (템플릿은 26.3가 기본이며, 1.21.11과 다른 부분은 `// @1.21.11:`로 표시) |
+| Minecraft / Paper | 1.21.11 및 26.3 (템플릿은 26.3가 기본이며, 1.21.11과 다른 부분은 `// @1.21.11:`로 표시) (`paper-world-clock`은 26.3 전용) |
+| Spigot | 대상 아님. 각 `SKILL.md`에 Paper 전용, 핵심 이식 가능, Spigot 동작 중 하나를 표시 (Spigot-API 26.3 기준) |
 | Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
 | Java | 21 (1.21.11) / 25 (26.3) |
-| 빌드 | Gradle 8.11.2+ (9.8.1에서 검증), Groovy DSL |
+| 빌드 | Gradle 9.7.1+ (9.8.1에서 검증), Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24` (NMS 스킬 전용, `reobfJar` 불필요) |
 | Shadow (선택 사항) | `com.gradleup.shadow` `9.6.1`, 멀티 모듈 빌드용 (`nms-version-adapter`) |
 | 소프트 의존성 | VaultAPI 1.7.1, PlaceholderAPI 2.11.6, packetevents 2.13.0, ProtocolLib 5.3.0, sqlite-jdbc 3.49.1.0 |

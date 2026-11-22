@@ -187,10 +187,11 @@ Para APIs além dos modelos, a [referência rápida de NMS](docs/paper-nms) cobr
 
 | Item | Suportado |
 |------|-----------|
-| Minecraft / Paper | 1.21.11 e 26.3 (os modelos usam 26.3 por padrão; as diferenças da 1.21.11 são marcadas com `// @1.21.11:`) |
+| Minecraft / Paper | 1.21.11 e 26.3 (os modelos usam 26.3 por padrão; as diferenças da 1.21.11 são marcadas com `// @1.21.11:`) (`paper-world-clock` somente 26.3) |
+| Spigot | Não é alvo. Cada `SKILL.md` informa se é somente Paper, núcleo portável ou funciona no Spigot (verificado com Spigot-API 26.3) |
 | Paper dev bundle | `1.21.11-R0.1-SNAPSHOT` / `26.3.build.258-stable` |
 | Java | 21 (1.21.11) / 25 (26.3) |
-| Build | Gradle 8.11.2+ (verificado com 9.8.1), Groovy DSL |
+| Build | Gradle 9.7.1+ (verificado com 9.8.1), Groovy DSL |
 | Paperweight userdev | `2.0.0-beta.24` (somente skills de NMS; `reobfJar` não é necessário) |
 | Shadow (opcional) | `com.gradleup.shadow` `9.6.1`, para builds multimódulo (`nms-version-adapter`) |
 | Dependências opcionais | VaultAPI 1.7.1, PlaceholderAPI 2.11.6, packetevents 2.13.0, ProtocolLib 5.3.0, sqlite-jdbc 3.49.1.0 |

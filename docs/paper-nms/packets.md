@@ -299,6 +299,18 @@ ClientboundDisconnectPacket packet =
 
 ---
 
+### 26.3 新增
+
+| 封包 | 建構子 | 原版用途 |
+|------|--------|----------|
+| `ClientboundSwingAnimationPacket` | `(Entity entity, InteractionHand hand, SwingAnimation animation)` | `LivingEntity#swing(hand, animation, ...)` 送出的揮手動畫。26.3 起 `ClientboundAnimatePacket` 只剩 `WAKE_UP`／`CRITICAL_HIT`／`MAGIC_CRITICAL_HIT`，揮手改用此封包 |
+| `ClientboundPostEffectsPacket` | `(List<Identifier> postEffects)`（common 協定） | 設定玩家畫面後製效果；Paper API 為 `Player#postEffects()`（見 `paper-client-side-effects`） |
+| `ClientboundAddTransientBlockPacket` | `(BlockPos pos, BlockState blockState)` | 掉落方塊（`FallingBlockEntity`）落地時送給追蹤中的玩家 |
+
+Serverbound 方面，26.3 以沒有欄位的 `ServerboundPunchPacket` 取代 `ServerboundSwingPacket`（見下方玩家動作）。
+
+---
+
 ## Serverbound 封包（客戶端 → 伺服器）
 
 ### Movement / 移動

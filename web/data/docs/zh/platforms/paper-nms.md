@@ -151,7 +151,7 @@ public final class MyNmsPlugin extends JavaPlugin {
 >
 > 26.2 → 26.3 影響範本的變更（26.2 不再是驗證目標；除了下列幾行，26.2 使用者可照 26.3 的寫法）：
 > - `LivingEntity#swing(InteractionHand)` 移除，改用 `swing(hand, SwingAnimation.DEFAULT, false)`（`net.minecraft.world.item.component.SwingAnimation`；`boolean` 是 `sendToSwingingEntity`，舊的單參數版本傳的是 `false`）
-> - 封包：`ServerboundSwingPacket` 換成沒有欄位的 `ServerboundPunchPacket`；`ClientboundExplodePacket` 最後多一個 `boolean playSound`；新增 `ClientboundSwingAnimationPacket`、`ClientboundPostEffectsPacket`、`ClientboundAddTransientBlockPacket`
+> - 封包：`ServerboundSwingPacket` 換成沒有欄位的 `ServerboundPunchPacket`；`ClientboundAnimatePacket` 拿掉揮手動作（揮手改用 `ClientboundSwingAnimationPacket`）；`ClientboundExplodePacket` 最後多一個 `boolean playSound`；新增 `ClientboundSwingAnimationPacket`、`ClientboundPostEffectsPacket`、`ClientboundAddTransientBlockPacket`
 > - 物品元件：移除 `minecraft:swing_animation` 與 `minecraft:map_color`；新增 `attack_animation`、`interact_animation`、`mob_visibility`、`villager_food` 等（見 `nms-data-component`）
 > - 方塊實體 NBT：方塊狀態改存 `id` / `properties`（原為 `Name` / `Properties`）；告示牌新增 `allow_op_features`；熔爐與釀造台計時改為 int；裝飾陶罐 `sherds` 改為物件
 > - 世界升級到 26.3 是單向的；在正式世界的複本上測試插件前先備份

@@ -149,7 +149,11 @@ export const en: Translations = {
       },
       {
         q: 'Which Minecraft versions are supported?',
-        a: 'Every template is compile-verified against Paper 1.21.11 and 26.3. NMS skills use Paperweight userdev; Paper API skills need only paper-api. Lines that differ carry an inline // @1.21.11: alternative.',
+        a: 'Every template is compile-verified against Paper 1.21.11 and 26.3. NMS skills use Paperweight userdev; Paper API skills need only paper-api. Lines that differ carry an inline // @1.21.11: alternative. The only exception is paper-world-clock, which uses an API that exists only on 26.3.',
+      },
+      {
+        q: 'Does it work on Spigot?',
+        a: 'Spigot is not a target. Every skill states its Spigot status — Paper only, core portable, or works on Spigot — checked against the Spigot-API 26.3 Javadoc. NMS skills need the Paperweight dev bundle, which exists only for Paper.',
       },
       {
         q: 'NMS or Paper API skills?',
