@@ -8,7 +8,7 @@
 
 [![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
-[![Skills](https://img.shields.io/badge/skills-31-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
+[![Skills](https://img.shields.io/badge/skills-33-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
 [![Skills compile](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml/badge.svg)](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml)
 [![License: MIT](https://img.shields.io/github/license/MrPippi/MJP-Paper-Skills)](LICENSE)
@@ -29,7 +29,7 @@
 - **Официальные названия Mojang**: код NMS использует Paperweight userdev и названия, с которыми Minecraft поставляется без обфускации начиная с 26.1.
 - **Потокобезопасность по умолчанию**: каждый навык указывает, в каком потоке выполняется каждый вызов (основной, Netty IO или асинхронный).
 - **Не привязано к инструменту**: открытый формат [Agent Skills](https://agentskills.io) работает с Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI и другими.
-- **Два направления**: 16 навыков NMS для низкоуровневой работы и 15 навыков Paper API, которым нужен только `paper-api`.
+- **Два направления**: 16 навыков NMS для низкоуровневой работы и 17 навыков Paper API, которым нужен только `paper-api`.
 - **Удобная документация**: каждый навык также опубликован на [сайте документации](https://mrpippi.github.io/MJP-Paper-Skills) на английском и традиционном китайском.
 
 ## Содержание
@@ -114,7 +114,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## Каталог навыков
 
-31 навыков, все с проверенной компиляцией на Paper 1.21.11 и 26.3. Просматривайте их с фильтрами и полными шаблонами на [сайте документации](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); машиночитаемый индекс — [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
+33 навыков, все с проверенной компиляцией на Paper 1.21.11 и 26.3. Просматривайте их с фильтрами и полными шаблонами на [сайте документации](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); машиночитаемый индекс — [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
 
 ### NMS (16 навыков, требуется Paperweight userdev)
 
@@ -137,7 +137,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | Мост | [`nms-reflection-bridge`](Skills/nms/nms-reflection-bridge/SKILL.md) | Доступ к NMS через рефлексию без Paperweight |
 | Мост | [`nms-version-adapter`](Skills/nms/nms-version-adapter/SKILL.md) | Паттерн Adapter для поддержки NMS нескольких версий |
 
-### Paper API (15 навыков, требуется только `paper-api`)
+### Paper API (17 навыков, требуется только `paper-api`)
 
 | Категория | Навык | Что делает |
 |----------|-------|--------------|
@@ -154,6 +154,8 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | Геймплей | [`paper-combat-tag`](Skills/paper/paper-combat-tag/SKILL.md) | Боевая метка PvP с учётом авторства урона и обработкой выхода из игры во время боя |
 | Геймплей | [`paper-safe-teleport`](Skills/paper/paper-safe-teleport/SKILL.md) | Поиск безопасной точки, случайная телепортация, асинхронная телепортация и перезарядки |
 | Геймплей | [`paper-economy-ledger`](Skills/paper/paper-economy-ledger/SKILL.md) | Мультивалютная книга учёта, эскроу и провайдер экономики для Vault |
+| Геймплей | [`paper-registry-events`](Skills/paper/paper-registry-events/SKILL.md) | Свои зачарования и типы урона из бутстрапа, изменение ванильных записей и тегов |
+| Геймплей | [`paper-data-components`](Skills/paper/paper-data-components/SKILL.md) | Компоненты предметов без NMS: еда, оружие, планирование, подсказки и ID в PDC |
 | Команды | [`paper-brigadier-command`](Skills/paper/paper-brigadier-command/SKILL.md) | Команды Brigadier, регистрируемые через `LifecycleEvents.COMMANDS` |
 | Мир | [`paper-disposable-world`](Skills/paper/paper-disposable-world/SKILL.md) | Одноразовые миры и сброс арен |
 
@@ -199,12 +201,12 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 MJP-Paper-Skills/
 ├── .claude/skills/           # Готовая для копирования папка навыков (зеркало Skills/, кроме папок PLATFORM)
 ├── Skills/                   # Канонические исходники навыков
-│   ├── skills-registry.yml   # Индекс всех 31 навыков (paper-nms + paper-api)
+│   ├── skills-registry.yml   # Индекс всех 33 навыков (paper-nms + paper-api)
 │   ├── _shared/              # Правила работы с потоками и именования, общие для всех навыков
 │   ├── paper-nms/PLATFORM.md # Шаблоны build.gradle / paper-plugin.yml для NMS, таблица версий
 │   ├── paper-api/PLATFORM.md # Настройка сборки Paper API, координаты мягких зависимостей
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (16 навыков NMS)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (15 навыков Paper API)
+│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (17 навыков Paper API)
 ├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (проверка компиляции)
 ├── verify/                   # Gradle-проект, компилирующий извлечённые шаблоны для каждой версии
 ├── docs/paper-nms/           # Краткий справочник по API NMS

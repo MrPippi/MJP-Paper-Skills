@@ -1,5 +1,5 @@
-version: "7.2.0"
-updated: "2026-11-22"
+version: "7.3.0"
+updated: "2026-11-23"
 description: "MJP-Paper-Skills — Minecraft Paper Agent Skills / 技能索引：NMS（paper-nms）與純 Paper API（paper-api），Paper 1.21.11 / 26.x"
 
 skills:
@@ -146,7 +146,8 @@ skills:
       - "反射橋接"
       - "NMS reflection"
       - "跨版本 NMS"
-      - "cross-version"
+      - "Spigot 相容"
+      - "spigot compatibility"
       - "避開 Paperweight"
       - "no paperweight"
 
@@ -251,13 +252,12 @@ skills:
         description: "Bukkit 事件橋接"
     tags: [nms, inventory, gui, container, menu, abstractcontainermenu]
     trigger_keywords:
-      - "自定義 GUI"
       - "custom menu"
       - "AbstractContainerMenu"
       - "自定義容器"
-      - "custom inventory"
       - "NMS GUI"
       - "container menu"
+      - "slot intercept"
 
   - id: nms-scoreboard
     version: "1.0.0"
@@ -458,13 +458,14 @@ skills:
         description: "CustomData 組件操作"
     tags: [nms, data-component, item, 1.21, datacomponenttype, customdata]
     trigger_keywords:
-      - "DataComponent"
-      - "data component"
-      - "物品組件"
-      - "1.21 item data"
-      - "ItemStack component"
-      - "DataComponentType"
+      - "NMS DataComponent"
+      - "DataComponents"
+      - "CustomData"
       - "CustomData component"
+      - "component map"
+      - "NMS 物品組件"
+      - "cooking_fuel"
+      - "brewing_fuel"
 
   - id: nms-chunk-access
     version: "1.0.0"
@@ -1201,6 +1202,86 @@ skills:
       - "write-behind"
       - "sqlite-jdbc"
       - "SQLITE_BUSY"
+
+  - id: paper-registry-events
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-gameplay
+    description: "Paper 註冊表事件：bootstrap 階段新增自訂附魔與傷害類型、修改原版項目、加入標籤 / Paper registry events: custom enchantments and damage types from a bootstrapper, vanilla entry changes and tags"
+    skill_file: paper/paper-registry-events/SKILL.md
+    examples_file: paper/paper-registry-events/examples.md
+    inputs:
+      - name: namespace
+        description: "插件新增項目的命名空間"
+        required: true
+      - name: enchantments
+        description: "自訂附魔（支援物品、等級、花費、欄位）"
+        required: false
+      - name: damage_types
+        description: "自訂傷害類型與要加入的標籤"
+        required: false
+      - name: vanilla_changes
+        description: "以 entryAdd 修改的既有項目"
+        required: false
+    outputs:
+      - name: "ContentKeys.java"
+        description: "所有 TypedKey 集中定義"
+      - name: "ContentBootstrap.java"
+        description: "bootstrap 階段註冊附魔、傷害類型、原版修改與標籤（不拋例外）"
+      - name: "ContentPlugin.java"
+        description: "執行期以 RegistryAccess 取回並回報 bootstrap 問題"
+      - name: "LifestealListener.java"
+        description: "附魔行為與自訂傷害類型的後續傷害"
+    tags: [paper-api, registry, enchantment, damage-type, bootstrap, tags]
+    trigger_keywords:
+      - "自訂附魔"
+      - "custom enchantment"
+      - "自訂傷害類型"
+      - "custom damage type"
+      - "RegistryEvents"
+      - "registry modification"
+      - "EnchantmentRegistryEntry"
+      - "LifecycleEvents.TAGS"
+
+  - id: paper-data-components
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-gameplay
+    description: "Paper Data Component API：不用 NMS 讀寫物品元件（食物、武器、滑翔、提示框），set／unset／reset 與 PDC 識別 / Paper data component API: item components without NMS, set vs unset vs reset, PDC item ids"
+    skill_file: paper/paper-data-components/SKILL.md
+    examples_file: paper/paper-data-components/examples.md
+    inputs:
+      - name: package
+        description: "輸出 package"
+        required: true
+      - name: items
+        description: "要建立的自訂物品"
+        required: true
+      - name: id_key
+        description: "識別自訂物品的 PDC key"
+        required: false
+      - name: resource_pack
+        description: "資源包提供的模型 id"
+        required: false
+    outputs:
+      - name: "ItemIds.java"
+        description: "PDC id 標記與查詢"
+      - name: "CustomItems.java"
+        description: "只用資料元件建構的自訂物品"
+      - name: "ItemChecks.java"
+        description: "忽略耐久比對、複製外觀、修復、移除食物"
+    tags: [paper-api, data-component, item, food, weapon, pdc]
+    trigger_keywords:
+      - "Data Component API"
+      - "data component"
+      - "物品組件"
+      - "DataComponentTypes"
+      - "setData"
+      - "自訂食物"
+      - "自訂武器"
+      - "matchesWithoutData"
 
 platforms:
   - id: paper-nms

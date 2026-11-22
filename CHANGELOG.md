@@ -5,6 +5,13 @@
 
 ## [Unreleased]
 
+### Added — paper-registry-events、paper-data-components（registry 7.3.0，共 33 個技能）
+
+- 新技能 `paper-registry-events`（paper-gameplay）：在 `PluginBootstrap` 以 `RegistryEvents` 新增自訂附魔（吸血）與傷害類型（流血）、用 `entryAdd` + `filter` 修改原版項目（鋒利上限 6）、用 `LifecycleEvents.TAGS.postFlatten` 加入附魔台／交易／`bypasses_armor` 標籤，執行期以 `RegistryAccess` 取回；附 1.21.11／26.3 可用註冊表對照表。已在 Paper 26.3 實機驗證 18 項（含 `/minecraft:reload` 後標籤仍在、流血對全套鑽石裝造成完整傷害）
+- 新技能 `paper-data-components`（paper-gameplay）：Paper Data Component API 自訂物品（食物＋可食用效果、武器屬性、滑翔、提示框、冷卻），`setData`／`unsetData`／`resetData` 與原型值、PDC id 識別、`matchesWithoutData` 忽略耐久比對；附 1.21.11 → 26.3 元件增刪表。已在 Paper 26.3 實機驗證 27 項
+- `nms-data-component`、`nms-custom-menu`、`nms-reflection-bridge` 調整觸發關鍵字，一般需求改由 Paper API 技能（`paper-data-components`、`paper-chest-gui`）命中；`nms-reflection-bridge` 說明改為以 Spigot／26.1 以前伺服器相容為主要用途
+- registry、`.claude/skills/`、網站頁（繁中＋英文）、README 目錄（8 種語言）、`PLATFORM.md` 技能清單與技能數量同步更新；像素字型子集重新產生
+
 ### Security — 升級 Next.js 至 16.4.6
 
 - Web 依賴 Next.js 16.4.0 → 16.4.6（`npm audit`：16.0.0–16.4.4 受影響，含 GHSA-2464-fhr4-w9xw 圖片最佳化 RCE、GHSA-p3m5-59mp-jv5r、GHSA-673q-mjm6-r5xr 等）；升級前 `next build` 會因 SecurityFatalError 中止，升級後 tsc、測試、靜態匯出皆通過

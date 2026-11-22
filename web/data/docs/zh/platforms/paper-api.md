@@ -108,7 +108,7 @@ permissions:
 | 僅 Paper 的 API | 使用的技能 |
 |------|------|
 | Adventure / MiniMessage（`net.kyori.*`）— Spigot 沒有內建 Adventure | 幾乎所有技能（訊息） |
-| `io.papermc.paper.*`（Dialog、Brigadier `Commands`、lifecycle、registry 事件、資料元件、`AsyncChatEvent`、世界邊界事件、`Tick`） | `paper-dialog-ui`、`paper-brigadier-command`、`paper-chest-gui`、`paper-client-side-effects`、`paper-discord-bridge` |
+| `io.papermc.paper.*`（Dialog、Brigadier `Commands`、lifecycle、registry 事件、資料元件、`AsyncChatEvent`、世界邊界事件、`Tick`） | `paper-dialog-ui`、`paper-brigadier-command`、`paper-chest-gui`、`paper-client-side-effects`、`paper-discord-bridge`、`paper-registry-events`、`paper-data-components` |
 | `Entity#teleportAsync`、`World#getChunkAtAsync`、`ItemStack#editMeta`、`Bukkit#getMinecraftVersion`、`PlayerKickEvent.Cause`、`org.bukkit.GameRules` | `paper-safe-teleport`、`paper-disposable-world`、`paper-combat-tag`、`paper-chest-gui`、`paper-packetevents-filter` |
 
 每個 `SKILL.md` 的版本段落用三種等級標明 Spigot 狀態：
@@ -132,10 +132,13 @@ Paper 自 2024-12-13 硬分叉後不再引入新的 Spigot API，因此 Spigot �
 | `paper-service-api` | paper-integration | ServicesManager 跨插件 API |
 | `paper-softdepend-hook` | paper-integration | 軟依賴 Hook／Bridge + PlaceholderAPI expansion |
 | `paper-embedded-http` | paper-integration | 內嵌 HTTP API（JDK HttpServer） |
+| `paper-discord-bridge` | paper-integration | 只用 JDK 的 Discord 雙向聊天橋接 |
 | `paper-packetevents-filter` | paper-network | PacketEvents／ProtocolLib 封包過濾 |
 | `paper-client-side-effects` | paper-network | 只對單一玩家顯示的效果（虛擬世界邊界、時間、天氣、隱藏玩家） |
 | `paper-combat-tag` | paper-gameplay | PvP 戰鬥標記 |
 | `paper-safe-teleport` | paper-gameplay | 安全落點搜尋與非同步傳送（RTP） |
 | `paper-economy-ledger` | paper-gameplay | 多幣別帳本 + Vault 提供者 |
+| `paper-registry-events` | paper-gameplay | bootstrap 新增自訂附魔／傷害類型、修改原版項目與標籤 |
+| `paper-data-components` | paper-gameplay | Data Component API：食物、武器、滑翔、提示框、PDC 識別 |
 | `paper-brigadier-command` | paper-command | Brigadier 指令（LifecycleEvents.COMMANDS） |
 | `paper-disposable-world` | paper-world | 拋棄式世界／競技場重置 |
