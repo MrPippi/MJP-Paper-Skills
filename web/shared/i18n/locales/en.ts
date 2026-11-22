@@ -109,8 +109,8 @@ export const en: Translations = {
         number: '01',
         title: 'Install the skills',
         description: 'Install with the skills CLI: it detects your AI tools (Claude Code, Codex, Cursor, Copilot, Gemini CLI …) and copies the skills into the folder each one reads. You can also copy them by hand.',
-        code: 'npx skills add MrPippi/MJP-Paper-Skills                             # choose skills and tools\nnpx skills add MrPippi/MJP-Paper-Skills --skill paper-dialog-ui   # one skill\n\n# Manual install\ngit clone https://github.com/MrPippi/MJP-Paper-Skills.git\ncp -r MJP-Paper-Skills/.claude/skills .agents/skills',
-        note: 'Each skill bundles its build setup and threading rules in references/, so installing a single skill works. Manual paths: Claude Code .claude/skills/, Codex and Gemini CLI .agents/skills/, Cursor .cursor/skills/, GitHub Copilot .github/skills/. For tools without Agent Skills support, reference the SKILL.md files you need from AGENTS.md or your rules file.',
+        code: 'npx skills add MrPippi/MJP-Paper-Skills                             # choose skills and tools\nnpx skills add MrPippi/MJP-Paper-Skills --skill paper-dialog-ui   # one skill\nnpx skills check    # check for updates\nnpx skills update   # update installed skills\n\n# Manual install\ngit clone https://github.com/MrPippi/MJP-Paper-Skills.git\ncp -r MJP-Paper-Skills/.claude/skills .agents/skills',
+        note: 'Each skill bundles its build setup and threading rules in references/, so installing a single skill works. Manual paths: Claude Code .claude/skills/, Codex and Gemini CLI .agents/skills/, Cursor .cursor/skills/, GitHub Copilot .github/skills/. For tools without Agent Skills support, reference the SKILL.md files you need from AGENTS.md or your rules file. Updates are not automatic: skills check compares the installed Git commit with the latest commit of the repository, not the release number. For a tested version, install from a release tag such as MrPippi/MJP-Paper-Skills@v7.4.0.',
       },
       {
         number: '02',

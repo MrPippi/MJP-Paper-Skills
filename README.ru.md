@@ -67,8 +67,12 @@
 | Установить один навык | `npx skills add MrPippi/MJP-Paper-Skills --skill paper-dialog-ui` |
 | Установить всё для выбранных инструментов, без запросов | `npx skills add MrPippi/MJP-Paper-Skills --skill '*' -a claude-code codex -y` |
 | Установить для всех ваших проектов (напр. `~/.claude/skills/`) | добавьте `-g` к любой команде `add` |
+| Проверить обновления | `npx skills check` |
 | Обновить установленные навыки | `npx skills update` |
+| Установить опубликованную версию | `npx skills add MrPippi/MJP-Paper-Skills@v7.4.0 --skill paper-dialog-ui` |
 | Удалить навык | `npx skills remove paper-dialog-ui` |
+
+Навыки не обновляются автоматически. `npx skills check` сравнивает Git-коммит из `skills-lock.json` с последним коммитом этого репозитория (а не номер версии), поэтому любой новый коммит в `main` считается обновлением. Чтобы использовать проверенную версию, устанавливайте из тега [релиза](https://github.com/MrPippi/MJP-Paper-Skills/releases).
 
 <details>
 <summary>Ручная установка</summary>
