@@ -17,7 +17,10 @@
  * A skill whose registry entry lists `mc_versions` is skipped for every other target
  * (e.g. paper-world-clock is 26.3 only).
  *
- * Partial snippets (no `package` line) are not compiled. Exits 1 on conflicting
+ * Partial snippets (no `package` line) are not compiled. Their imports, and those of the
+ * docs/paper-nms reference, are written to snippet-imports.tsv; verify's
+ * checkSnippetImports task resolves them against the same classpath, so a snippet that
+ * names a class removed in a new version is still caught. Exits 1 on conflicting
  * duplicate files or NMS imports in Paper API skills.
  */
 import fs from 'node:fs';
@@ -39,6 +42,14 @@ const TOP_LEVEL_TYPE =
 const ONLY = /^\s*\/\/\s*@only\s+(\S+)/;
 const VERSION_ALT = /^(\s*).*?\/\/\s*@1\.21\.11:\s?(.*)$/;
 const NMS_IMPORT = /^import\s+(?:static\s+)?(?:net\.minecraft|org\.bukkit\.craftbukkit)\./m;
+const SNIPPET_IMPORT = /^\s*import\s+(static\s+)?([\w.]+(?:\.\*)?)\s*;/gm;
+/**
+ * Not checked: JDK packages (not on the Gradle classpath; javac checks them when templates compile)
+ * and com.example, the namespace every template uses for its own classes.
+ */
+const UNCHECKED_PREFIX = /^(?:java|javax|jdk|sun|com\.sun|com\.example)\./;
+/** Reference docs whose snippets are checked as well (they belong to no skill). */
+const SNIPPET_DOC_DIRS = ['docs/paper-nms'];
 
 /** Applies the version markers; returns null when the block does not apply to `target`. */
 export function applyTarget(code, target) {
@@ -114,6 +125,43 @@ function extractSkill(group, id, target) {
   return { sets, problems, skippedSnippets: template.skippedSnippets + examples.skippedSnippets };
 }
 
+/** Imports of every partial snippet in `files` (repo-relative) as `where<TAB>static|class<TAB>name` rows. */
+export function snippetImports(files, target) {
+  const rows = [];
+  for (const rel of files) {
+    const full = path.join(REPO_ROOT, rel);
+    if (!fs.existsSync(full)) continue;
+    const markdown = fs.readFileSync(full, 'utf8').replace(/\r\n/g, '\n');
+    for (const [, block] of markdown.matchAll(JAVA_BLOCK)) {
+      if (PACKAGE.test(block)) continue;                       // complete units are compiled instead
+      const code = applyTarget(block, target);
+      if (code === null) continue;
+      for (const [, isStatic, name] of code.matchAll(SNIPPET_IMPORT)) {
+        if (!UNCHECKED_PREFIX.test(name)) rows.push(`${rel}\t${isStatic ? 'static' : 'class'}\t${name}`);
+      }
+    }
+  }
+  return rows;
+}
+
+/** Markdown files whose snippets are checked for `target`: every built skill plus SNIPPET_DOC_DIRS. */
+function snippetFiles(target, versionsById) {
+  const files = [];
+  for (const group of GROUPS) {
+    const groupDir = path.join(REPO_ROOT, 'Skills', group);
+    for (const id of fs.readdirSync(groupDir).sort()) {
+      if (!(versionsById.get(id) ?? TARGETS).includes(target)) continue;
+      for (const file of [...TEMPLATE_FILES, 'examples.md']) files.push(`Skills/${group}/${id}/${file}`);
+    }
+  }
+  for (const dir of SNIPPET_DOC_DIRS) {
+    for (const file of fs.readdirSync(path.join(REPO_ROOT, dir)).filter((f) => f.endsWith('.md')).sort()) {
+      files.push(`${dir}/${file}`);
+    }
+  }
+  return files;
+}
+
 function main() {
   const target = process.argv[2] ?? DEFAULT_TARGET;
   if (!TARGETS.includes(target)) {
@@ -150,8 +198,12 @@ function main() {
     }
   }
 
+  const imports = snippetImports(snippetFiles(target, versionsById), target);
+  fs.mkdirSync(outRoot, { recursive: true });
+  fs.writeFileSync(path.join(outRoot, 'snippet-imports.tsv'), imports.join('\n') + '\n');
+
   for (const problem of problems) console.error(`error: ${problem}`);
-  console.log(`[${target}] extracted ${files} files; skipped ${snippets} partial snippets and ${skippedSkills} skills not built for this version`);
+  console.log(`[${target}] extracted ${files} files; skipped ${snippets} partial snippets and ${skippedSkills} skills not built for this version; listed ${imports.length} snippet imports`);
   if (problems.length) process.exit(1);
 }
 

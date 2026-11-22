@@ -268,7 +268,7 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 6. 若涉及新平台，建立 `Skills/<platform>/PLATFORM.md`
 7. 驗證觸發關鍵字無與既有技能衝突
 8. 在 `web/data/skills/<slug>.md` 新增網站頁面、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），並更新 `web/tests/skills-api.data.test.ts` 的預期清單
-9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；`SKILL.md` 與 `template.md` 合為一組，examples.md 的同名類別會覆蓋該組版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
+9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；片段（以及 `docs/paper-nms/`）的 import 由 `./gradlew checkSnippetImports -Pmc=<版本>` 對同一 classpath 檢查類別是否存在（`com.example.*` 與 JDK 除外）；`SKILL.md` 與 `template.md` 合為一組，examples.md 的同名類別會覆蓋該組版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
 
 ---
 
