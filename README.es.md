@@ -67,8 +67,12 @@ Cada skill incluye la configuración de compilación y las reglas de hilos que n
 | Instalar un skill | `npx skills add MrPippi/MJP-Paper-Skills --skill paper-dialog-ui` |
 | Instalar todo para herramientas concretas, sin preguntas | `npx skills add MrPippi/MJP-Paper-Skills --skill '*' -a claude-code codex -y` |
 | Instalar para todos tus proyectos (p. ej. `~/.claude/skills/`) | añade `-g` a cualquier comando `add` |
+| Buscar actualizaciones | `npx skills check` |
 | Actualizar los skills instalados | `npx skills update` |
+| Instalar una versión publicada | `npx skills add MrPippi/MJP-Paper-Skills@v7.4.0 --skill paper-dialog-ui` |
 | Eliminar un skill | `npx skills remove paper-dialog-ui` |
+
+Las actualizaciones no son automáticas. `npx skills check` compara el commit de Git guardado en `skills-lock.json` con el último commit de este repositorio (no el número de versión), así que cualquier commit nuevo en `main` aparece como actualización. Para usar una versión probada, instala desde la etiqueta de una [release](https://github.com/MrPippi/MJP-Paper-Skills/releases).
 
 <details>
 <summary>Instalación manual</summary>

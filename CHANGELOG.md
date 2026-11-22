@@ -11,6 +11,10 @@
 - `scripts/extract-skill-java.mjs`：`SKILL.md` 與 `template.md` 合為同一組編譯；`scripts/sync-skill-references.mjs` 與 `skill-references` 測試也會掃描 `template.md` 的 `references/` 連結
 - CLAUDE.md：新增長範本拆檔規則
 
+### Changed — 說明技能更新方式
+
+- README（8 種語言）與網站「開始使用」：補上 `npx skills check`、從 Release tag 安裝（`@v7.4.0`），並說明技能不會自動更新，`check` 比對的是 Git commit 而非版本號
+
 ## [7.4.0] - 2026-11-23
 
 技能庫 registry 版本 `7.0.0` → `7.4.0`（7.1.0 paper-discord-bridge、7.2.0 目標版本改為 Paper 26.3 + 1.21.11、7.3.0 與 7.4.0 新增 26.x 技能）。共 37 個技能（NMS 16、Paper API 21）。

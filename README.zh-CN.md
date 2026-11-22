@@ -67,8 +67,12 @@ AI 编程工具经常在 Paper 插件上出现细微错误：过时或已混淆�
 | 安装单个技能 | `npx skills add MrPippi/MJP-Paper-Skills --skill paper-dialog-ui` |
 | 为指定工具安装全部技能，不再询问 | `npx skills add MrPippi/MJP-Paper-Skills --skill '*' -a claude-code codex -y` |
 | 安装到所有项目（例如 `~/.claude/skills/`） | 在任何 `add` 命令后加上 `-g` |
+| 检查是否有更新 | `npx skills check` |
 | 更新已安装的技能 | `npx skills update` |
+| 安装已发布的版本 | `npx skills add MrPippi/MJP-Paper-Skills@v7.4.0 --skill paper-dialog-ui` |
 | 移除技能 | `npx skills remove paper-dialog-ui` |
+
+技能不会自动更新。`npx skills check` 比对的是 `skills-lock.json` 记录的 Git commit 与本仓库最新的 commit（不是版本号），因此 `main` 上任何新 commit 都会显示为有更新。想使用测试过的版本，请从 [Release](https://github.com/MrPippi/MJP-Paper-Skills/releases) 的 tag 安装。
 
 <details>
 <summary>手动安装</summary>
