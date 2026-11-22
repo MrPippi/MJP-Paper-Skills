@@ -24,7 +24,7 @@ MJP-Paper-Skills 官方網站，提供 Skills 瀏覽、搜尋與詳細頁功能�
 | `tsx` | 4.23.15 | 執行 TypeScript 測試（dev） |
 | `@types/node` / `@types/react` / `@types/react-dom` / `@types/hast` | 24.19.1 / 19.3.0 / 19.3.0 / 3.0.5 | 型別（dev） |
 
-`npm audit`：0 個漏洞（2026-11-23）。`package.json` 的 `overrides` 仍保留 `postcss-selector-parser: ^7.1.6`，但目前已沒有套件依賴它（原本是 `@tailwindcss/typography`，已移除）。
+`npm audit`：0 個漏洞（2026-11-23）。
 
 ## 本機開發
 
