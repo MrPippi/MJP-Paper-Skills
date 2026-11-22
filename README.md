@@ -8,7 +8,7 @@ Low-level NMS with official Mojang names and pure Paper API, for any AI coding t
 
 [![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
-[![Skills](https://img.shields.io/badge/skills-33-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
+[![Skills](https://img.shields.io/badge/skills-37-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
 [![Skills compile](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml/badge.svg)](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml)
 [![License: MIT](https://img.shields.io/github/license/MrPippi/MJP-Paper-Skills)](LICENSE)
@@ -29,7 +29,7 @@ AI coding tools often get Paper plugins subtly wrong: outdated or obfuscated NMS
 - **Official Mojang names**: NMS code uses Paperweight userdev and the names Minecraft ships unobfuscated since 26.1.
 - **Thread-safe by design**: each skill states which thread every call runs on (main, Netty IO or async).
 - **Tool-agnostic**: the open [Agent Skills](https://agentskills.io) format works with Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI and more.
-- **Two tracks**: 16 NMS skills for low-level work and 17 Paper API skills that need only `paper-api`.
+- **Two tracks**: 16 NMS skills for low-level work and 21 Paper API skills that need only `paper-api`.
 - **Readable docs**: every skill is also published on the [documentation site](https://mrpippi.github.io/MJP-Paper-Skills), in English and Traditional Chinese.
 
 ## Contents
@@ -114,7 +114,7 @@ Describe the feature in plain language. The tool matches your request against ea
 
 ## Skill Catalog
 
-33 skills, all compile-verified against Paper 1.21.11 and 26.3. Browse them with filters and full templates on the [documentation site](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); the machine-readable index is [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
+37 skills, all compile-verified against Paper 1.21.11 and 26.3. Browse them with filters and full templates on the [documentation site](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); the machine-readable index is [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
 
 ### NMS (16 skills, requires Paperweight userdev)
 
@@ -137,14 +137,16 @@ Describe the feature in plain language. The tool matches your request against ea
 | Bridge | [`nms-reflection-bridge`](Skills/nms/nms-reflection-bridge/SKILL.md) | Reflection-based NMS access without Paperweight |
 | Bridge | [`nms-version-adapter`](Skills/nms/nms-version-adapter/SKILL.md) | Adapter pattern for multi-version NMS support |
 
-### Paper API (17 skills, requires only `paper-api`)
+### Paper API (21 skills, requires only `paper-api`)
 
 | Category | Skill | What it does |
 |----------|-------|--------------|
 | UI | [`paper-dialog-ui`](Skills/paper/paper-dialog-ui/SKILL.md) | Dialog API screens with callbacks on the main thread |
 | UI | [`paper-chest-gui`](Skills/paper/paper-chest-gui/SKILL.md) | InventoryHolder chest GUIs with paging and click protection |
+| UI | [`paper-menu-type-gui`](Skills/paper/paper-menu-type-gui/SKILL.md) | Portable vanilla workstations and merchant screens with MenuType |
 | Data | [`paper-sqlite-repository`](Skills/paper/paper-sqlite-repository/SKILL.md) | SQLite repository with `user_version` migrations and a single writer thread |
 | Data | [`paper-config-lang`](Skills/paper/paper-config-lang/SKILL.md) | Immutable config objects, config versioning and MiniMessage language files |
+| Data | [`paper-datapack-bundling`](Skills/paper/paper-datapack-bundling/SKILL.md) | Data packs shipped inside the plugin jar and enabled from a bootstrapper |
 | Integration | [`paper-service-api`](Skills/paper/paper-service-api/SKILL.md) | Cross-plugin APIs through ServicesManager |
 | Integration | [`paper-softdepend-hook`](Skills/paper/paper-softdepend-hook/SKILL.md) | Soft-dependency hooks for Vault and PlaceholderAPI |
 | Integration | [`paper-embedded-http`](Skills/paper/paper-embedded-http/SKILL.md) | Embedded JSON HTTP API bound to localhost, with rate limiting |
@@ -156,8 +158,10 @@ Describe the feature in plain language. The tool matches your request against ea
 | Gameplay | [`paper-economy-ledger`](Skills/paper/paper-economy-ledger/SKILL.md) | Multi-currency ledger, escrow and a Vault economy provider |
 | Gameplay | [`paper-registry-events`](Skills/paper/paper-registry-events/SKILL.md) | Custom enchantments and damage types from a bootstrapper, vanilla changes and tags |
 | Gameplay | [`paper-data-components`](Skills/paper/paper-data-components/SKILL.md) | Item components without NMS: food, weapons, gliding, tooltips, with PDC item ids |
+| Gameplay | [`paper-custom-recipes`](Skills/paper/paper-custom-recipes/SKILL.md) | Crafting, transmute and brewing recipes with one resync and reload handling |
 | Commands | [`paper-brigadier-command`](Skills/paper/paper-brigadier-command/SKILL.md) | Brigadier commands registered via `LifecycleEvents.COMMANDS` |
 | World | [`paper-disposable-world`](Skills/paper/paper-disposable-world/SKILL.md) | Disposable worlds and arena resets |
+| World | [`paper-world-clock`](Skills/paper/paper-world-clock/SKILL.md) | Per-world clock pause, speed and time locks (26.3 only) |
 
 ---
 
@@ -201,12 +205,12 @@ The canonical `build.gradle` and `paper-plugin.yml` templates live in the two `P
 MJP-Paper-Skills/
 ├── .claude/skills/           # Ready-to-copy skill folder (mirrors Skills/, except the PLATFORM folders)
 ├── Skills/                   # Canonical skill sources
-│   ├── skills-registry.yml   # Index of all 33 skills (paper-nms + paper-api)
+│   ├── skills-registry.yml   # Index of all 37 skills (paper-nms + paper-api)
 │   ├── _shared/              # Threading and naming rules shared by all skills
 │   ├── paper-nms/PLATFORM.md # NMS build.gradle / paper-plugin.yml templates, version table
 │   ├── paper-api/PLATFORM.md # Paper API build setup, soft-dependency coordinates
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (16 NMS skills)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (17 Paper API skills)
+│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (21 Paper API skills)
 ├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (compile check)
 ├── verify/                   # Gradle project that compiles the extracted templates for each version
 ├── docs/paper-nms/           # NMS API quick reference

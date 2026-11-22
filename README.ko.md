@@ -8,7 +8,7 @@
 
 [![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
-[![Skills](https://img.shields.io/badge/skills-33-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
+[![Skills](https://img.shields.io/badge/skills-37-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
 [![Skills compile](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml/badge.svg)](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml)
 [![License: MIT](https://img.shields.io/github/license/MrPippi/MJP-Paper-Skills)](LICENSE)
@@ -29,7 +29,7 @@ AI 코딩 도구는 Paper 플러그인에서 미묘한 실수를 자주 합니�
 - **공식 Mojang 이름**: NMS 코드는 Paperweight userdev와, 26.1부터 Minecraft가 난독화 없이 제공하는 이름을 사용합니다.
 - **스레드 안전 설계**: 각 스킬은 모든 호출이 어느 스레드(메인, Netty IO, 비동기)에서 실행되는지 명시합니다.
 - **도구에 종속되지 않음**: 개방형 [Agent Skills](https://agentskills.io) 형식은 Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI 등에서 동작합니다.
-- **두 가지 트랙**: 저수준 작업을 위한 NMS 스킬 16개와 `paper-api`만 필요한 Paper API 스킬 17개가 있습니다.
+- **두 가지 트랙**: 저수준 작업을 위한 NMS 스킬 16개와 `paper-api`만 필요한 Paper API 스킬 21개가 있습니다.
 - **읽기 쉬운 문서**: 모든 스킬은 [문서 사이트](https://mrpippi.github.io/MJP-Paper-Skills)에도 게시되어 있으며, 영어와 중국어 번체로 제공됩니다.
 
 ## 목차
@@ -114,7 +114,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## 스킬 카탈로그
 
-33개의 스킬은 모두 Paper 1.21.11과 26.3를 대상으로 컴파일 검증되었습니다. 필터와 전체 템플릿은 [문서 사이트](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)에서 확인할 수 있으며, 기계가 읽을 수 있는 색인은 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)입니다.
+37개의 스킬은 모두 Paper 1.21.11과 26.3를 대상으로 컴파일 검증되었습니다. 필터와 전체 템플릿은 [문서 사이트](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)에서 확인할 수 있으며, 기계가 읽을 수 있는 색인은 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)입니다.
 
 ### NMS (스킬 16개, Paperweight userdev 필요)
 
@@ -137,14 +137,16 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | 브리지 | [`nms-reflection-bridge`](Skills/nms/nms-reflection-bridge/SKILL.md) | Paperweight 없이 리플렉션으로 NMS에 접근 |
 | 브리지 | [`nms-version-adapter`](Skills/nms/nms-version-adapter/SKILL.md) | 멀티 버전 NMS 지원을 위한 어댑터 패턴 |
 
-### Paper API (스킬 17개, `paper-api`만 필요)
+### Paper API (스킬 21개, `paper-api`만 필요)
 
 | 카테고리 | 스킬 | 기능 |
 |----------|-------|--------------|
 | UI | [`paper-dialog-ui`](Skills/paper/paper-dialog-ui/SKILL.md) | 콜백을 메인 스레드에서 처리하는 Dialog API 화면 |
 | UI | [`paper-chest-gui`](Skills/paper/paper-chest-gui/SKILL.md) | 페이지 넘김과 클릭 방지를 갖춘 InventoryHolder 상자 GUI |
+| UI | [`paper-menu-type-gui`](Skills/paper/paper-menu-type-gui/SKILL.md) | MenuType으로 휴대용 바닐라 작업대와 거래 화면 열기 |
 | 데이터 | [`paper-sqlite-repository`](Skills/paper/paper-sqlite-repository/SKILL.md) | `user_version` 마이그레이션과 단일 쓰기 스레드를 갖춘 SQLite 리포지토리 |
 | 데이터 | [`paper-config-lang`](Skills/paper/paper-config-lang/SKILL.md) | 불변 설정 객체, 설정 버전 관리, MiniMessage 언어 파일 |
+| 데이터 | [`paper-datapack-bundling`](Skills/paper/paper-datapack-bundling/SKILL.md) | 플러그인 jar에 데이터 팩을 넣고 bootstrapper에서 활성화 |
 | 연동 | [`paper-service-api`](Skills/paper/paper-service-api/SKILL.md) | ServicesManager를 통한 플러그인 간 API |
 | 연동 | [`paper-softdepend-hook`](Skills/paper/paper-softdepend-hook/SKILL.md) | Vault와 PlaceholderAPI용 소프트 의존성 훅 |
 | 연동 | [`paper-embedded-http`](Skills/paper/paper-embedded-http/SKILL.md) | localhost에 바인딩되고 요청 제한을 갖춘 내장 JSON HTTP API |
@@ -156,8 +158,10 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | 게임플레이 | [`paper-economy-ledger`](Skills/paper/paper-economy-ledger/SKILL.md) | 다중 통화 장부, 에스크로, Vault 경제 제공자 |
 | 게임플레이 | [`paper-registry-events`](Skills/paper/paper-registry-events/SKILL.md) | 부트스트랩에서 사용자 정의 인챈트와 피해 유형을 추가하고 바닐라 항목과 태그를 수정 |
 | 게임플레이 | [`paper-data-components`](Skills/paper/paper-data-components/SKILL.md) | NMS 없이 아이템 컴포넌트 조작: 음식, 무기, 활공, 툴팁, PDC로 아이템 식별 |
+| 게임플레이 | [`paper-custom-recipes`](Skills/paper/paper-custom-recipes/SKILL.md) | 제작·변환·양조 레시피를 한 번에 동기화하고 리로드 처리 |
 | 명령어 | [`paper-brigadier-command`](Skills/paper/paper-brigadier-command/SKILL.md) | `LifecycleEvents.COMMANDS`로 등록하는 Brigadier 명령어 |
 | 월드 | [`paper-disposable-world`](Skills/paper/paper-disposable-world/SKILL.md) | 일회용 월드와 아레나 초기화 |
+| 월드 | [`paper-world-clock`](Skills/paper/paper-world-clock/SKILL.md) | 월드별 시계 일시정지, 속도, 시간 잠금 (26.3 전용) |
 
 ---
 
@@ -201,12 +205,12 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 MJP-Paper-Skills/
 ├── .claude/skills/           # 바로 복사해 쓸 수 있는 스킬 폴더 (PLATFORM 폴더를 제외하고 Skills/를 미러링)
 ├── Skills/                   # 표준 스킬 소스
-│   ├── skills-registry.yml   # 전체 33개 스킬 색인 (paper-nms + paper-api)
+│   ├── skills-registry.yml   # 전체 37개 스킬 색인 (paper-nms + paper-api)
 │   ├── _shared/              # 모든 스킬이 공유하는 스레딩 및 명명 규칙
 │   ├── paper-nms/PLATFORM.md # NMS build.gradle / paper-plugin.yml 템플릿, 버전 표
 │   ├── paper-api/PLATFORM.md # Paper API 빌드 설정, 소프트 의존성 좌표
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (NMS 스킬 16개)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (Paper API 스킬 17개)
+│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (Paper API 스킬 21개)
 ├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (컴파일 검사)
 ├── verify/                   # 추출한 템플릿을 버전별로 컴파일하는 Gradle 프로젝트
 ├── docs/paper-nms/           # NMS API 빠른 참조

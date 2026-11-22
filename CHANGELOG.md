@@ -5,6 +5,15 @@
 
 ## [Unreleased]
 
+### Added — paper-custom-recipes、paper-menu-type-gui、paper-datapack-bundling、paper-world-clock（registry 7.4.0，共 37 個技能）
+
+- `paper-custom-recipes`（paper-gameplay）：有形狀／無形狀合成、`RecipeChoice.itemType`、`TransmuteRecipe` 升級保留附魔、26.3 `BrewingRecipe`（1.21.11 `PotionMix`）；26.3 改用 `addRecipes`／`removeRecipes` 與 `RecipeChoice.exactChoice`（舊寫法在 26.3 淘汰）。實機發現 `/minecraft:reload` 會清掉插件配方，範本在 `ServerResourcesReloadedEvent` 重新註冊
+- `paper-menu-type-gui`（paper-ui）：MenuType 可攜式工作台、鐵砧（花費上限）、切石機等與自訂交易；依 Paper 原始碼說明方塊實體類介面沒有 `location` 時是不運作、不存檔的暫存方塊實體（需要玩家客戶端，未實機）
+- `paper-datapack-bundling`（paper-data）：bootstrap 以 `DATAPACK_DISCOVERY` 從 jar 載入資料包並自動啟用（預設不啟用）、`pack.mcmeta` 範圍 1.21.11 = 94.1、26.3 = 121.0、依版本分資料夾
+- `paper-world-clock`（paper-world，**僅 26.3**）：每個世界暫停、流速、固定時間與 `TimeSkipEvent` 時間鎖；實機確認時鐘狀態每個世界獨立且重啟後保留、地獄沒有時鐘
+- 三個可實機的技能在 Paper 26.3 build 258 驗證 27 項（含真實釀造台、重啟、reload）；四個技能皆通過 1.21.11／26.3 編譯（`paper-world-clock` 只編譯 26.3）
+- registry、`.claude/skills/`、網站頁（繁中＋英文）、README 目錄（8 種語言）、`PLATFORM.md` 技能清單、CLAUDE.md、測試、像素字型子集同步更新
+
 ### Added — paper-registry-events、paper-data-components（registry 7.3.0，共 33 個技能）
 
 - 新技能 `paper-registry-events`（paper-gameplay）：在 `PluginBootstrap` 以 `RegistryEvents` 新增自訂附魔（吸血）與傷害類型（流血）、用 `entryAdd` + `filter` 修改原版項目（鋒利上限 6）、用 `LifecycleEvents.TAGS.postFlatten` 加入附魔台／交易／`bypasses_armor` 標籤，執行期以 `RegistryAccess` 取回；附 1.21.11／26.3 可用註冊表對照表。已在 Paper 26.3 實機驗證 18 項（含 `/minecraft:reload` 後標籤仍在、流血對全套鑽石裝造成完整傷害）

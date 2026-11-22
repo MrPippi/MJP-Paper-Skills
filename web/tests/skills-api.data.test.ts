@@ -42,18 +42,22 @@ const EXPECTED_SLUGS = [
   'paper-client-side-effects',
   'paper-combat-tag',
   'paper-config-lang',
+  'paper-custom-recipes',
   'paper-data-components',
+  'paper-datapack-bundling',
   'paper-dialog-ui',
   'paper-discord-bridge',
   'paper-disposable-world',
   'paper-economy-ledger',
   'paper-embedded-http',
+  'paper-menu-type-gui',
   'paper-packetevents-filter',
   'paper-registry-events',
   'paper-safe-teleport',
   'paper-service-api',
   'paper-softdepend-hook',
   'paper-sqlite-repository',
+  'paper-world-clock',
 ];
 
 describe('getAllSkills (real data)', () => {
@@ -62,7 +66,7 @@ describe('getAllSkills (real data)', () => {
     assert.equal(getAllSkills().length, mdCount);
   });
 
-  it('contains the 33 skills in title order', () => {
+  it('contains the 37 skills in title order', () => {
     assert.deepEqual(getAllSkills().map((s) => s.slug), EXPECTED_SLUGS);
   });
 
@@ -92,21 +96,21 @@ describe('getAllSkills (real data)', () => {
 describe('getCategories (real data)', () => {
   it('returns 15 categories sorted by count desc', () => {
     assert.deepEqual(getCategories(), [
-      { id: 'paper-gameplay', label: 'Paper 玩法', labelEn: 'Paper Gameplay', count: 5 },
+      { id: 'paper-gameplay', label: 'Paper 玩法', labelEn: 'Paper Gameplay', count: 6 },
       { id: 'paper-integration', label: 'Paper 整合', labelEn: 'Paper Integration', count: 4 },
       { id: 'nms-world', label: 'NMS 世界', labelEn: 'NMS World', count: 3 },
+      { id: 'paper-ui', label: 'Paper 介面', labelEn: 'Paper UI', count: 3 },
+      { id: 'paper-data', label: 'Paper 資料', labelEn: 'Paper Data', count: 3 },
       { id: 'nms-entity', label: 'NMS 實體', labelEn: 'NMS Entity', count: 2 },
       { id: 'nms-display', label: 'NMS 顯示', labelEn: 'NMS Display', count: 2 },
       { id: 'nms-data', label: 'NMS 資料', labelEn: 'NMS Data', count: 2 },
       { id: 'nms-player', label: 'NMS 玩家', labelEn: 'NMS Player', count: 2 },
       { id: 'nms-packet', label: 'NMS 封包', labelEn: 'NMS Packet', count: 2 },
       { id: 'nms-bridge', label: 'NMS 橋接', labelEn: 'NMS Bridge', count: 2 },
-      { id: 'paper-ui', label: 'Paper 介面', labelEn: 'Paper UI', count: 2 },
       { id: 'paper-network', label: 'Paper 網路', labelEn: 'Paper Network', count: 2 },
-      { id: 'paper-data', label: 'Paper 資料', labelEn: 'Paper Data', count: 2 },
+      { id: 'paper-world', label: 'Paper 世界', labelEn: 'Paper World', count: 2 },
       { id: 'nms-ui', label: 'NMS UI', labelEn: 'NMS UI', count: 1 },
       { id: 'paper-command', label: 'Paper 指令', labelEn: 'Paper Command', count: 1 },
-      { id: 'paper-world', label: 'Paper 世界', labelEn: 'Paper World', count: 1 },
     ]);
   });
 

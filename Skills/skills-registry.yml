@@ -1,4 +1,4 @@
-version: "7.3.0"
+version: "7.4.0"
 updated: "2026-11-23"
 description: "MJP-Paper-Skills — Minecraft Paper Agent Skills / 技能索引：NMS（paper-nms）與純 Paper API（paper-api），Paper 1.21.11 / 26.x"
 
@@ -1282,6 +1282,146 @@ skills:
       - "自訂食物"
       - "自訂武器"
       - "matchesWithoutData"
+
+  - id: paper-custom-recipes
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-gameplay
+    description: "Paper 自訂配方：合成、ItemTypeChoice、TransmuteRecipe 保留附魔、26.3 BrewingRecipe／1.21.11 PotionMix、批次同步與 reload 後重新註冊 / Paper custom recipes: crafting, ItemTypeChoice, component-keeping TransmuteRecipe, brewing, batch resync and re-registration after reload"
+    skill_file: paper/paper-custom-recipes/SKILL.md
+    examples_file: paper/paper-custom-recipes/examples.md
+    inputs:
+      - name: package
+        description: "輸出 package"
+        required: true
+      - name: recipes
+        description: "要新增的配方"
+        required: true
+      - name: unlock
+        description: "何時把配方加入配方書"
+        required: false
+    outputs:
+      - name: "CustomRecipes.java"
+        description: "建立、批次註冊、解鎖與移除合成配方"
+      - name: "Brewing.java"
+        description: "26.3 BrewingRecipe 或 1.21.11 PotionMix"
+      - name: "RecipesPlugin.java"
+        description: "啟用註冊、加入時解鎖、reload 後重新註冊、停用時移除"
+    tags: [paper-api, recipe, crafting, brewing, transmute]
+    trigger_keywords:
+      - "自訂配方"
+      - "custom recipe"
+      - "ShapedRecipe"
+      - "TransmuteRecipe"
+      - "釀造配方"
+      - "BrewingRecipe"
+      - "addRecipes"
+
+  - id: paper-menu-type-gui
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-ui
+    description: "Paper MenuType 原版介面：可攜式工作台、鐵砧、切石機、鍛造台與自訂交易，方塊實體類介面的暫存陷阱 / Paper MenuType vanilla menus: portable crafting table, anvil, stonecutter, smithing, custom merchant, block-entity menu caveats"
+    skill_file: paper/paper-menu-type-gui/SKILL.md
+    examples_file: paper/paper-menu-type-gui/examples.md
+    inputs:
+      - name: package
+        description: "輸出 package"
+        required: true
+      - name: menus
+        description: "要開啟的介面"
+        required: true
+      - name: anvil_max_cost
+        description: "可攜式鐵砧的花費上限"
+        required: false
+    outputs:
+      - name: "Workstations.java"
+        description: "開啟可攜式方塊介面"
+      - name: "PortableAnvil.java"
+        description: "可攜式鐵砧與花費上限"
+      - name: "TradeMenu.java"
+        description: "自訂交易介面"
+    tags: [paper-api, menu-type, gui, anvil, merchant]
+    trigger_keywords:
+      - "MenuType"
+      - "可攜式工作台"
+      - "portable crafting table"
+      - "portable anvil"
+      - "open vanilla menu"
+      - "custom merchant"
+      - "AnvilView"
+
+  - id: paper-datapack-bundling
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-data
+    description: "Paper 插件內附資料包：bootstrap 以 DATAPACK_DISCOVERY 從 jar 載入並自動啟用、pack.mcmeta 版本範圍、依版本選資料夾 / Paper plugin-bundled data packs: DATAPACK_DISCOVERY from the jar, auto-enable, pack.mcmeta format ranges, per-version folders"
+    skill_file: paper/paper-datapack-bundling/SKILL.md
+    examples_file: paper/paper-datapack-bundling/examples.md
+    inputs:
+      - name: pack_id
+        description: "資料包 id（會變成 <插件名>/<id>）"
+        required: true
+      - name: contents
+        description: "資料包內容"
+        required: true
+      - name: versions
+        description: "支援的 MC 版本"
+        required: false
+    outputs:
+      - name: "datapack/"
+        description: "內附資料包（pack.mcmeta、data/...）"
+      - name: "PackBootstrap.java"
+        description: "bootstrap 註冊並自動啟用資料包（不拋例外）"
+      - name: "PackPlugin.java"
+        description: "onEnable 確認資料包已啟用"
+    tags: [paper-api, datapack, bootstrap, lifecycle]
+    trigger_keywords:
+      - "插件內附資料包"
+      - "bundle datapack"
+      - "DATAPACK_DISCOVERY"
+      - "DatapackRegistrar"
+      - "discoverPack"
+      - "pack.mcmeta"
+
+  - id: paper-world-clock
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-world
+    mc_versions: ["26.3"]
+    description: "Paper 26.3 世界時鐘：每個世界獨立暫停、調整時間流速、固定時間、攔截 /time 與跳夜（僅 26.3） / Paper 26.3 world clocks: per-world pause, rate, frozen time, blocking /time and night skips (26.3 only)"
+    skill_file: paper/paper-world-clock/SKILL.md
+    examples_file: paper/paper-world-clock/examples.md
+    inputs:
+      - name: frozen_worlds
+        description: "時間固定的世界與時間"
+        required: false
+      - name: day_length
+        description: "一天的實際長度"
+        required: false
+      - name: locked_worlds
+        description: "禁止 /time 與跳夜的世界"
+        required: false
+    outputs:
+      - name: "WorldTime.java"
+        description: "固定、解除、白天長度"
+      - name: "TimeLock.java"
+        description: "攔截時間變更"
+      - name: "ClockPlugin.java"
+        description: "啟用與 WorldLoadEvent 時套用設定"
+    tags: [paper-api, world-clock, time, 26.3]
+    trigger_keywords:
+      - "世界時鐘"
+      - "world clock"
+      - "WorldClock"
+      - "時間流速"
+      - "day length"
+      - "freeze time"
+      - "ClockTimeSkipEvent"
 
 platforms:
   - id: paper-nms
