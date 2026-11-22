@@ -33,7 +33,7 @@ const PLATFORM_DEFAULTS = {
 };
 
 const MIRROR_ROOTS = ['Skills', '.claude/skills'];
-const SKILL_TEXT_FILES = ['SKILL.md', 'examples.md'];
+const SKILL_TEXT_FILES = ['SKILL.md', 'template.md', 'examples.md'];
 const LINK = /\]\(([^)#\s]+)(#[^)\s]*)?\)/g;
 
 const toPosix = (p) => p.split(path.sep).join('/');

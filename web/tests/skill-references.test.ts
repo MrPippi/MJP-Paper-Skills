@@ -27,7 +27,7 @@ describe('skill references/', () => {
     for (const group of SKILL_GROUPS) {
       const groupDir = path.join(REPO_ROOT, 'Skills', group);
       for (const id of fs.readdirSync(groupDir)) {
-        for (const file of ['SKILL.md', 'examples.md']) {
+        for (const file of ['SKILL.md', 'template.md', 'examples.md']) {
           const full = path.join(groupDir, id, file);
           if (!fs.existsSync(full)) continue;
           assert.doesNotMatch(fs.readFileSync(full, 'utf8'), outside, `${group}/${id}/${file}`);
