@@ -70,7 +70,7 @@ MJP-Paper-Skills/
 當使用者要求產生插件代碼時，一律遵循：
 
 1. **檢查 `.claude/skills/skills-registry.yml`** — 找出 `trigger_keywords` 匹配請求的技能，並看其 `platform`（`paper-nms` 或 `paper-api`）
-2. **讀取對應的 `SKILL.md`** — `.claude/skills/nms/<id>/SKILL.md` 或 `.claude/skills/paper/<id>/SKILL.md`
+2. **讀取對應的 `SKILL.md`** — `.claude/skills/nms/<id>/SKILL.md` 或 `.claude/skills/paper/<id>/SKILL.md`；同目錄有 `template.md` 時，產生程式碼前必須一併讀取（完整範本在那裡）
 3. **查看 `examples.md`** — 理解多種使用情境（同目錄）
 4. **讀取平台設定** — NMS 技能讀 `Skills/paper-nms/PLATFORM.md`；Paper API 技能讀 `Skills/paper-api/PLATFORM.md`
 5. **閱讀執行緒規則** — NMS：`Skills/_shared/nms-threading.md`、`nms-obfuscation.md`；Paper API：`Skills/_shared/paper-threading.md`
@@ -252,6 +252,8 @@ description: "中英雙語描述（含 NMS Paperweight 要求）"
 ## Fallback
 ```
 
+**長範本拆檔**：`SKILL.md` 目標 800 行以內。完整範本過長時，`## Code Template` 只留「先讀 `template.md`」的指示與檔案索引表（檔名、套件、職責），完整程式碼放同目錄的 `template.md`（不含 frontmatter，標題 `# <Skill Title> — Code Template`，每個檔案一個 `##` 段落）。`template.md` 與 `SKILL.md` 是同一個技能、同一組編譯；不可放進 `references/`（那是腳本產生的資料夾）。範例：`paper-discord-bridge`。
+
 技能內文（SKILL.md、examples.md、`PLATFORM.md`、`_shared/`）一律英文，包含程式碼註解與字串；frontmatter `description` 與 registry 維持中英雙語。
 
 Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-{skill-id}`、版本段落為「Paper 版本需求 / Paper Version Requirements」、建置段落為「建置設定 / Build Setup」並引用 `Skills/paper-api/PLATFORM.md`。範本只能 import Paper API 與 `PLATFORM.md` 列出的軟依賴，不可出現 `net.minecraft` / `org.bukkit.craftbukkit`。
@@ -266,7 +268,7 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 6. 若涉及新平台，建立 `Skills/<platform>/PLATFORM.md`
 7. 驗證觸發關鍵字無與既有技能衝突
 8. 在 `web/data/skills/<slug>.md` 新增網站頁面、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），並更新 `web/tests/skills-api.data.test.ts` 的預期清單
-9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；examples.md 的同名類別會覆蓋 SKILL.md 版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
+9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；`SKILL.md` 與 `template.md` 合為一組，examples.md 的同名類別會覆蓋該組版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
 
 ---
 

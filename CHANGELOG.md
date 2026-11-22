@@ -5,6 +5,12 @@
 
 ## [Unreleased]
 
+### Changed — 長範本拆到 template.md
+
+- `paper-discord-bridge`：`SKILL.md` 由 2136 行縮為 176 行，完整範本（11 個類別、2 個 JUnit 測試、`config.yml`／`plugin.yml`）移到同目錄 `template.md`；`SKILL.md` 的 Code Template 改為「先讀 `template.md`」指示與檔案索引表。技能 ID、registry、網站頁面不變
+- `scripts/extract-skill-java.mjs`：`SKILL.md` 與 `template.md` 合為同一組編譯；`scripts/sync-skill-references.mjs` 與 `skill-references` 測試也會掃描 `template.md` 的 `references/` 連結
+- CLAUDE.md：新增長範本拆檔規則
+
 ### Changed — 說明技能更新方式
 
 - README（8 種語言）與網站「開始使用」：補上 `npx skills check`、從 Release tag 安裝（`@v7.4.0`），並說明技能不會自動更新，`check` 比對的是 Git commit 而非版本號
