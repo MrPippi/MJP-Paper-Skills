@@ -11,6 +11,9 @@
  *   `code; // @1.21.11: other code;`  → for 1.21.11 the line becomes `other code;`
  *   first line `// @only <version>`   → the block is skipped for other versions
  *
+ * Long skills keep their full templates in template.md next to SKILL.md; both files
+ * form one compile set.
+ *
  * Partial snippets (no `package` line) are not compiled. Exits 1 on conflicting
  * duplicate files or NMS imports in Paper API skills.
  */
@@ -22,7 +25,8 @@ const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..
 export const TARGETS = ['26.3', '1.21.11'];
 const DEFAULT_TARGET = '26.3';
 const GROUPS = ['nms', 'paper'];
-const SKILL_FILES = ['SKILL.md', 'examples.md'];
+/** Files whose complete units form a skill's base compile set. */
+const TEMPLATE_FILES = ['SKILL.md', 'template.md'];
 
 const JAVA_BLOCK = /```java\r?\n([\s\S]*?)```/g;
 const PACKAGE = /^package\s+([\w.]+)\s*;/m;
@@ -54,11 +58,20 @@ export function primaryTypeName(code) {
   return (publicType ?? types[0])?.[2] ?? null;
 }
 
-function collectUnits(group, id, file, target, problems) {
+function collectUnits(group, id, files, target, problems) {
   const units = new Map();
   let skippedSnippets = 0;
+  for (const file of files) {
+    skippedSnippets += collectFile(group, id, file, target, units, problems);
+  }
+  return { units, skippedSnippets };
+}
+
+/** Adds the complete units of one markdown file to `units`; returns its partial-snippet count. */
+function collectFile(group, id, file, target, units, problems) {
+  let skippedSnippets = 0;
   const full = path.join(REPO_ROOT, 'Skills', group, id, file);
-  if (!fs.existsSync(full)) return { units, skippedSnippets };
+  if (!fs.existsSync(full)) return 0;
   const where = `Skills/${group}/${id}/${file}`;
   const markdown = fs.readFileSync(full, 'utf8').replace(/\r\n/g, '\n');
   for (const [, block] of markdown.matchAll(JAVA_BLOCK)) {
@@ -80,18 +93,18 @@ function collectUnits(group, id, file, target, problems) {
     if (existing === undefined) units.set(relPath, code);
     else if (existing !== code) problems.push(`${where}: conflicting definitions of ${relPath}`);
   }
-  return { units, skippedSnippets };
+  return skippedSnippets;
 }
 
 /**
- * Two compile sets per skill: `skill` (SKILL.md templates) and, when examples.md has
+ * Two compile sets per skill: `skill` (SKILL.md + template.md) and, when examples.md has
  * complete files, `examples` (the templates with the example files layered on top,
  * since examples may extend or replace a template class).
  */
 function extractSkill(group, id, target) {
   const problems = [];
-  const template = collectUnits(group, id, 'SKILL.md', target, problems);
-  const examples = collectUnits(group, id, 'examples.md', target, problems);
+  const template = collectUnits(group, id, TEMPLATE_FILES, target, problems);
+  const examples = collectUnits(group, id, ['examples.md'], target, problems);
   const sets = { skill: template.units };
   if (examples.units.size) sets.examples = new Map([...template.units, ...examples.units]);
   return { sets, problems, skippedSnippets: template.skippedSnippets + examples.skippedSnippets };
