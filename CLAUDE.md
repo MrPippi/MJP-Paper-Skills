@@ -18,7 +18,7 @@ MJP-Paper-Skills (Minecraft Paper Agent Skills) 是一套 Paper 插件開發的 
 執行時目錄：**`.claude/skills/`**（Claude Code 專用）
 規範來源：**`Skills/`**（authoritative source，與 `.claude/skills/` 內容相同）
 
-Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 33 個技能頁面。
+Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 37 個技能頁面。
 
 ### Repository Layout
 
@@ -33,12 +33,12 @@ MJP-Paper-Skills/
 │   ├── ci.yml                           ← PR：tsc + test + build（不部署）
 │   └── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯（改到 Skills/、verify/ 時）
 ├── .claude/
-│   └── skills/                          ← Claude Code 執行時（33 個技能，與 Skills/ 同步）
+│   └── skills/                          ← Claude Code 執行時（37 個技能，與 Skills/ 同步）
 │       ├── skills-registry.yml          ← 與 Skills/ 相同
 │       ├── _shared/
 │       └── nms/
 ├── Skills/                              ← Canonical source
-│   ├── skills-registry.yml              ← v7.3.0，33 個技能（paper-nms + paper-api）
+│   ├── skills-registry.yml              ← v7.4.0，37 個技能（paper-nms + paper-api）
 │   ├── _shared/
 │   │   ├── nms-threading.md
 │   │   ├── nms-obfuscation.md
@@ -60,7 +60,7 @@ MJP-Paper-Skills/
 │       ├── network.md                   ← Netty pipeline 結構與執行緒模型
 │       └── bukkit-nms-bridge.md         ← Bukkit ↔ NMS 橋接轉換表
 └── web/                                 ← Next.js 文件站
-    └── data/skills/                     ← 33 個技能 .md（已完整）
+    └── data/skills/                     ← 37 個技能 .md（已完整）
 ```
 
 ---
@@ -102,7 +102,7 @@ MJP-Paper-Skills/
 
 ## Skills Index
 
-所有技能以 `Skills/skills-registry.yml`（v7.3.0）為準（共 33 個：NMS 16 個、Paper API 17 個）。✅ = 已同步至 `.claude/skills/`。
+所有技能以 `Skills/skills-registry.yml`（v7.4.0）為準（共 37 個：NMS 16 個、Paper API 21 個）。✅ = 已同步至 `.claude/skills/`。
 
 **NMS 技能**（`platform: paper-nms`，`Skills/nms/`）
 
@@ -131,8 +131,10 @@ MJP-Paper-Skills/
 |----------|----------|---------|------|
 | `paper-dialog-ui` | paper-ui | Paper Dialog API 介面（回呼回主執行緒、確認鈕在右） | ✅ |
 | `paper-chest-gui` | paper-ui | InventoryHolder 箱子 GUI（分頁、點擊防護、onDisable 關閉） | ✅ |
+| `paper-menu-type-gui` | paper-ui | MenuType 可攜式原版工作台、鐵砧、交易介面（方塊實體類介面的暫存陷阱） | ✅ |
 | `paper-sqlite-repository` | paper-data | SQLite Repository、user_version 遷移、單一寫入執行緒 | ✅ |
 | `paper-config-lang` | paper-data | 不可變設定物件、config-version、MiniMessage 語言檔 | ✅ |
+| `paper-datapack-bundling` | paper-data | 插件 jar 內附資料包（DATAPACK_DISCOVERY、自動啟用、pack.mcmeta 版本範圍） | ✅ |
 | `paper-service-api` | paper-integration | ServicesManager 跨插件 API（只加不改、容忍版本落差） | ✅ |
 | `paper-softdepend-hook` | paper-integration | 軟依賴 Hook／Bridge、Vault、PlaceholderAPI expansion | ✅ |
 | `paper-embedded-http` | paper-integration | 內嵌 JDK HttpServer JSON API（127.0.0.1、限流、快照） | ✅ |
@@ -144,8 +146,10 @@ MJP-Paper-Skills/
 | `paper-economy-ledger` | paper-gameplay | 多幣別帳本、託管、Vault 提供者 | ✅ |
 | `paper-registry-events` | paper-gameplay | bootstrap 以 RegistryEvents 新增自訂附魔／傷害類型、修改原版項目與標籤 | ✅ |
 | `paper-data-components` | paper-gameplay | Paper Data Component API 物品元件（食物、武器、滑翔、提示框、PDC 識別） | ✅ |
+| `paper-custom-recipes` | paper-gameplay | 合成／Transmute／釀造配方、批次同步、reload 後重新註冊 | ✅ |
 | `paper-brigadier-command` | paper-command | Brigadier 指令（LifecycleEvents.COMMANDS、k/m/b 金額） | ✅ |
 | `paper-disposable-world` | paper-world | 拋棄式世界與競技場重置 | ✅ |
+| `paper-world-clock` | paper-world | 26.3 世界時鐘：每個世界暫停、流速、時間鎖定（僅 26.3） | ✅ |
 
 ---
 
@@ -268,7 +272,7 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 
 ## Web App (`web/`)
 
-Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 33 個技能（每個一個 `.md`）。
+Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 37 個技能（每個一個 `.md`）。
 
 ```bash
 cd web
@@ -356,7 +360,7 @@ npm run build         # 靜態匯出至 web/out/（robots.txt / sitemap.xml 由 
 
 2. **技能自給自足**：使用者可用 `npx skills add MrPippi/MJP-Paper-Skills --skill <id>` 單獨安裝技能，只會複製該技能資料夾。各技能需要的 `PLATFORM.md` 與 `_shared/*.md` 由 `scripts/sync-skill-references.mjs` 複製到 `<skill>/references/`（產生檔，不可手改）。修改 `Skills/paper-*/PLATFORM.md` 或 `Skills/_shared/` 後必須重跑腳本；`web/tests/skill-references.test.ts` 會以 `--check` 檢查。
 
-3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.3** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.3 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。
+3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.3** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.3 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。唯一例外是 `paper-world-clock`（API 只有 26.3：所有區塊標 `// @only 26.3`，registry 加 `mc_versions: ["26.3"]`）。
 
 4. **Mojang 官方名稱強制**：不產生 Spigot/混淆映射的代碼。
 

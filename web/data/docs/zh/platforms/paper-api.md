@@ -127,8 +127,10 @@ Paper 自 2024-12-13 硬分叉後不再引入新的 Spigot API，因此 Spigot �
 |------|------|------|
 | `paper-dialog-ui` | paper-ui | Paper Dialog API 介面 |
 | `paper-chest-gui` | paper-ui | InventoryHolder 箱子 GUI |
+| `paper-menu-type-gui` | paper-ui | 以 MenuType 開啟可攜式原版介面 |
 | `paper-sqlite-repository` | paper-data | SQLite Repository + schema 遷移 + 單一寫入執行緒 |
 | `paper-config-lang` | paper-data | 不可變設定物件 + MiniMessage 語言檔 |
+| `paper-datapack-bundling` | paper-data | 插件 jar 內附資料包 |
 | `paper-service-api` | paper-integration | ServicesManager 跨插件 API |
 | `paper-softdepend-hook` | paper-integration | 軟依賴 Hook／Bridge + PlaceholderAPI expansion |
 | `paper-embedded-http` | paper-integration | 內嵌 HTTP API（JDK HttpServer） |
@@ -140,5 +142,7 @@ Paper 自 2024-12-13 硬分叉後不再引入新的 Spigot API，因此 Spigot �
 | `paper-economy-ledger` | paper-gameplay | 多幣別帳本 + Vault 提供者 |
 | `paper-registry-events` | paper-gameplay | bootstrap 新增自訂附魔／傷害類型、修改原版項目與標籤 |
 | `paper-data-components` | paper-gameplay | Data Component API：食物、武器、滑翔、提示框、PDC 識別 |
+| `paper-custom-recipes` | paper-gameplay | 合成、轉換與釀造配方 |
 | `paper-brigadier-command` | paper-command | Brigadier 指令（LifecycleEvents.COMMANDS） |
 | `paper-disposable-world` | paper-world | 拋棄式世界／競技場重置 |
+| `paper-world-clock` | paper-world | 每個世界的時鐘控制（僅 26.3） |

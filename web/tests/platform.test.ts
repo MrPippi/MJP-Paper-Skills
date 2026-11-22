@@ -18,9 +18,9 @@ describe('getPlatform', () => {
     assert.equal(getPlatform(base), 'paper-api');
   });
 
-  it('classifies the real data as 16 NMS + 17 Paper API', () => {
+  it('classifies the real data as 16 NMS + 21 Paper API', () => {
     const counts = groupSkillsByPlatform(getAllSkills()).map((g) => [g.platform, g.skills.length]);
-    assert.deepEqual(counts, [['paper-nms', 16], ['paper-api', 17]]);
+    assert.deepEqual(counts, [['paper-nms', 16], ['paper-api', 21]]);
   });
 });
 

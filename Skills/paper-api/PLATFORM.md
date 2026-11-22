@@ -127,8 +127,10 @@ Paper stopped importing new Spigot API after its 2024-12-13 hard fork, so APIs a
 |------|------|------|
 | `paper-dialog-ui` | paper-ui | Paper Dialog API UI |
 | `paper-chest-gui` | paper-ui | InventoryHolder chest GUI |
+| `paper-menu-type-gui` | paper-ui | Portable vanilla menus with MenuType |
 | `paper-sqlite-repository` | paper-data | SQLite Repository + schema migration + single writer thread |
 | `paper-config-lang` | paper-data | Immutable config object + MiniMessage language files |
+| `paper-datapack-bundling` | paper-data | Data packs bundled in the plugin jar |
 | `paper-service-api` | paper-integration | ServicesManager cross-plugin API |
 | `paper-softdepend-hook` | paper-integration | Soft-dependency Hook / Bridge + PlaceholderAPI expansion |
 | `paper-embedded-http` | paper-integration | Embedded HTTP API (JDK HttpServer) |
@@ -140,5 +142,7 @@ Paper stopped importing new Spigot API after its 2024-12-13 hard fork, so APIs a
 | `paper-economy-ledger` | paper-gameplay | Multi-currency ledger + Vault provider |
 | `paper-registry-events` | paper-gameplay | Custom enchantments / damage types from a bootstrapper, vanilla changes, tags |
 | `paper-data-components` | paper-gameplay | Data component API: food, weapons, gliding, tooltips, PDC item ids |
+| `paper-custom-recipes` | paper-gameplay | Crafting, transmute and brewing recipes |
 | `paper-brigadier-command` | paper-command | Brigadier commands (LifecycleEvents.COMMANDS) |
 | `paper-disposable-world` | paper-world | Disposable worlds / arena reset |
+| `paper-world-clock` | paper-world | Per-world clock control (26.3 only) |
