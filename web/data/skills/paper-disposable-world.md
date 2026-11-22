@@ -2,8 +2,8 @@
 id: paper-disposable-world
 title: Paper Disposable World
 titleZh: 拋棄式世界與競技場重置
-description: Throw-away Paper worlds and resettable arenas - void generator, serial naming with a level.dat guard, async template copy, safe unload and delete, a pre-generated pool, and a budgeted in-place reset with residual-entity sweep.
-descriptionZh: 拋棄式世界與可重置競技場：虛空生成器、流水號命名與 level.dat 守衛、非同步複製模板、安全卸載與刪除（level.dat 最後刪）、預產生池，以及預算式就地還原與殘留實體清掃。
+description: Throw-away Paper worlds and resettable arenas - void generator, serial naming with a stale-data guard, async template copy with atomic rename, safe unload and delete, the 26.x dimensions storage layout, a pre-generated pool, and a budgeted in-place reset with residual-entity sweep.
+descriptionZh: 拋棄式世界與可重置競技場：虛空生成器、流水號命名與殘留資料守衛、非同步複製模板（暫存後原子改名）、安全卸載與刪除、26.x dimensions 存檔路徑、預產生池，以及預算式就地還原與殘留實體清掃。
 version: "1.1.0"
 status: active
 category: paper-world
@@ -71,8 +71,9 @@ rules.apply(world);   // 建立後立刻套用遊戲規則
 ### 複製模板與刪除（WorldFolders，非同步）
 
 ```java
-// 複製：略過 uid.dat、session.lock；level.dat 最後才寫
-// 刪除：level.dat 最後才刪，半刪的資料夾不會被誤認為世界
+// 26.x 世界資料在 <主世界>/dimensions/minecraft/<名稱>/（1.21.11 在 <世界容器>/<名稱>/）；路徑一律用 WorldFolders.dataRoot / getWorldPath()
+// 複製：略過世界 UUID 檔（26.x data/paper/metadata.dat、1.21.11 uid.dat）與 session.lock；先寫到 <名稱>.copying 再原子改名
+// 刪除：先改名為 <名稱>.deleting 再刪；啟動時 purgeStaleAsync 清掉殘留與 .copying / .deleting（已在 Paper 26.3 實機驗證）
 WorldFolders.copyTemplate(template, target);
 WorldFolders.deleteWorld(folder);
 ```

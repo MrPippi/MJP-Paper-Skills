@@ -829,7 +829,7 @@ skills:
         description: "範本所在 package"
         required: true
       - name: template_folder
-        description: "模板世界資料夾（含 level.dat）"
+        description: "模板：同 MC 版本競技場資料夾（World#getWorldPath()）的複本，含 region/"
         required: false
       - name: pool_size
         description: "預先產生的閒置世界數"
@@ -839,7 +839,7 @@ skills:
         required: true
     outputs:
       - name: "DisposableWorlds.java"
-        description: "建立／複製／卸載／刪除主流程（level.dat 守衛）"
+        description: "建立／複製／卸載／刪除主流程（殘留資料守衛、26.x dimensions 路徑）"
       - name: "WorldFolders.java"
         description: "非同步複製模板與刪除資料夾"
       - name: "ArenaPool.java"

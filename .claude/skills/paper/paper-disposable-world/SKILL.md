@@ -1,6 +1,6 @@
 ---
 name: paper-disposable-world
-description: "拋棄式世界與可重置競技場：VoidChunkGenerator、WorldCreator、流水號命名與 level.dat 守衛、非同步複製模板、卸載後最後才刪 level.dat、預產生池，以及就地還原（變更格子基準表分批還原 + 殘留實體清掃）/ Throw-away Paper worlds and resettable arenas: void generator, serial naming with level.dat guard, async template copy, safe unload and delete, pre-generated pool, and budgeted in-place reset with debris sweep"
+description: "拋棄式世界與可重置競技場：VoidChunkGenerator、WorldCreator、流水號命名與殘留資料守衛、非同步複製模板（暫存後原子改名）、卸載後安全刪除、26.x dimensions 存檔路徑、預產生池，以及就地還原（變更格子基準表分批還原 + 殘留實體清掃）/ Throw-away Paper worlds and resettable arenas: void generator, serial naming with stale-data guard, async template copy with atomic rename, safe unload and delete, 26.x dimensions storage layout, pre-generated pool, and budgeted in-place reset with debris sweep"
 ---
 
 # Paper Disposable World
@@ -20,8 +20,8 @@ Both routes follow the same principle: **world operations happen only on the mai
 
 The three most dangerous silent failures are all guarded against in the template:
 
-- `WorldCreator` **silently generates a new terrain** when it hits a missing or incomplete folder -> check the folder and `level.dat` first
-- A crash halfway through deletion leaves debris without `level.dat` that is later mistaken for a world -> **delete `level.dat` last** (and write it last when copying)
+- `createWorld` **silently loads whatever data already exists** for the name (a crashed arena) or generates new terrain over an incomplete folder -> check the world's real data folder first (on 26.x it is `<main world>/dimensions/minecraft/<name>`, not next to the main world)
+- A crash halfway through copying or deleting leaves a half folder under a real world name -> **copy into `<name>.copying` and rename atomically; rename to `<name>.deleting` before deleting**, and purge the suffixed debris at startup
 - Unloading a world that still has players -> teleport players away first, and call `unloadWorld` only after confirming
 
 ## Paper Version Requirements
@@ -29,6 +29,7 @@ The three most dangerous silent failures are all guarded against in the template
 - Paper 1.21.11 / 26.3; pure Paper API, no Paperweight needed
 - **GameRule**: the old constants in `org.bukkit.GameRule` (`DO_DAYLIGHT_CYCLE`, `DO_MOB_SPAWNING`, etc.) are `@Deprecated` in both versions, and vanilla rules were changed to snake_case registry keys (`advance_time`, `spawn_mobs`...). This template always uses `Registry.GAME_RULE.get(NamespacedKey.minecraft(key))`, which is identical in both versions and does not depend on the old constants; a key that cannot be found only logs a warning and does not make world creation fail
 - No deprecated API: `ChunkGenerator#shouldGenerateBedrock()` (no effect since 1.19.2), `WorldCreator#keepSpawnLoaded(TriState)` (no effect since 1.21.9, marked for removal) and the `Block#getBlockKey` family (only encodes y -512..511) are not used; `ChangeRecorder` packs its own block keys
+- **World storage (verified on a running Paper 26.3 server)**: 26.x stores every world created with `WorldCreator` as a dimension of the main world, `<main world>/dimensions/minecraft/<name>/`, with no `level.dat` of its own and the world UUID in `data/paper/metadata.dat`; 1.21.11 uses `<world container>/<name>/` with `level.dat` and `uid.dat`. `WorldFolders.dataRoot` picks the right parent, so the template runs unchanged on both. Templates are not portable between the two layouts
 - **Spigot**: Paper only — uses `Entity#teleportAsync` and Paper's world storage layout
 
 ## Triggers
@@ -44,7 +45,7 @@ The three most dangerous silent failures are all guarded against in the template
 |------|------|------|
 | `base_package` | `com.example.arena` | Package the template lives in |
 | `name_prefix` | `arena_` | World folder prefix (**reserved for this mechanism; do not share it with real worlds**) |
-| `template_folder` | `plugins/Arena/templates/duel_map` | Template world folder (contains `level.dat`) |
+| `template_folder` | `plugins/Arena/templates/duel_map` | Template: a copy of an arena's data folder (`World#getWorldPath()`) saved on the **same** MC version (contains `region/`) |
 | `pool_size` | `2` | Number of idle worlds to pre-generate |
 | `reset_mode` | `swap` / `in-place` | World swapping, or in-place reset |
 | `blocks_per_tick` / `nanos_per_tick` | `2000` / `2_000_000` | Per-tick block count and time budget for in-place reset |
@@ -54,7 +55,7 @@ The three most dangerous silent failures are all guarded against in the template
 - `VoidChunkGenerator.java` - chunk generator that generates nothing
 - `ArenaNames.java` - serial naming (reuses numbers, skips ones in use)
 - `ArenaRules.java` - game rules applied right after creation
-- `WorldFolders.java` - copy template (skips `uid.dat`, `session.lock`), delete (`level.dat` last)
+- `WorldFolders.java` - data-folder location per version, copy template (skips the world UUID file and `session.lock`, atomic rename), delete (rename first)
 - `DisposableWorlds.java` - main flow for create / copy / unload / delete
 - `ArenaPool.java` - pre-generated world pool
 - `ChangeRecorder.java` - records changed blocks (baseline map)
@@ -237,6 +238,8 @@ public final class ArenaRules {
 ```java
 package com.example.arena;
 
+import org.bukkit.Server;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -250,69 +253,106 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 /**
- * File operations on world folders. **All blocking IO; call only from an async thread** (except at server shutdown).
+ * File operations on world data folders. **All blocking IO; call only from an async thread** (except at server shutdown,
+ * and {@link #dataRoot}, which only reads paths).
+ *
+ * <p>Where a world keeps its data depends on the version (checked on a running Paper 26.3 server):
+ * <ul>
+ *   <li>26.x: every world is a dimension of the main world: {@code <main world>/dimensions/minecraft/<name>/}
+ *       ({@code region/}, {@code data/}, {@code paper-world.yml}; no {@code level.dat} of its own)</li>
+ *   <li>1.21.11: a separate folder {@code <world container>/<name>/} with its own {@code level.dat}</li>
+ * </ul>
+ * A template is therefore a copy of an arena's data folder ({@code World#getWorldPath()}) saved on the <b>same</b> version.
+ *
+ * <p>Crash safety does not depend on any marker file: a copy is written to {@code <name>.copying} and renamed into place
+ * atomically, and a deletion first renames the folder to {@code <name>.deleting}. A crash leaves only suffixed debris,
+ * which {@link DisposableWorlds#purgeStaleAsync()} removes, never a half-written folder under a real world name.
  */
 public final class WorldFolders {
 
-    /** uid.dat makes two worlds collide on UUID; session.lock is the original world's lock. Neither may be copied. */
-    private static final Set<String> SKIP = Set.of("uid.dat", "session.lock");
-    private static final String LEVEL_DAT = "level.dat";
+    public static final String COPYING = ".copying";
+    public static final String DELETING = ".deleting";
+
+    /**
+     * Files that belong to one particular world and must never be duplicated (paths relative to the data folder):
+     * the world UUID (26.x {@code data/paper/metadata.dat}, 1.21.11 {@code uid.dat}) and the session lock.
+     * A copied UUID makes two loaded worlds collide.
+     */
+    private static final Set<String> SKIP = Set.of("data/paper/metadata.dat", "uid.dat", "session.lock");
 
     private WorldFolders() {
     }
 
-    public static boolean hasLevelDat(Path folder) {
-        return Files.isRegularFile(folder.resolve(LEVEL_DAT));
+    /**
+     * Parent folder of every world's data folder: on 26.x the main world's {@code dimensions/minecraft} folder, on 1.21.11
+     * the world container. Call after the default worlds are loaded (any time from a normal {@code onEnable}).
+     */
+    public static Path dataRoot(Server server) {
+        Path main = server.getWorlds().get(0).getWorldPath().toAbsolutePath().normalize();
+        Path namespace = main.getParent();                         // .../dimensions/minecraft on 26.x
+        Path dimensions = namespace == null ? null : namespace.getParent();
+        boolean dimensionLayout = dimensions != null && dimensions.getFileName() != null
+                && dimensions.getFileName().toString().equals("dimensions");
+        return dimensionLayout ? namespace : server.getWorldContainer().toPath().toAbsolutePath().normalize();
     }
 
-    /** Copy the template; {@code level.dat} is written last, so a folder that crashed mid-copy is not taken for a world. */
+    /** A world data folder (or template) always has {@code region/}, on both versions. */
+    public static boolean looksLikeWorld(Path folder) {
+        return Files.isDirectory(folder.resolve("region"));
+    }
+
+    /** Copy the template into {@code <target>.copying}, then rename it to {@code target} in one atomic step. */
     public static void copyTemplate(Path template, Path target) throws IOException {
-        if (!hasLevelDat(template)) {
-            throw new IOException("Template has no level.dat: " + template);
+        if (!looksLikeWorld(template)) {
+            throw new IOException("Template has no region/ folder (not a world data folder): " + template);
         }
         if (Files.exists(target)) {
             throw new IOException("Target already exists: " + target);
         }
+        Path staging = target.resolveSibling(target.getFileName() + COPYING);
+        deleteTree(staging);                                      // debris from an earlier crash
         Files.walkFileTree(template, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                Files.createDirectories(target.resolve(template.relativize(dir).toString()));
+                Files.createDirectories(staging.resolve(template.relativize(dir).toString()));
                 return FileVisitResult.CONTINUE;
             }
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                String name = file.getFileName().toString();
-                if (!SKIP.contains(name) && !LEVEL_DAT.equals(name)) {
-                    Files.copy(file, target.resolve(template.relativize(file).toString()),
-                            StandardCopyOption.COPY_ATTRIBUTES);
+                String relative = template.relativize(file).toString().replace(java.io.File.separatorChar, '/');
+                if (!SKIP.contains(relative)) {
+                    Files.copy(file, staging.resolve(relative), StandardCopyOption.COPY_ATTRIBUTES);
                 }
                 return FileVisitResult.CONTINUE;
             }
         });
-        Files.copy(template.resolve(LEVEL_DAT), target.resolve(LEVEL_DAT), StandardCopyOption.COPY_ATTRIBUTES);
+        Files.move(staging, target, StandardCopyOption.ATOMIC_MOVE);
     }
 
-    /**
-     * Delete a world folder, **deleting {@code level.dat} last**: if a crash happens mid-deletion, the debris has no level.dat,
-     * so neither {@code WorldCreator} nor an admin mistakes it for a loadable world.
-     */
+    /** Rename the folder to {@code <name>.deleting} first, so an interrupted delete never leaves a loadable world behind. */
     public static void deleteWorld(Path folder) throws IOException {
         if (!Files.exists(folder)) {
             return;
         }
-        Path levelDat = folder.resolve(LEVEL_DAT);
+        Path doomed = folder.resolveSibling(folder.getFileName() + DELETING);
+        deleteTree(doomed);
+        Files.move(folder, doomed, StandardCopyOption.ATOMIC_MOVE);
+        deleteTree(doomed);
+    }
+
+    /** Plain recursive delete, children first. */
+    public static void deleteTree(Path folder) throws IOException {
+        if (!Files.exists(folder)) {
+            return;
+        }
         List<Path> paths;
         try (Stream<Path> walk = Files.walk(folder)) {
-            paths = walk.sorted(Comparator.reverseOrder()).toList();   // children first, folders last
+            paths = walk.sorted(Comparator.reverseOrder()).toList();
         }
         for (Path path : paths) {
-            if (!path.equals(folder) && !path.equals(levelDat)) {
-                Files.deleteIfExists(path);
-            }
+            Files.deleteIfExists(path);
         }
-        Files.deleteIfExists(levelDat);
-        Files.deleteIfExists(folder);
     }
 }
 ```
@@ -352,6 +392,9 @@ import java.util.stream.Stream;
  * <p>Threading: {@code createVoid}, {@code createFromTemplate}, and {@code destroy} must be called on the main thread;
  * world loading/unloading always happens on the main thread; only copying and deleting folders is async. Returned futures always complete on the main thread.
  * This class's fields are read and written only on the main thread, so no locks are needed.
+ *
+ * <p>World data folders are resolved with {@link WorldFolders#dataRoot}: on 26.x they live under the main world's
+ * {@code dimensions/minecraft/}, not next to it, so never build them from {@code getWorldContainer()} yourself.
  */
 public final class DisposableWorlds {
 
@@ -359,16 +402,17 @@ public final class DisposableWorlds {
     private final Server server;
     private final ArenaNames names;
     private final ArenaRules rules;
-    private final Path container;
+    private final Path dataRoot;
     private final Set<String> owned = new LinkedHashSet<>();
     private final Set<String> reserved = new HashSet<>();
 
+    /** Construct in {@code onEnable} (the default worlds must already be loaded). */
     public DisposableWorlds(Plugin plugin, ArenaNames names, ArenaRules rules) {
         this.plugin = plugin;
         this.server = plugin.getServer();
         this.names = names;
         this.rules = rules;
-        this.container = server.getWorldContainer().toPath();
+        this.dataRoot = WorldFolders.dataRoot(server);
     }
 
     /** Create a void world with a single spawn platform block in the center (in practice, replace with your paste flow). */
@@ -391,7 +435,7 @@ public final class DisposableWorlds {
         String name = names.next(this::taken);
         requireFresh(name);
         reserved.add(name);                      // Hold the number during the copy so a second call in the same tick does not collide on the name
-        Path target = container.resolve(name);
+        Path target = dataRoot.resolve(name);    // where createWorld will look for this world's data
         CompletableFuture<World> pipeline = CompletableFuture
                 .runAsync(() -> copy(template, target), this::async)
                 .thenCompose(v -> onMain(() -> load(name, generator)));
@@ -408,7 +452,7 @@ public final class DisposableWorlds {
         Location exit = server.getWorlds().get(0).getSpawnLocation();
         List<CompletableFuture<Boolean>> moves = world.getPlayers().stream()
                 .map(player -> player.teleportAsync(exit)).toList();
-        Path folder = world.getWorldFolder().toPath();
+        Path folder = world.getWorldPath();
         CompletableFuture<Void> pipeline = CompletableFuture.allOf(moves.toArray(new CompletableFuture<?>[0]))
                 .thenCompose(v -> onMain(() -> {
                     unload(world);
@@ -418,14 +462,24 @@ public final class DisposableWorlds {
         return finishOnMain(pipeline, () -> { }, failure -> { });
     }
 
-    /** On startup, clean up arena_* folders left by the last crash (the prefix is reserved for this mechanism). */
+    /**
+     * On startup, clean up arena_* data and {@code .copying} / {@code .deleting} debris left by the last crash
+     * (the prefix is reserved for this mechanism). Scans {@link WorldFolders#dataRoot}, which on 26.x is
+     * {@code <main world>/dimensions/minecraft}: scanning the world container would miss every arena.
+     */
     public void purgeStaleAsync() {
         Set<String> loaded = server.getWorlds().stream().map(World::getName).collect(Collectors.toSet());
         async(() -> {
-            try (Stream<Path> dirs = Files.list(container)) {
+            try (Stream<Path> dirs = Files.list(dataRoot)) {
                 for (Path dir : dirs.filter(Files::isDirectory).toList()) {
                     String name = dir.getFileName().toString();
-                    if (ArenaNames.isArena(name) && !loaded.contains(name)) {
+                    String base = stripDebrisSuffix(name);
+                    if (!ArenaNames.isArena(base)) {
+                        continue;
+                    }
+                    if (!base.equals(name)) {
+                        deleteTreeQuietly(dir);            // interrupted copy or delete
+                    } else if (!loaded.contains(name)) {
                         deleteQuietly(dir);
                     }
                 }
@@ -444,7 +498,7 @@ public final class DisposableWorlds {
                 owned.remove(name);
                 continue;
             }
-            Path folder = world.getWorldFolder().toPath();
+            Path folder = world.getWorldPath();
             for (Player player : List.copyOf(world.getPlayers())) {
                 player.teleport(exit);
             }
@@ -458,21 +512,33 @@ public final class DisposableWorlds {
     // ---- Internals ----
 
     private boolean taken(String name) {
-        return server.getWorld(name) != null || reserved.contains(name) || Files.exists(container.resolve(name));
+        return server.getWorld(name) != null || reserved.contains(name) || Files.exists(dataRoot.resolve(name));
     }
 
-    /** Guard: refuse if the folder already exists. WorldCreator treats an incomplete folder as a new world and silently generates terrain. */
+    /**
+     * Guard: refuse if data for this name already exists. {@code createWorld} silently loads whatever it finds there
+     * (stale arena data after a crash) or generates new terrain over an incomplete folder.
+     */
     private void requireFresh(String name) {
         if (server.getWorld(name) != null) {
             throw new IllegalStateException("World already loaded: " + name);
         }
-        Path folder = container.resolve(name);
+        Path folder = dataRoot.resolve(name);
         if (Files.exists(folder)) {
-            String why = WorldFolders.hasLevelDat(folder)
-                    ? "an existing world"
-                    : "a folder without level.dat (half-deleted or foreign data)";
-            throw new IllegalStateException("Refusing to create '" + name + "' over " + why);
+            String why = WorldFolders.looksLikeWorld(folder)
+                    ? "existing world data"
+                    : "a folder without region/ (half-deleted or foreign data)";
+            throw new IllegalStateException("Refusing to create '" + name + "' over " + why + " at " + folder);
         }
+    }
+
+    private static String stripDebrisSuffix(String name) {
+        for (String suffix : List.of(WorldFolders.COPYING, WorldFolders.DELETING)) {
+            if (name.endsWith(suffix)) {
+                return name.substring(0, name.length() - suffix.length());
+            }
+        }
+        return name;
     }
 
     private World load(String name, ChunkGenerator generator) {
@@ -518,6 +584,14 @@ public final class DisposableWorlds {
     private void deleteQuietly(Path folder) {
         try {
             WorldFolders.deleteWorld(folder);
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Could not delete " + folder, e);
+        }
+    }
+
+    private void deleteTreeQuietly(Path folder) {
+        try {
+            WorldFolders.deleteTree(folder);
         } catch (IOException e) {
             plugin.getLogger().log(Level.WARNING, "Could not delete " + folder, e);
         }
@@ -1163,7 +1237,7 @@ src/main/java/com/example/arena/
     ├── ChangeRecorder.java
     ├── ArenaResetService.java
     └── DebrisSweeper.java
-plugins/Arena/templates/duel_map/   ← template world (contains level.dat, region/)
+plugins/Arena/templates/duel_map/   ← template = copy of an arena's data folder from the same version (region/, data/ ...)
 ```
 
 (The templates above all sit in `com.example.arena` so each file compiles on its own; a real project can split packages following this structure.)
@@ -1203,9 +1277,11 @@ The bottleneck of in-place reset is the Bukkit wrapper and lighting update that 
 
 | Error | Cause | Fix |
 |------|------|------|
-| World becomes an empty new map after restart | The folder was deleted and `WorldCreator` silently generated new terrain | Check `level.dat` before loading; `requireFresh` refuses to create over an incomplete folder |
-| Debris folder is loaded as a world | `level.dat` was deleted first on delete (or written first on copy) | Delete `level.dat` last and write it last when copying; `purgeStaleAsync` at startup |
-| Two worlds with the same UUID / `session.lock` error | `uid.dat` and `session.lock` were copied | The `SKIP` set in `WorldFolders` |
+| World becomes an empty new map, or an old match's blocks reappear | `createWorld` generated over an incomplete folder, or loaded stale data left by a crash | `requireFresh` refuses when data for the name exists under `WorldFolders.dataRoot`; `purgeStaleAsync` clears it at startup |
+| Debris folder is loaded as a world | A copy or delete was interrupted under the real name | Copy to `.copying` then rename; rename to `.deleting` before deleting; `purgeStaleAsync` removes the suffixed debris |
+| Two worlds with the same UUID / `session.lock` error | The template's UUID file (26.x `data/paper/metadata.dat`, 1.21.11 `uid.dat`) or `session.lock` was copied | The `SKIP` set in `WorldFolders` |
+| On 26.x stale arenas are never cleaned and templates are rejected | Code built paths from `getWorldContainer()`; 26.x keeps every world under `<main world>/dimensions/minecraft/` and has no per-world `level.dat` | Resolve paths with `WorldFolders.dataRoot` / `World#getWorldPath()`; validate templates by `region/` |
+| A legacy world folder dropped into the server root disappears on 26.x | Paper imports a `<container>/<name>` folder that has `level.dat` into `dimensions/` on `createWorld`, then deletes the original | Build 26.x templates from a 26.x arena's `getWorldPath()`; do not reuse 1.21.11 templates |
 | Terrain turns vanilla after loading a copied world | The custom generator is not saved with the world | Pass `generator(...)` on every load |
 | `unloadWorld` returns false | The world still has players, or it is the default world | `teleportAsync` them away first and confirm `getPlayers().isEmpty()`; never unload `getWorlds().get(0)` |
 | Deleting a folder throws `AccessDeniedException` on Windows | Region files were just unloaded and the file lock is not yet released | Retry the delete after a few seconds' delay; `purgeStaleAsync` at startup cleans up the rest |

@@ -46,8 +46,9 @@ rules.apply(world);   // Apply game rules immediately after creation
 ### Template copy and deletion (WorldFolders, async)
 
 ```java
-// Copy: skip uid.dat and session.lock; write level.dat last
-// Delete: delete level.dat last, so a half-deleted folder is never mistaken for a world
+// 26.x keeps world data in <main world>/dimensions/minecraft/<name>/ (1.21.11: <world container>/<name>/); resolve paths with WorldFolders.dataRoot / getWorldPath()
+// Copy: skip the world UUID file (26.x data/paper/metadata.dat, 1.21.11 uid.dat) and session.lock; write to <name>.copying, then rename atomically
+// Delete: rename to <name>.deleting first; purgeStaleAsync clears leftovers and .copying / .deleting debris at startup (verified on a running Paper 26.3 server)
 WorldFolders.copyTemplate(template, target);
 WorldFolders.deleteWorld(folder);
 ```

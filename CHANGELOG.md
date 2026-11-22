@@ -19,6 +19,7 @@
 - `paper-combat-tag`：`PotionEffectTypeCategory`（26.3 標記 for removal）改用 `PotionEffectType#getEffectCategory()`
 - `paper-chest-gui`：移除 `InventoryAction.HOTBAR_MOVE_AND_READD`；`ItemFlag.HIDE_ADDITIONAL_TOOLTIP` 改用 `TOOLTIP_DISPLAY` 資料元件
 - `paper-disposable-world`：移除無作用的 `keepSpawnLoaded`、`shouldGenerateBedrock`；`Block#getBlockKey` 改為自行打包座標
+- `paper-disposable-world`：修正 26.x 存檔路徑。26.x 把 `WorldCreator` 建立的世界存在 `<主世界>/dimensions/minecraft/<名稱>/`，沒有 `level.dat`，世界 UUID 改存在 `data/paper/metadata.dat`；原範本照舊版結構去世界容器找資料，導致崩潰殘留永遠清不掉、從 26.x 世界做的範本一律被拒。改為 `WorldFolders.dataRoot` 依版本決定路徑，範本以 `region/` 判斷，複製時略過 UUID 檔，並改用 `.copying` / `.deleting` 原子改名取代「`level.dat` 最後寫／最後刪」。已在 Paper 26.3（build 258）實機驗證 18 項檢查
 - `paper-client-side-effects`：`WorldBorder#setSize(double, long)` 改用 `changeSize(double, long)`
 - `docs/paper-nms/packets.md`：`ClientboundExplodePacket` 補上 26.3 新增的 `playSound` 參數；揮手封包改寫為 26.3／1.21.11 兩版
 
