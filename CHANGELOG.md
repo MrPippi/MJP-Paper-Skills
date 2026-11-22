@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+### Security — 升級 Next.js 至 16.4.6
+
+- Web 依賴 Next.js 16.4.0 → 16.4.6（`npm audit`：16.0.0–16.4.4 受影響，含 GHSA-2464-fhr4-w9xw 圖片最佳化 RCE、GHSA-p3m5-59mp-jv5r、GHSA-673q-mjm6-r5xr 等）；升級前 `next build` 會因 SecurityFatalError 中止，升級後 tsc、測試、靜態匯出皆通過
+
 ### Added — paper-discord-bridge（registry 7.1.0，共 31 個技能）
 
 - 新技能 `paper-discord-bridge`（paper-integration）：只用 JDK `HttpClient`／`WebSocket` 的 Discord 雙向聊天橋接，不需 JDA 或 DiscordSRV。遊戲 → Discord 以 webhook 佇列送出（daemon 執行緒、429 照 `Retry-After` 重送一次、`allowed_mentions` 為空、Markdown／提及跳脫）；Discord → 遊戲以純邏輯 Gateway 狀態機（HELLO、抖動心跳、IDENTIFY／RESUME、op 7／9、致命關閉碼、退避）在單一執行緒運作，入站回主執行緒、經 `AccountLinks` 檢查後送進聊天；token 與 webhook 網址不進 log
