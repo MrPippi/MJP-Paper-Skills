@@ -1,0 +1,103 @@
+# Runs skill templates on a real Paper server and checks their behaviour
+# (verify/runtime/scenarios.json, scripts/runtime-check.mjs). Not a required check.
+#
+# Running the test servers accepts the Minecraft EULA (https://aka.ms/MinecraftEULA)
+# on the repository owner's behalf; that is what --accept-eula below does.
+name: Skills runtime
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "Skills/paper/paper-disposable-world/**"
+      - "Skills/paper/paper-data-components/**"
+      - "Skills/paper/paper-registry-events/**"
+      - "Skills/paper/paper-custom-recipes/**"
+      - "Skills/paper/paper-datapack-bundling/**"
+      - "Skills/paper/paper-world-clock/**"
+      - "verify/**"
+      - "scripts/runtime-check.mjs"
+      - "scripts/extract-skill-java.mjs"
+      - "scripts/lib/**"
+      - ".github/workflows/skills-runtime.yml"
+  push:
+    branches: ["main"]
+    paths:
+      - "Skills/paper/paper-disposable-world/**"
+      - "Skills/paper/paper-data-components/**"
+      - "Skills/paper/paper-registry-events/**"
+      - "Skills/paper/paper-custom-recipes/**"
+      - "Skills/paper/paper-datapack-bundling/**"
+      - "Skills/paper/paper-world-clock/**"
+      - "verify/**"
+      - "scripts/runtime-check.mjs"
+      - "scripts/extract-skill-java.mjs"
+      - "scripts/lib/**"
+      - ".github/workflows/skills-runtime.yml"
+  schedule:
+    - cron: "41 3 * * 1"   # Mondays, after the canary
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: skills-runtime-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime:
+    name: Paper ${{ matrix.mc }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mc: "26.3"
+            java: "25"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java ${{ matrix.java }}
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Cache Paper server
+        uses: actions/cache@v6
+        with:
+          path: |
+            verify/build/runtime/${{ matrix.mc }}/downloads
+            verify/build/runtime/${{ matrix.mc }}/base
+          key: paper-server-${{ matrix.mc }}-${{ hashFiles('verify/build.gradle') }}
+
+      - name: Extract templates
+        run: node scripts/extract-skill-java.mjs ${{ matrix.mc }}
+
+      - name: Build probe plugins
+        working-directory: verify
+        run: ./gradlew buildRuntimePlugins -Pmc=${{ matrix.mc }}
+
+      - name: Run on Paper
+        run: node scripts/runtime-check.mjs ${{ matrix.mc }} --accept-eula
+
+      - name: Upload server logs
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: runtime-logs-${{ matrix.mc }}
+          path: |
+            verify/build/runtime/${{ matrix.mc }}/*/*.log
+            verify/build/runtime/${{ matrix.mc }}/*/logs/
+          retention-days: 7

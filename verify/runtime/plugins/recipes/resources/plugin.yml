@@ -1,0 +1,4 @@
+name: RecipesTest
+version: '1.0'
+main: com.example.recipes.RecipesPlugin
+api-version: '${apiVersion}'

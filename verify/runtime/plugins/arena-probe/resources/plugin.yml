@@ -1,0 +1,4 @@
+name: ArenaProbe
+version: '1.0'
+main: com.example.probe.arena.ArenaProbe
+api-version: '${apiVersion}'

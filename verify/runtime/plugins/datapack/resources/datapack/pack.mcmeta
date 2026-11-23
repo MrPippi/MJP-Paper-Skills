@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "description": "Example content bundled with the CustomContent plugin",
+    "min_format": [94, 1],
+    "max_format": 121
+  }
+}

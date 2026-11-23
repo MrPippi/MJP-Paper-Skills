@@ -1,0 +1,5 @@
+name: CustomContent
+version: '1.0'
+main: com.example.content.ContentPlugin
+bootstrapper: com.example.content.ContentBootstrap
+api-version: '${apiVersion}'
