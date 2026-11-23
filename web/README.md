@@ -59,7 +59,7 @@ npm run dev
 
 1. 在 `data/skills/` 新增 `{skill-id}.md`，填入 YAML frontmatter（參考現有檔案）
 2. 在 `data/skills/en/{skill-id}.md` 新增英文內文（只含內文、不得有中文）
-3. 更新 `tests/skills-api.data.test.ts` 的預期 slug 清單與分類數，以及 `tests/platform.test.ts` 的平台技能數
+3. 在儲存庫根目錄執行 `node scripts/sync-catalog.mjs` 更新各處技能數量（測試的預期值直接讀 `Skills/skills-registry.yml`，不必手改；`tests/catalog.test.ts` 會檢查網站頁、README 目錄與數量是否與 registry 一致）
 4. 若 `tests/pixel-font.test.ts` 回報缺字，執行 `python scripts/pixel-font.py <Cubic_11.ttf>` 重新產生像素字型子集
 5. `npm test && npm run build`
 

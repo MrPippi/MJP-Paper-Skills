@@ -9,6 +9,8 @@ on:
       - "Skills/**"
       - "verify/**"
       - "scripts/extract-skill-java.mjs"
+      - "scripts/lib/**"
+      - "docs/paper-nms/**"
       - ".github/workflows/skills-compile.yml"
   push:
     branches: ["main"]
@@ -16,6 +18,8 @@ on:
       - "Skills/**"
       - "verify/**"
       - "scripts/extract-skill-java.mjs"
+      - "scripts/lib/**"
+      - "docs/paper-nms/**"
       - ".github/workflows/skills-compile.yml"
   workflow_dispatch:
 
@@ -59,3 +63,7 @@ jobs:
       - name: Compile templates
         working-directory: verify
         run: ./gradlew compileSkills -Pmc=${{ matrix.mc }} --continue
+
+      - name: Check snippet imports
+        working-directory: verify
+        run: ./gradlew checkSnippetImports -Pmc=${{ matrix.mc }}

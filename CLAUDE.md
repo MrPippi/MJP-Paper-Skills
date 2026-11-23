@@ -31,7 +31,8 @@ MJP-Paper-Skills/
 ├── .github/workflows/
 │   ├── nextjs.yml                       ← main push：tsc + test + build + 部署 GitHub Pages
 │   ├── ci.yml                           ← PR：tsc + test + build（不部署）
-│   └── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯（改到 Skills/、verify/ 時）
+│   ├── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯＋片段 import 檢查（改到 Skills/、verify/、docs/paper-nms/ 時）
+│   └── skills-canary.yml                ← 每週一：有更新的 Paper dev bundle（新 build 或下一版 beta）時先編譯一次，不擋 PR
 ├── .claude/
 │   └── skills/                          ← Claude Code 執行時（37 個技能，與 Skills/ 同步）
 │       ├── skills-registry.yml          ← 與 Skills/ 相同
@@ -51,7 +52,10 @@ MJP-Paper-Skills/
 │   └── paper/                           ← Paper API 技能（每個含 SKILL.md + examples.md + references/）
 ├── scripts/
 │   ├── sync-skill-references.mjs        ← 產生各技能 references/（PLATFORM.md、_shared 副本）
-│   └── extract-skill-java.mjs           ← 抽出完整 Java 範本（套用 @1.21.11／@only）供 verify/ 編譯
+│   ├── extract-skill-java.mjs           ← 抽出完整 Java 範本（套用 @1.21.11／@only、依 mc_versions 跳過）供 verify/ 編譯，並列出片段 import
+│   ├── sync-catalog.mjs                 ← 依 registry 改寫各處技能數量／版本；--check 檢查網站頁、README 目錄、Skills Index
+│   ├── canary-bundle.mjs                ← 找出 Paper 最新 dev bundle（skills-canary.yml 用）
+│   └── lib/registry.mjs                 ← 不依賴 YAML 套件的 registry 讀取（各腳本與網站測試共用）
 ├── verify/                              ← Gradle 專案：對指定版本 dev bundle 編譯抽出的範本
 ├── docs/
 │   └── paper-nms/                       ← NMS API 速查表（深度參考資料）
@@ -267,8 +271,8 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 5. 將新條目加入 `Skills/skills-registry.yml` 與 `.claude/skills/skills-registry.yml`
 6. 若涉及新平台，建立 `Skills/<platform>/PLATFORM.md`
 7. 驗證觸發關鍵字無與既有技能衝突
-8. 在 `web/data/skills/<slug>.md` 新增網站頁面、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），並更新 `web/tests/skills-api.data.test.ts` 的預期清單
-9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；`SKILL.md` 與 `template.md` 合為一組，examples.md 的同名類別會覆蓋該組版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
+8. 在 `web/data/skills/<slug>.md` 新增網站頁面（frontmatter 的 `version`、`category` 與 registry 一致；只支援部分版本時加 `mcVersions`）、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），在 8 份 README 目錄、本檔 Skills Index、`Skills/paper-api/PLATFORM.md` 技能清單各加一列，然後執行 `node scripts/sync-catalog.mjs` 更新各處技能數量與 registry 版本。網站測試的預期值直接讀 registry，不必手改；`web/tests/catalog.test.ts` 以 `--check` 檢查以上是否一致
+9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；片段（以及 `docs/paper-nms/`）的 import 由 `./gradlew checkSnippetImports -Pmc=<版本>` 對同一 classpath 檢查類別是否存在（`com.example.*` 與 JDK 除外）；`SKILL.md` 與 `template.md` 合為一組，examples.md 的同名類別會覆蓋該組版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）
 
 ---
 
@@ -362,7 +366,7 @@ npm run build         # 靜態匯出至 web/out/（robots.txt / sitemap.xml 由 
 
 2. **技能自給自足**：使用者可用 `npx skills add MrPippi/MJP-Paper-Skills --skill <id>` 單獨安裝技能，只會複製該技能資料夾。各技能需要的 `PLATFORM.md` 與 `_shared/*.md` 由 `scripts/sync-skill-references.mjs` 複製到 `<skill>/references/`（產生檔，不可手改）。修改 `Skills/paper-*/PLATFORM.md` 或 `Skills/_shared/` 後必須重跑腳本；`web/tests/skill-references.test.ts` 會以 `--check` 檢查。
 
-3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.3** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.3 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。唯一例外是 `paper-world-clock`（API 只有 26.3：所有區塊標 `// @only 26.3`，registry 加 `mc_versions: ["26.3"]`）。
+3. **MC 版本**：所有技能範本必須同時對 Paper **1.21.11** 與 **26.3** 編譯驗證（CI `skills-compile.yml` 自動檢查）。預設寫 26.3 API；1.21.11 寫法不同的行在行尾加 `// @1.21.11: <替代程式碼>`，只適用單一版本的區塊第一行加 `// @only <版本>`（見 `Skills/paper-nms/PLATFORM.md`）。唯一例外是 `paper-world-clock`（API 只有 26.3）：registry 寫 `mc_versions: ["26.3"]`（抽取腳本會跳過其他版本）、網站 frontmatter 寫 `mcVersions: ["26.3"]`（技能頁顯示支援版本），區塊仍標 `// @only 26.3` 方便閱讀。
 
 4. **Mojang 官方名稱強制**：不產生 Spigot/混淆映射的代碼。
 

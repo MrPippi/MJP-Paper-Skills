@@ -1,7 +1,6 @@
 /**
- * Characterization tests for features/skills/api/skills.ts against the real
- * web/data/skills/ content. Records the current dataset shape; expected to
- * change whenever skills are added, removed or recategorized.
+ * Tests for features/skills/api/skills.ts against the real web/data/skills/ content,
+ * checked against Skills/skills-registry.yml (ids, versions, categories).
  *
  * Must run with cwd = web/ (npm test does this).
  */
@@ -17,48 +16,13 @@ import {
   getSkillBySlug,
   getSkillsByCategory,
 } from '../features/skills/api/skills';
+import { readRegistry } from './helpers/registry';
 
 const DATA_DIR = path.join(__dirname, '..', 'data', 'skills');
 
-const EXPECTED_SLUGS = [
-  'nms-attribute-modifier',
-  'nms-block-entity',
-  'nms-boss-event',
-  'nms-chunk-access',
-  'nms-custom-entity',
-  'nms-custom-menu',
-  'nms-data-component',
-  'nms-fake-player',
-  'nms-nbt-manipulation',
-  'nms-packet-interceptor',
-  'nms-packet-sender',
-  'nms-particle-effect',
-  'nms-player-profile',
-  'nms-reflection-bridge',
-  'nms-scoreboard',
-  'nms-version-adapter',
-  'paper-brigadier-command',
-  'paper-chest-gui',
-  'paper-client-side-effects',
-  'paper-combat-tag',
-  'paper-config-lang',
-  'paper-custom-recipes',
-  'paper-data-components',
-  'paper-datapack-bundling',
-  'paper-dialog-ui',
-  'paper-discord-bridge',
-  'paper-disposable-world',
-  'paper-economy-ledger',
-  'paper-embedded-http',
-  'paper-menu-type-gui',
-  'paper-packetevents-filter',
-  'paper-registry-events',
-  'paper-safe-teleport',
-  'paper-service-api',
-  'paper-softdepend-hook',
-  'paper-sqlite-repository',
-  'paper-world-clock',
-];
+/** Expectations come from Skills/skills-registry.yml, so adding a skill needs no test edit. */
+const REGISTRY = readRegistry();
+const EXPECTED_SLUGS = REGISTRY.skills.map((s) => s.id).sort();
 
 describe('getAllSkills (real data)', () => {
   it('parses every .md file in data/skills', () => {
@@ -66,52 +30,36 @@ describe('getAllSkills (real data)', () => {
     assert.equal(getAllSkills().length, mdCount);
   });
 
-  it('contains the 37 skills in title order', () => {
-    assert.deepEqual(getAllSkills().map((s) => s.slug), EXPECTED_SLUGS);
+  it('contains exactly the registry skills, in title order', () => {
+    const skills = getAllSkills();
+    assert.deepEqual(skills.map((s) => s.slug).sort(), EXPECTED_SLUGS);
+    const titles = skills.map((s) => s.title);
+    assert.deepEqual(titles, [...titles].sort((a, b) => a.localeCompare(b)));
   });
 
   it('uses frontmatter id equal to filename slug for every skill', () => {
     for (const s of getAllSkills()) assert.equal(s.id, s.slug);
   });
 
-  it('marks every skill active at its recorded version with string updatedAt', () => {
-    // Skills revised for Paper 26.3 (registry 7.2.0) are at 1.1.0; all others are still 1.0.0.
-    const revised = new Set([
-      'nms-data-component',
-      'nms-fake-player',
-      'nms-packet-interceptor',
-      'paper-chest-gui',
-      'paper-client-side-effects',
-      'paper-combat-tag',
-      'paper-disposable-world',
-    ]);
+  it('marks every skill active at its registry version with string updatedAt', () => {
+    const versions = new Map(REGISTRY.skills.map((s) => [s.id, s.version]));
     for (const s of getAllSkills()) {
       assert.equal(s.status, 'active', s.slug);
-      assert.equal(s.version, revised.has(s.slug) ? '1.1.0' : '1.0.0', s.slug);
+      assert.equal(s.version, versions.get(s.slug), s.slug);
       assert.match(s.updatedAt, /^\d{4}-\d{2}-\d{2}$/, s.slug);
     }
   });
 });
 
 describe('getCategories (real data)', () => {
-  it('returns 15 categories sorted by count desc', () => {
-    assert.deepEqual(getCategories(), [
-      { id: 'paper-gameplay', label: 'Paper 玩法', labelEn: 'Paper Gameplay', count: 6 },
-      { id: 'paper-integration', label: 'Paper 整合', labelEn: 'Paper Integration', count: 4 },
-      { id: 'nms-world', label: 'NMS 世界', labelEn: 'NMS World', count: 3 },
-      { id: 'paper-ui', label: 'Paper 介面', labelEn: 'Paper UI', count: 3 },
-      { id: 'paper-data', label: 'Paper 資料', labelEn: 'Paper Data', count: 3 },
-      { id: 'nms-entity', label: 'NMS 實體', labelEn: 'NMS Entity', count: 2 },
-      { id: 'nms-display', label: 'NMS 顯示', labelEn: 'NMS Display', count: 2 },
-      { id: 'nms-data', label: 'NMS 資料', labelEn: 'NMS Data', count: 2 },
-      { id: 'nms-player', label: 'NMS 玩家', labelEn: 'NMS Player', count: 2 },
-      { id: 'nms-packet', label: 'NMS 封包', labelEn: 'NMS Packet', count: 2 },
-      { id: 'nms-bridge', label: 'NMS 橋接', labelEn: 'NMS Bridge', count: 2 },
-      { id: 'paper-network', label: 'Paper 網路', labelEn: 'Paper Network', count: 2 },
-      { id: 'paper-world', label: 'Paper 世界', labelEn: 'Paper World', count: 2 },
-      { id: 'nms-ui', label: 'NMS UI', labelEn: 'NMS UI', count: 1 },
-      { id: 'paper-command', label: 'Paper 指令', labelEn: 'Paper Command', count: 1 },
-    ]);
+  it('counts every registry category, sorted by count desc, with labels', () => {
+    const expected = new Map<string, number>();
+    for (const s of REGISTRY.skills) expected.set(s.category, (expected.get(s.category) ?? 0) + 1);
+    const categories = getCategories();
+    assert.deepEqual(new Map(categories.map((c) => [c.id, c.count])), expected);
+    const counts = categories.map((c) => c.count);
+    assert.deepEqual(counts, [...counts].sort((a, b) => b - a));
+    for (const c of categories) assert.ok(c.label && c.labelEn, c.id);
   });
 
   it('getSkillsByCategory returns title-ordered members', () => {

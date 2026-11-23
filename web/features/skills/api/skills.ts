@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { renderMarkdown } from '@/shared/markdown/render';
+import { MC_VERSIONS } from '@/config/site';
 import type { SkillMeta, SkillFull, Category, SearchIndex } from '@/shared/types/skill';
 
 const SKILLS_DIR = path.join(process.cwd(), 'data', 'skills');
@@ -38,6 +39,7 @@ function parseSkillFile(filename: string): SkillMeta | null {
     updatedAt: (data.updatedAt as string) || '',
     githubPath: (data.githubPath as string) || '',
     featured: Boolean(data.featured),
+    mcVersions: Array.isArray(data.mcVersions) ? (data.mcVersions as unknown[]).map(String) : [...MC_VERSIONS],
   };
 }
 

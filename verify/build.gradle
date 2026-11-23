@@ -23,6 +23,13 @@ def target = targets[mc]
 if (target == null) {
     throw new GradleException("Unknown -Pmc=${mc}; expected one of ${targets.keySet()}")
 }
+// -Pbundle=<version> compiles the same templates against another dev bundle
+// (used by .github/workflows/skills-canary.yml with the newest published bundle).
+def bundleOverride = providers.gradleProperty('bundle').orNull
+if (bundleOverride) {
+    target = target + [bundle: bundleOverride]
+    logger.lifecycle("Using dev bundle ${bundleOverride} instead of the pinned ${targets[mc].bundle}")
+}
 
 repositories {
     mavenCentral()
@@ -73,6 +80,65 @@ if (extracted.isDirectory()) {
                 skillTasks << sourceSet.compileJavaTaskName
             }
         }
+    }
+}
+
+// Partial snippets are not compiled, so check that every class they import exists in this
+// version's classpath (dev bundle, paper-api, soft dependencies). The list comes from the extractor.
+tasks.register('checkSnippetImports') {
+    group = 'verification'
+    description = "Checks that the imports of partial snippets resolve for Minecraft ${mc}."
+    def listFile = layout.projectDirectory.file("build/extracted/${mc}/snippet-imports.tsv").asFile
+    def classpath = sourceSets.main.compileClasspath
+    inputs.files(classpath)
+    doLast {
+        if (!listFile.isFile()) {
+            throw new GradleException("No snippet list for ${mc}. Run: node ../scripts/extract-skill-java.mjs ${mc}")
+        }
+        def classes = new HashSet<String>()
+        def packages = new HashSet<String>()
+        def add = { String entry ->
+            def name = entry.substring(0, entry.length() - '.class'.length())
+            classes << name
+            def slash = name.lastIndexOf('/')
+            if (slash > 0) packages << name.substring(0, slash)
+        }
+        classpath.files.each { f ->
+            if (f.isDirectory()) {
+                f.eachFileRecurse(groovy.io.FileType.FILES) { c ->
+                    if (c.name.endsWith('.class')) add(f.toPath().relativize(c.toPath()).toString().replace('\\', '/'))
+                }
+            } else if (f.name.endsWith('.jar')) {
+                new java.util.zip.ZipFile(f).withCloseable { zip ->
+                    zip.entries().each { e -> if (e.name.endsWith('.class')) add(e.name) }
+                }
+            }
+        }
+        // a.b.C.D may be the nested class a/b/C$D: try every split between package and class
+        def resolves = { String dotted ->
+            def parts = dotted.split('\\.')
+            (parts.length - 1..1).any { i -> classes.contains(parts[0..<i].join('/') + '/' + parts[i..-1].join('$')) }
+        }
+        def missing = []
+        listFile.eachLine('UTF-8') { line ->
+            if (!line.trim()) return
+            def (where, kind, name) = line.split('\t')
+            def ok
+            if (kind == 'static') {
+                def owner = name.substring(0, name.lastIndexOf('.'))     // drop the member or *
+                ok = resolves(owner)
+            } else if (name.endsWith('.*')) {
+                def base = name[0..-3]
+                ok = packages.contains(base.replace('.', '/')) || resolves(base)
+            } else {
+                ok = resolves(name)
+            }
+            if (!ok) missing << "${where}: ${name}"
+        }
+        if (missing) {
+            throw new GradleException("Snippet imports not found for Minecraft ${mc}:\n  " + missing.unique().join('\n  '))
+        }
+        logger.lifecycle("All snippet imports resolve for Minecraft ${mc}.")
     }
 }
 

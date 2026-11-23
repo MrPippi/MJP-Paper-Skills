@@ -20,6 +20,7 @@ triggerKeywords:
   - "ClockTimeSkipEvent"
 updatedAt: "2026-11-23"
 githubPath: Skills/paper/paper-world-clock/SKILL.md
+mcVersions: ["26.3"]
 featured: false
 ---
 

@@ -35,6 +35,7 @@ export function SkillDetail({ skill }: { skill: SkillFull }) {
         <PlatformBadge platform={platform} />
         <SkillBadge status={skill.status} />
         <span className="rounded-[3px] border border-line px-1.5 py-0.5 font-pixel text-[12px]">v{String(skill.version)}</span>
+        <span className="rounded-[3px] border border-line px-1.5 py-0.5 font-pixel text-[12px]" title="Minecraft">MC {skill.mcVersions.join(' · ')}</span>
         <code className="font-mono text-fg-3">{skill.id}</code>
         {skill.updatedAt && (
           <span className="ml-auto">

@@ -1,3 +1,5 @@
+/** Minecraft versions every template is verified against (a skill may list fewer via mcVersions). */
+export const MC_VERSIONS: readonly string[] = ['1.21.11', '26.3'];
 export const GITHUB_REPO_URL = 'https://github.com/MrPippi/MJP-Paper-Skills';
 /** 貢獻指南：各語言 README 的「貢獻指南」／Contributing 段落 */
 export const GITHUB_CONTRIBUTE_URLS = {
