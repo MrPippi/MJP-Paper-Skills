@@ -7,7 +7,8 @@
  *
  * Rewritten (counts and version only): READMEs, CLAUDE.md, the site's locale strings and docs page.
  * Checked only (needs a human or agent, e.g. translations): skill folders, both registry copies,
- * web pages and their frontmatter, README catalog rows, the CLAUDE.md index and the paper-api PLATFORM list.
+ * web pages and their frontmatter, README catalog rows, the CLAUDE.md index, the paper-api PLATFORM list
+ * and the runtime scenarios (verify/runtime/scenarios.json vs the registry and skills-runtime.yml paths).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -145,6 +146,33 @@ for (const skill of registry.skills) {
   }
   if (!claudeMd.includes(`| \`${skill.id}\` |`)) problems.push(`CLAUDE.md: no Skills Index row for ${skill.id}`);
   if (group === 'paper' && !paperPlatform.includes(`| \`${skill.id}\` |`)) problems.push(`Skills/paper-api/PLATFORM.md: no skill list row for ${skill.id}`);
+}
+
+// Runtime scenarios (verify/runtime/scenarios.json) name real skills on versions they support,
+// build from existing template sets, and trigger skills-runtime.yml when those skills change.
+const scenarioConfig = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'verify', 'runtime', 'scenarios.json'), 'utf8'));
+const runtimeWorkflow = fs.readFileSync(path.join(REPO_ROOT, '.github', 'workflows', 'skills-runtime.yml'), 'utf8');
+for (const scenario of scenarioConfig.scenarios) {
+  for (const id of scenario.skills) {
+    const skill = registry.skills.find((s) => s.id === id);
+    if (!skill) {
+      problems.push(`verify/runtime/scenarios.json: ${scenario.id} names unknown skill ${id}`);
+      continue;
+    }
+    const unsupported = scenario.mc.filter((v) => !skill.mcVersions.includes(v));
+    if (unsupported.length) problems.push(`verify/runtime/scenarios.json: ${scenario.id} runs ${id} on ${unsupported} (not in its mc_versions)`);
+    const pathFilter = `"Skills/${groupOf(skill)}/${id}/**"`;
+    if (runtimeWorkflow.split(pathFilter).length - 1 < 2) problems.push(`.github/workflows/skills-runtime.yml: add ${pathFilter} to the pull_request and push paths`);
+  }
+  for (const name of scenario.plugins) {
+    const plugin = scenarioConfig.plugins[name];
+    if (!plugin) {
+      problems.push(`verify/runtime/scenarios.json: ${scenario.id} uses undefined plugin ${name}`);
+      continue;
+    }
+    const [group, id] = plugin.templates.split('/');
+    if (!fs.existsSync(path.join(REPO_ROOT, 'Skills', group, id, 'SKILL.md'))) problems.push(`verify/runtime/scenarios.json: plugin ${name} builds from missing skill ${plugin.templates}`);
+  }
 }
 
 if (CHECK) {

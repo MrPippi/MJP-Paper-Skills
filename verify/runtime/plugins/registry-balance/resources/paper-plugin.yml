@@ -1,0 +1,5 @@
+name: Balance
+version: '1.0'
+main: com.example.balance.BalancePlugin
+bootstrapper: com.example.balance.BalanceBootstrap
+api-version: '${apiVersion}'

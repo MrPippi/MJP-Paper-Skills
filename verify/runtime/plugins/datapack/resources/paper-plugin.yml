@@ -1,0 +1,5 @@
+name: CustomContent
+version: '1.0'
+main: com.example.datapack.PackPlugin
+bootstrapper: com.example.datapack.PackBootstrap
+api-version: '${apiVersion}'

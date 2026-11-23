@@ -1,0 +1,4 @@
+name: ItemsProbe
+version: '1.0'
+main: com.example.probe.items.ItemsProbe
+api-version: '${apiVersion}'

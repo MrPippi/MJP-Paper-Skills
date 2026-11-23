@@ -1,0 +1,4 @@
+name: RegistryProbe
+version: '1.0'
+main: com.example.probe.registry.RegistryProbe
+api-version: '${apiVersion}'

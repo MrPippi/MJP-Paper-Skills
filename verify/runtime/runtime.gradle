@@ -1,0 +1,56 @@
+// Builds the plugin jars for the runtime checks (applied from verify/build.gradle).
+//
+//   node ../scripts/extract-skill-java.mjs 26.3 && ./gradlew buildRuntimePlugins -Pmc=26.3
+//   node ../scripts/runtime-check.mjs 26.3 --accept-eula
+//
+// Each plugin in runtime/scenarios.json compiles one extracted template set together with
+// runtime/probe (the Probe base class) and runtime/plugins/<name>/src, against the same
+// classpath as compileSkills. The jar keeps only the packages listed in `include`, plus
+// runtime/plugins/<name>/resources (descriptors get ${apiVersion} = the target version).
+// Jars go to build/runtime-plugins/<mc>/<name>.jar.
+
+def mc = skillsTarget.mc
+def config = new groovy.json.JsonSlurper().parse(file('runtime/scenarios.json'))
+def used = config.scenarios.findAll { mc in it.mc }.collectMany { it.plugins }.toSet()
+def jarTasks = []
+
+config.plugins.each { String name, Map plugin ->
+    if (!(name in used)) return
+    def templates = new File(skillsTarget.extracted, plugin.templates)
+    def sourceSetName = 'runtime' + name.split('-').collect { it.capitalize() }.join()
+    def sourceSet = sourceSets.create(sourceSetName) {
+        java.srcDirs = [templates, file('runtime/probe'), file("runtime/plugins/${name}/src")]
+        resources.srcDirs = [file("runtime/plugins/${name}/resources")]
+        compileClasspath += sourceSets.main.compileClasspath
+    }
+    tasks.named(sourceSet.compileJavaTaskName) {
+        options.encoding = 'UTF-8'
+        options.release.set(skillsTarget.java)
+        doFirst {
+            if (!templates.isDirectory()) {
+                throw new GradleException("${name}: ${templates} is missing. Run: node ../scripts/extract-skill-java.mjs ${mc}")
+            }
+        }
+    }
+    tasks.named(sourceSet.processResourcesTaskName) {
+        inputs.property('apiVersion', mc)
+        filesMatching('*plugin.yml') { expand(apiVersion: mc) }
+    }
+    jarTasks << tasks.register("${sourceSetName}Jar", Jar) {
+        archiveFileName = "${name}.jar"
+        destinationDirectory = layout.buildDirectory.dir("runtime-plugins/${mc}")
+        from(sourceSet.output.classesDirs) { plugin.include.each { include "${it}/**" } }
+        from(tasks.named(sourceSet.processResourcesTaskName))
+    }
+}
+
+tasks.register('buildRuntimePlugins') {
+    group = 'verification'
+    description = "Builds the runtime-check plugin jars for Minecraft ${mc}."
+    dependsOn jarTasks
+    doFirst {
+        if (jarTasks.isEmpty()) {
+            throw new GradleException("No runtime scenario targets Minecraft ${mc} (see runtime/scenarios.json).")
+        }
+    }
+}

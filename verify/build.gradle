@@ -142,6 +142,10 @@ tasks.register('checkSnippetImports') {
     }
 }
 
+// Plugin jars for the runtime checks on a real server (see runtime/runtime.gradle).
+ext.skillsTarget = [mc: mc, java: target.java, extracted: extracted]
+apply from: 'runtime/runtime.gradle'
+
 tasks.register('compileSkills') {
     group = 'verification'
     description = "Compiles all extracted skill templates for Minecraft ${mc}."
