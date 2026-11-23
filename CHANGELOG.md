@@ -12,6 +12,7 @@
 - `skills-canary.yml`：每週一（或手動）讀 Paper 最新 dev bundle，比固定版本新時（新 build 或下一版 beta）先編譯並檢查片段，不擋 PR；`verify` 支援 `-Pbundle=<版本>`
 - registry `mc_versions` 正式化：抽取腳本依此跳過不支援的版本，網站技能頁顯示支援的 Minecraft 版本（frontmatter `mcVersions`）
 - `scripts/lib/registry.mjs`：不依賴 YAML 套件的 registry 讀取，供上述腳本與網站測試共用
+- 實機檢查（`verify/runtime/`、`scripts/runtime-check.mjs`、`skills-runtime.yml`）：從抽出的範本建出插件，在真的 Paper 26.3 伺服器上執行並檢查行為。首批 4 個情境、90 項檢查，涵蓋 `paper-disposable-world`、`paper-data-components`、`paper-registry-events`、`paper-custom-recipes`、`paper-datapack-bundling`、`paper-world-clock`；改到這些技能時與每週一執行，不擋 PR。執行時會接受 Minecraft EULA（`--accept-eula`）
 
 ### Changed — 長範本拆到 template.md
 
