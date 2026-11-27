@@ -1,5 +1,5 @@
-name: GameplayProbe
+name: RecipesProbe
 version: '1.0'
-main: com.example.probe.gameplay.GameplayProbe
+main: com.example.probe.recipes.RecipesProbe
 api-version: '${apiVersion}'
 softdepend: [RecipesTest]

@@ -34,7 +34,7 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，範本兩版相同；已在 Paper 26.3 實機驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，範本兩版相同；已在 Paper 26.3 與 1.21.11 實機驗證）
 - 1.21.11 的 Data Component API 仍標記 `@ApiStatus.Experimental`；Paper 26.3 已移除
 - 26.3 新增 `ATTACK_ANIMATION`、`INTERACT_ANIMATION`、`MOB_VISIBILITY`、`VILLAGER_FOOD` 等，移除 `SWING_ANIMATION`、`MAP_COLOR`；`brewing_fuel`、`cooking_fuel`、`compostable`、`block_transformer` Paper 尚未提供（改用 `nms-data-component`）
 - Java 21（1.21.11）／25（26.3）
@@ -81,7 +81,7 @@ item.unsetData(DataComponentTypes.FOOD);         // 連原型的 FOOD 也移除
 - 食物要同時設定 `FOOD` 與 `CONSUMABLE`
 - 物品本身的名稱用 `ITEM_NAME`（不是斜體）；`CUSTOM_NAME` 是鐵砧改名用的
 - 同時用 `ItemMeta` 與元件時，先 `editMeta` 再 `setData`，不要留著舊的 `ItemMeta` 寫回去
-- 實機驗證（Paper 26.3）：27 項檢查全過，包含 set／unset／reset 語意、忽略耐久比對、序列化後 PDC id 仍在
+- 實機驗證（Paper 26.3、1.21.11）：27 項檢查全過，包含 set／unset／reset 語意、忽略耐久比對、序列化後 PDC id 仍在
 
 ---
 

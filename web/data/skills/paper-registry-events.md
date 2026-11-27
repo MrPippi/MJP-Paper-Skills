@@ -34,7 +34,7 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，範本兩版相同；已在 Paper 26.3 實機驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，範本兩版相同；已在 Paper 26.3 與 1.21.11 實機驗證）
 - 純 Paper API，不需要 Paperweight；必須使用 `paper-plugin.yml` 並宣告 `bootstrapper`
 - `TRIM_MATERIAL`、`TRIM_PATTERN`、`DECORATED_POT_PATTERN`、`SULFUR_CUBE_ARCHETYPE`、`WORLD_CLOCK`、`TIMELINE` 的註冊表事件只有 26.3 有
 - Java 21（1.21.11）／25（26.3）
@@ -87,7 +87,7 @@ target.damage(level, DamageSource.builder(bleed).withCausingEntity(attacker).wit
 - 所有 key 集中在 `ContentKeys`，發佈後不可改名（物品與世界會存 key）
 - 附魔效果用監聽器實作；監聽器要略過自己的後續傷害，避免無限循環
 - 自訂 `messageId` 的死亡訊息需要資源包提供 `death.attack.<messageId>` 翻譯
-- 實機驗證（Paper 26.3）：附魔與傷害類型註冊成功、標籤在 `/minecraft:reload` 後仍在；流血對全套鑽石裝僵屍造成完整 6.0 傷害，對照組 mob_attack 只有 1.2
+- 實機驗證（Paper 26.3、1.21.11）：附魔與傷害類型註冊成功、標籤在 `/minecraft:reload` 後仍在；流血對全套鑽石裝僵屍造成完整 6.0 傷害，對照組 mob_attack 只有 1.2
 
 ---
 

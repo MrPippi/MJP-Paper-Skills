@@ -33,7 +33,7 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，開啟淘汰 API 檢查零警告；已在 Paper 26.3 實機驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證，開啟淘汰 API 檢查零警告；已在 Paper 26.3 與 1.21.11 實機驗證）
 - 26.3 起 `addRecipe(Recipe, boolean)`、`removeRecipe(key, boolean)` 淘汰，改用 `addRecipes`／`removeRecipes`；`ExactChoice` 建構子淘汰，改用 `RecipeChoice.exactChoice(...)`；不同處以 `// @1.21.11:` 標註
 - 釀造：26.3 用 `BrewingRecipe`，1.21.11 用 `PotionMix`（以 `// @only` 分開）
 - Java 21（1.21.11）／25（26.3）
@@ -80,7 +80,7 @@ public void onResourcesReloaded(ServerResourcesReloadedEvent event) {
 - 配方 key 固定為 `<插件>:<名稱>`，玩家的配方書會記住 key
 - 停用時移除所有 key；加入時 `discoverRecipes` 才會出現在配方書
 - `/minecraft:reload` 會從資料包重建配方清單並**清掉插件配方**（合成與釀造皆然，Paper 26.3 實測），必須在 `ServerResourcesReloadedEvent` 重新註冊
-- 實機驗證（Paper 26.3）：三叉戟可用烈焰棒當握柄、Transmute 升級保留鋒利 III 與自訂名稱、真實釀造台把粗製藥水＋螢光莓釀成再生藥水、reload 後配方恢復
+- 實機驗證（Paper 26.3、1.21.11）：三叉戟可用烈焰棒當握柄、Transmute 升級保留鋒利 III 與自訂名稱、真實釀造台把粗製藥水＋螢光莓釀成再生藥水、reload 後配方恢復
 
 ---
 

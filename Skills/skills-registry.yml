@@ -1354,7 +1354,7 @@ skills:
       - "AnvilView"
 
   - id: paper-datapack-bundling
-    version: "1.0.0"
+    version: "1.0.1"
     status: active
     platform: paper-api
     category: paper-data

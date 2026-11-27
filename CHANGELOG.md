@@ -12,7 +12,12 @@
 - `skills-canary.yml`：每週一（或手動）讀 Paper 最新 dev bundle，比固定版本新時（新 build 或下一版 beta）先編譯並檢查片段，不擋 PR；`verify` 支援 `-Pbundle=<版本>`
 - registry `mc_versions` 正式化：抽取腳本依此跳過不支援的版本，網站技能頁顯示支援的 Minecraft 版本（frontmatter `mcVersions`）
 - `scripts/lib/registry.mjs`：不依賴 YAML 套件的 registry 讀取，供上述腳本與網站測試共用
-- 實機檢查（`verify/runtime/`、`scripts/runtime-check.mjs`、`skills-runtime.yml`）：從抽出的範本建出插件，在真的 Paper 26.3 伺服器上執行並檢查行為。首批 4 個情境、90 項檢查，涵蓋 `paper-disposable-world`、`paper-data-components`、`paper-registry-events`、`paper-custom-recipes`、`paper-datapack-bundling`、`paper-world-clock`；改到這些技能時與每週一執行，不擋 PR。執行時會接受 Minecraft EULA（`--accept-eula`）
+- 實機檢查（`verify/runtime/`、`scripts/runtime-check.mjs`、`skills-runtime.yml`）：從抽出的範本建出插件，在真的 Paper 伺服器上執行並檢查行為。5 個情境：26.3 跑 5 個共 89 項檢查、1.21.11 跑 4 個共 81 項（`paper-world-clock` 只有 26.3），涵蓋 `paper-disposable-world`、`paper-data-components`、`paper-registry-events`、`paper-custom-recipes`、`paper-datapack-bundling`、`paper-world-clock`；改到這些技能時與每週一執行，不擋 PR。執行時會接受 Minecraft EULA（`--accept-eula`）
+
+### Fixed — paper-datapack-bundling 1.0.1
+
+- 實機測試發現：`pack.mcmeta` 的版本範圍不含伺服器時，資料包**不會**被拒絕，仍會載入並自動啟用，log 也沒有任何訊息；`discoverPack` 只有在 `pack.mcmeta` 缺少或無效時才回傳 `null`。修正原本「版本不符會回傳 `null`」的說明與 Fallback 表
+- 範本在 `getCompatibility()` 不是 `COMPATIBLE` 時記錄警告，伺服器升級超出 `max_format`（26.4 快照已是 125 以上）時提醒重新測試再調整範圍
 
 ### Changed — 長範本拆到 template.md
 

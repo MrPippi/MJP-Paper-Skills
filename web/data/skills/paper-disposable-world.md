@@ -73,7 +73,7 @@ rules.apply(world);   // 建立後立刻套用遊戲規則
 ```java
 // 26.x 世界資料在 <主世界>/dimensions/minecraft/<名稱>/（1.21.11 在 <世界容器>/<名稱>/）；路徑一律用 WorldFolders.dataRoot / getWorldPath()
 // 複製：略過世界 UUID 檔（26.x data/paper/metadata.dat、1.21.11 uid.dat）與 session.lock；先寫到 <名稱>.copying 再原子改名
-// 刪除：先改名為 <名稱>.deleting 再刪；啟動時 purgeStaleAsync 清掉殘留與 .copying / .deleting（已在 Paper 26.3 實機驗證）
+// 刪除：先改名為 <名稱>.deleting 再刪；啟動時 purgeStaleAsync 清掉殘留與 .copying / .deleting（已在 Paper 26.3 與 1.21.11 實機驗證）
 WorldFolders.copyTemplate(template, target);
 WorldFolders.deleteWorld(folder);
 ```
