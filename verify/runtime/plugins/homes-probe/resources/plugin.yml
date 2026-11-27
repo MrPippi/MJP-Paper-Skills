@@ -1,0 +1,5 @@
+name: HomesProbe
+version: '1.0'
+main: com.example.probe.homes.HomesProbe
+api-version: '${apiVersion}'
+softdepend: [Homes]

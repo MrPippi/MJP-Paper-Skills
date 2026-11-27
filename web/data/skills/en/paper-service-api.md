@@ -8,7 +8,7 @@ Let plugins within the same plugin suite call each other safely. The provider re
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.3 (both compile-verified)
+- Paper 1.21.11 / 26.3 (both compile-verified; runtime-verified on Paper 26.3 and 1.21.11)
 - Pure Paper API, no Paperweight needed
 - Java 21 (1.21.11) / 25 (26.3)
 - **Spigot**: Core portable — `ServicesManager` is Bukkit API; replace Adventure messages

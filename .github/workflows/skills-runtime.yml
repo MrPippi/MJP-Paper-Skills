@@ -15,6 +15,10 @@ on:
       - "Skills/paper/paper-custom-recipes/**"
       - "Skills/paper/paper-datapack-bundling/**"
       - "Skills/paper/paper-world-clock/**"
+      - "Skills/paper/paper-service-api/**"
+      - "Skills/paper/paper-sqlite-repository/**"
+      - "Skills/paper/paper-embedded-http/**"
+      - "Skills/paper/paper-brigadier-command/**"
       - "verify/**"
       - "scripts/runtime-check.mjs"
       - "scripts/extract-skill-java.mjs"
@@ -29,6 +33,10 @@ on:
       - "Skills/paper/paper-custom-recipes/**"
       - "Skills/paper/paper-datapack-bundling/**"
       - "Skills/paper/paper-world-clock/**"
+      - "Skills/paper/paper-service-api/**"
+      - "Skills/paper/paper-sqlite-repository/**"
+      - "Skills/paper/paper-embedded-http/**"
+      - "Skills/paper/paper-brigadier-command/**"
       - "verify/**"
       - "scripts/runtime-check.mjs"
       - "scripts/extract-skill-java.mjs"
@@ -49,7 +57,7 @@ jobs:
   runtime:
     name: Paper ${{ matrix.mc }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     strategy:
       fail-fast: false
       matrix:

@@ -1,0 +1,5 @@
+name: WebProbe
+version: '1.0'
+main: com.example.probe.web.WebProbe
+api-version: '${apiVersion}'
+softdepend: [Web]

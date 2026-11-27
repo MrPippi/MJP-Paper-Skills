@@ -8,7 +8,7 @@ Give a Paper plugin a small, reliable SQLite persistence skeleton: a single conn
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.3 (both compile-verified)
+- Paper 1.21.11 / 26.3 (both compile-verified; runtime-verified on Paper 26.3 and 1.21.11)
 - Pure Paper API, no Paperweight needed
 - `org.xerial:sqlite-jdbc` contains JNI and **must not be shaded**: use `compileOnly` + `libraries:` in `plugin.yml`
 - **Spigot**: Core portable — JDBC and the Bukkit scheduler only; replace Adventure messages

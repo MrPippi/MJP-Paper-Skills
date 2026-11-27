@@ -567,7 +567,7 @@ skills:
       - "ServerPlayer NPC"
 
   - id: paper-brigadier-command
-    version: "1.0.0"
+    version: "1.0.1"
     status: active
     platform: paper-api
     category: paper-command

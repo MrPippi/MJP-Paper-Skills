@@ -1,0 +1,2 @@
+# Runtime check: the probe writes marker: 2 here, then runs /example reload
+marker: 1

@@ -134,6 +134,8 @@ public final class CommandSupport {
     /**
      * Returns the player the command runs as; the console or a non-player entity gets a clear error.
      * This method is called from {@code executes}, which runs on the main thread.
+     * On 26.x getPlayerOrThrow() itself throws vanilla's "A player is required to run this command here";
+     * the null check below only fires on 1.21.11.
      */
     public static Player requirePlayer(CommandSourceStack source) throws CommandSyntaxException {
         Player player = source.getPlayerOrThrow(); // @1.21.11: Player player = source.getExecutor() instanceof Player p ? p : null;
@@ -511,7 +513,7 @@ src/main/resources/
 
 - `getSender()`: whoever actually typed the command / the console / a command block; **use it for permission checks and replies**
 - `getExecutor()`: the entity the command "represents" (with `/execute as <entity> run ...` it is that entity); may be `null`; **use it for self-targeted actions (charging your own money, teleporting yourself)**
-- When a player is required: `CommandSupport.requirePlayer(source)` (calls `getPlayerOrThrow()` internally on 26.x; checks `getExecutor()` itself on 1.21.11)
+- When a player is required: `CommandSupport.requirePlayer(source)` (calls `getPlayerOrThrow()` internally on 26.x, which replies with vanilla's "A player is required to run this command here"; checks `getExecutor()` itself on 1.21.11 and replies with the template's message; runtime-verified on both)
 - Commands the console may use (for example `reload`) must not call `requirePlayer`; reply to `getSender()` directly
 
 ## Thread Safety
@@ -539,3 +541,4 @@ src/main/resources/
 | Odd permission results after `/execute as` | Permission checked with `getExecutor()` | Use `getSender()` for permissions and `getExecutor()` for the target |
 | Compiles on 26.3 but `getPlayerOrThrow` is not found on 1.21.11 | That method exists only on 26.2+ | Follow the `// @1.21.11:` form in `CommandSupport.requirePlayer` |
 | `paper-plugin.yml` fails to load | `commands:` is still present | Remove it; all commands go through Brigadier |
+| `CommandException: Unhandled exception executing ...` in another plugin that ran your command with `Bukkit.dispatchCommand` / `Player#performCommand` | An error thrown while **converting a custom argument** (`CustomArgumentType.Converted#convert`) is not sent to the sender on this path; it reaches the caller wrapped in a `CommandException` (errors thrown from `executes` are sent normally). Runtime-verified on 26.3 and 1.21.11 | Callers of `dispatchCommand` should catch `CommandException`; if your command is meant to be run that way, validate in `executes` instead of in the argument type |

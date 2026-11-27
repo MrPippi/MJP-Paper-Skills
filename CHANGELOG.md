@@ -12,12 +12,16 @@
 - `skills-canary.yml`：每週一（或手動）讀 Paper 最新 dev bundle，比固定版本新時（新 build 或下一版 beta）先編譯並檢查片段，不擋 PR；`verify` 支援 `-Pbundle=<版本>`
 - registry `mc_versions` 正式化：抽取腳本依此跳過不支援的版本，網站技能頁顯示支援的 Minecraft 版本（frontmatter `mcVersions`）
 - `scripts/lib/registry.mjs`：不依賴 YAML 套件的 registry 讀取，供上述腳本與網站測試共用
-- 實機檢查（`verify/runtime/`、`scripts/runtime-check.mjs`、`skills-runtime.yml`）：從抽出的範本建出插件，在真的 Paper 伺服器上執行並檢查行為。5 個情境：26.3 跑 5 個共 89 項檢查、1.21.11 跑 4 個共 81 項（`paper-world-clock` 只有 26.3），涵蓋 `paper-disposable-world`、`paper-data-components`、`paper-registry-events`、`paper-custom-recipes`、`paper-datapack-bundling`、`paper-world-clock`；改到這些技能時與每週一執行，不擋 PR。執行時會接受 Minecraft EULA（`--accept-eula`）
+- 實機檢查（`verify/runtime/`、`scripts/runtime-check.mjs`、`skills-runtime.yml`）：從抽出的範本建出插件，在真的 Paper 伺服器上執行並檢查行為。10 個情境：26.3 跑 10 個共 137 項檢查、1.21.11 跑 9 個共 129 項（`paper-world-clock` 只有 26.3），涵蓋 `paper-disposable-world`、`paper-data-components`、`paper-registry-events`、`paper-custom-recipes`、`paper-datapack-bundling`、`paper-world-clock`、`paper-service-api`（兩個插件跨 class loader、Wallet 未安裝時的退化）、`paper-sqlite-repository`（`libraries:` 下載驅動、遷移、WAL、寫入延遲、關服最後一次寫入、較新的 schema 拒絕啟動）、`paper-embedded-http`（真的 HTTP 請求：ETag／304、405、404、429 限流、BOM、停用後釋放連接埠）、`paper-brigadier-command`（註冊、別名、reload、錯誤訊息、k/m/b 補全）；改到這些技能時與每週一執行，不擋 PR。執行時會接受 Minecraft EULA（`--accept-eula`）
 
 ### Fixed — paper-datapack-bundling 1.0.1
 
 - 實機測試發現：`pack.mcmeta` 的版本範圍不含伺服器時，資料包**不會**被拒絕，仍會載入並自動啟用，log 也沒有任何訊息；`discoverPack` 只有在 `pack.mcmeta` 缺少或無效時才回傳 `null`。修正原本「版本不符會回傳 `null`」的說明與 Fallback 表
 - 範本在 `getCompatibility()` 不是 `COMPATIBLE` 時記錄警告，伺服器升級超出 `max_format`（26.4 快照已是 125 以上）時提醒重新測試再調整範圍
+
+### Fixed — paper-brigadier-command 1.0.1
+
+- 實機測試發現：其他插件以 `Bukkit.dispatchCommand`／`Player#performCommand` 執行指令時，自訂參數型別 `convert` 丟出的 `CommandSyntaxException` 不會傳給執行者，而是包成 `CommandException` 丟給呼叫端（26.3、1.21.11 皆同）；Fallback 表新增此列。`requirePlayer` 說明補上 26.x 由 `getPlayerOrThrow()` 回覆原版訊息「A player is required to run this command here」
 
 ### Changed — 長範本拆到 template.md
 

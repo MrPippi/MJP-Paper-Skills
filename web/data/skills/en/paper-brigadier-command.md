@@ -11,7 +11,8 @@ Simple commands that need no completion can still stay in `plugin.yml` under `co
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.3 (compile-verified on both)
+- Paper 1.21.11 / 26.3 (compile-verified on both; runtime-verified on Paper 26.3 and 1.21.11)
+- When another plugin runs your command with `Bukkit.dispatchCommand` / `Player#performCommand`, an error thrown while converting a custom argument (`convert`) is not sent to the sender; it reaches the caller wrapped in a `CommandException`. Errors thrown from `executes` are shown normally
 - Pure Paper API, no Paperweight needed
 - Only difference: `CommandSourceStack#getPlayerOrThrow()` exists on 26.2+ (verified on 26.3); on 1.21.11 use `getExecutor()` to decide
 - **Spigot**: Paper only — `io.papermc.paper.command.brigadier` and `LifecycleEvents.COMMANDS` are Paper API; Spigot only has `CommandExecutor`
