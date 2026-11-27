@@ -1,0 +1,5 @@
+name: CommandProbe
+version: '1.0'
+main: com.example.probe.command.CommandProbe
+api-version: '${apiVersion}'
+softdepend: [Example]

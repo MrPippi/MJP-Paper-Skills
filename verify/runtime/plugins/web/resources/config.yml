@@ -1,0 +1,11 @@
+# Runtime check settings: enabled, loopback only, a port next to the test server's, a low rate limit
+web:
+  enabled: true
+  bind: 127.0.0.1
+  port: 25600
+  threads: 2
+  rate-limit-per-minute: 5
+  trusted-proxies: []
+  cors-origin: ""
+  cache-seconds: 5
+  refresh-ticks: 1200          # one snapshot for the whole test: the body has generatedAt, so every rebuild changes the ETag

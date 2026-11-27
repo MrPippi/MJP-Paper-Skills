@@ -1,0 +1,4 @@
+name: Web
+version: '1.0'
+main: com.example.web.WebPlugin
+api-version: '${apiVersion}'

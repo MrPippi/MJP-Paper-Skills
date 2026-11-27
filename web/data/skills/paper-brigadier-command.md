@@ -4,7 +4,7 @@ title: Paper Brigadier Command
 titleZh: Paper Brigadier 指令
 description: Register Paper Brigadier commands through LifecycleEvents.COMMANDS with built-in and custom argument types (k/m/b amounts), permission gates, snapshot-only suggestions and a reload subcommand.
 descriptionZh: 以 Paper Brigadier API 註冊指令：LifecycleEvents.COMMANDS、內建與自訂參數（k/m/b 金額）、權限 requires、補全只讀快照與 reload 子指令。
-version: "1.0.0"
+version: "1.0.1"
 status: active
 category: paper-command
 categoryLabel: Paper 指令
@@ -34,7 +34,8 @@ featured: false
 
 ## 平台需求
 
-- Paper 1.21.11 / 26.3（兩版皆經編譯驗證）
+- Paper 1.21.11 / 26.3（兩版皆經編譯驗證；已在 Paper 26.3 與 1.21.11 實機驗證）
+- 其他插件以 `Bukkit.dispatchCommand`／`Player#performCommand` 執行你的指令時，自訂參數型別轉換（`convert`）丟出的錯誤不會傳給執行者，而是包成 `CommandException` 丟給呼叫端；`executes` 內丟出的錯誤則正常顯示
 - 純 Paper API，不需要 Paperweight
 - 唯一差異：`CommandSourceStack#getPlayerOrThrow()` 在 26.2 起才有（已於 26.3 驗證）；1.21.11 以 `getExecutor()` 判斷
 - **Spigot**：僅 Paper——`io.papermc.paper.command.brigadier` 與 `LifecycleEvents.COMMANDS` 是 Paper API；Spigot 只有 `CommandExecutor`

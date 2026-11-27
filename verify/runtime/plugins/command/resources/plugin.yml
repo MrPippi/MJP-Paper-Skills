@@ -1,0 +1,11 @@
+name: Example
+version: '1.0'
+main: com.example.command.ExamplePlugin
+api-version: '${apiVersion}'
+permissions:
+  example.use:
+    default: true
+  example.pay:
+    default: true
+  example.admin:
+    default: op

@@ -9,7 +9,15 @@
     "recipes": { "templates": "paper/paper-custom-recipes/skill", "include": ["com/example/recipes"] },
     "datapack": { "templates": "paper/paper-datapack-bundling/skill", "include": ["com/example/datapack"] },
     "recipes-probe": { "templates": "paper/paper-custom-recipes/skill", "include": ["com/example/probe"] },
-    "clock-probe": { "templates": "paper/paper-world-clock/skill", "include": ["com/example/clock", "com/example/probe"] }
+    "clock-probe": { "templates": "paper/paper-world-clock/skill", "include": ["com/example/clock", "com/example/probe"] },
+    "wallet": { "templates": "paper/paper-service-api/skill", "include": ["com/example/wallet"] },
+    "shop-probe": { "templates": "paper/paper-service-api/skill", "include": ["com/example/shop", "com/example/probe"] },
+    "homes": { "templates": "paper/paper-sqlite-repository/skill", "include": ["com/example/homes"] },
+    "homes-probe": { "templates": "paper/paper-sqlite-repository/skill", "include": ["com/example/probe"] },
+    "web": { "templates": "paper/paper-embedded-http/skill", "include": ["com/example/web"] },
+    "web-probe": { "templates": "paper/paper-embedded-http/skill", "include": ["com/example/probe"] },
+    "command": { "templates": "paper/paper-brigadier-command/skill", "include": ["com/example/command"] },
+    "command-probe": { "templates": "paper/paper-brigadier-command/skill", "include": ["com/example/probe"] }
   },
   "scenarios": [
     {
@@ -51,6 +59,46 @@
       "plugins": ["clock-probe"],
       "starts": 2,
       "checks": 8
+    },
+    {
+      "id": "service-api",
+      "skills": ["paper-service-api"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["wallet", "shop-probe"],
+      "starts": 1,
+      "checks": 14
+    },
+    {
+      "id": "service-api-absent",
+      "skills": ["paper-service-api"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["shop-probe"],
+      "starts": 1,
+      "checks": 3
+    },
+    {
+      "id": "sqlite-repository",
+      "skills": ["paper-sqlite-repository"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["homes", "homes-probe"],
+      "starts": 3,
+      "checks": 8
+    },
+    {
+      "id": "embedded-http",
+      "skills": ["paper-embedded-http"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["web", "web-probe"],
+      "starts": 1,
+      "checks": 11
+    },
+    {
+      "id": "brigadier-command",
+      "skills": ["paper-brigadier-command"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["command", "command-probe"],
+      "starts": 1,
+      "checks": 12
     }
   ]
 }

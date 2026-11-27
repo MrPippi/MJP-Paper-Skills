@@ -1,0 +1,6 @@
+name: Homes
+version: '1.0'
+main: com.example.homes.HomesPlugin
+api-version: '${apiVersion}'
+libraries:
+  - org.xerial:sqlite-jdbc:3.49.1.0

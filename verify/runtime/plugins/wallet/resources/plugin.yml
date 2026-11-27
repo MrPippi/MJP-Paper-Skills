@@ -1,0 +1,4 @@
+name: Wallet
+version: '1.0'
+main: com.example.wallet.WalletPlugin
+api-version: '${apiVersion}'

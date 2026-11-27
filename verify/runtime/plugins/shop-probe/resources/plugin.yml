@@ -1,0 +1,5 @@
+name: ShopProbe
+version: '1.0'
+main: com.example.probe.shop.ShopProbe
+api-version: '${apiVersion}'
+softdepend: [Wallet]
