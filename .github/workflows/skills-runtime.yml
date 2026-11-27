@@ -56,6 +56,8 @@ jobs:
         include:
           - mc: "26.3"
             java: "25"
+          - mc: "1.21.11"
+            java: "21"
     steps:
       - name: Checkout
         uses: actions/checkout@v7

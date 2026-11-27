@@ -24,6 +24,7 @@ What the Paper 26.3 implementation does (read from `PaperDatapackRegistrar`):
 | Pack id | `<plugin name>/<id>`, e.g. `CustomContent/content` |
 | Enabled? | `autoEnableOnServerStart` defaults to **false**: without it the pack is only discovered, not enabled |
 | Invalid or missing pack | `discoverPack` returns `null` (no exception); check it |
+| Format range excludes this server | **Not** rejected: the pack is still discovered and auto-enabled, with nothing in the log. Only `getCompatibility()` (`TOO_OLD` / `TOO_NEW`) tells you (runtime-verified on 26.3) |
 | Position | `TOP` by default (overrides packs below it); `position(true, ...)` pins it there |
 
 The template bundles a pack with a recipe, a load function and its `#minecraft:load` tag, enables it on start, and verifies it from `onEnable`.
@@ -40,6 +41,7 @@ The template bundles a pack with a recipe, a load function and its `#minecraft:l
 | 26.3 | 121.0 | `"min_format": 121` |
 
   Both versions use `min_format` / `max_format`; a range such as `[94, 1]`..`121` accepts both servers. The **contents** must then use JSON that both versions parse: crafting recipes, function files and function tags are written the same way on 1.21.11 and 26.3, while 26.3 renamed many loot table, predicate, advancement trigger and worldgen fields. Ship per-version folders (example 2) for those.
+- **Newer servers**: set `max_format` to the newest version you have tested, not to a guess. A server past it (26.4 snapshots are already at 125+) still loads the pack, so nothing breaks on its own; but files whose JSON changed fail one by one with "Couldn't parse data file". The template therefore warns when `getCompatibility()` is not `COMPATIBLE`; treat that warning as "re-test the pack and raise `max_format`".
 - **Spigot**: Paper only — `PluginBootstrap` and `DATAPACK_DISCOVERY` are Paper API; on Spigot the admin must install the data pack into `world/datapacks/`
 
 ## Triggers
@@ -175,7 +177,11 @@ public final class PackBootstrap implements PluginBootstrap {
                             .autoEnableOnServerStart(true)            // default false: discovered but not enabled
                             .position(false, Datapack.Position.TOP)); // above vanilla; not pinned
                     if (pack == null) {
-                        problems.add("pack rejected (pack.mcmeta missing, invalid or incompatible format)");
+                        problems.add("pack rejected (pack.mcmeta missing or invalid)");
+                    } else if (pack.getCompatibility() != Datapack.Compatibility.COMPATIBLE) {
+                        // Still loaded and enabled: only files whose JSON changed will fail to parse
+                        problems.add("pack.mcmeta format range does not include this server (" + pack.getCompatibility()
+                                + "); loaded anyway - re-test the pack and update min_format / max_format");
                     }
                 } catch (URISyntaxException | IOException | RuntimeException e) {
                     log.error("Could not register the bundled data pack", e);
@@ -260,6 +266,7 @@ src/main/resources/
 | Enable it | `autoEnableOnServerStart(true)`; otherwise admins must run `/datapack enable` |
 | Know it worked | `discoverPack` returns `null` on failure; `getDatapackManager().getPack("<plugin>/<id>").isEnabled()` in `onEnable` |
 | One pack, two versions | `min_format` / `max_format` range + only JSON both versions parse |
+| Server newer than `max_format` | Pack still loads; warn on `getCompatibility() != COMPATIBLE` so the range gets re-tested |
 | Diverging JSON | One folder per version, chosen with `ServerBuildInfo.buildInfo().minecraftVersionId()` (example 2) |
 | Data pack vs. Java | Prefer the data pack for recipes, advancements, loot and worldgen; use Java (`paper-custom-recipes`, `paper-registry-events`) when values come from config or code |
 
@@ -268,7 +275,8 @@ src/main/resources/
 | Error | Cause | Fix |
 |------|------|------|
 | Pack listed by `/datapack list available` but not enabled | `autoEnableOnServerStart` not set | Set it to `true` |
-| `discoverPack` returns `null` | `pack.mcmeta` missing or the format range excludes this server | Check the path inside the jar and the `min_format` / `max_format` numbers |
+| `discoverPack` returns `null` | `pack.mcmeta` missing or not valid JSON | Check the path inside the jar and the `pack.mcmeta` syntax |
+| Warning "format range does not include this server" | Server updated past `max_format` (or older than `min_format`) | Pack is still enabled; check the log for parse errors, fix the JSON for the new version, then raise the range |
 | Log shows "Couldn't parse data file" for one JSON | That file uses a format the running version does not accept (26.3 renamed many loot/predicate fields) | Split per version (example 2) |
 | Recipe from the pack missing although the pack is enabled | JSON error in that file only; the rest of the pack still loads | Read the server log around data pack loading |
 | `${...}` in JSON replaced or build fails in `processResources` | Resource expansion applied to every file | Restrict `filesMatching` to `paper-plugin.yml` |

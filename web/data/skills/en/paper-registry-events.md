@@ -8,7 +8,7 @@ Enchantments, damage types, mob variants, jukebox songs, dialogs and more live i
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.3 (compile-verified on both, templates identical; runtime-verified on Paper 26.3)
+- Paper 1.21.11 / 26.3 (compile-verified on both, templates identical; runtime-verified on Paper 26.3 and 1.21.11)
 - Pure Paper API, no Paperweight needed; requires `paper-plugin.yml` with a `bootstrapper`
 - Registry events for `TRIM_MATERIAL`, `TRIM_PATTERN`, `DECORATED_POT_PATTERN`, `SULFUR_CUBE_ARCHETYPE`, `WORLD_CLOCK` and `TIMELINE` exist only on 26.3
 - Java 21 (1.21.11) / 25 (26.3)
@@ -61,7 +61,7 @@ target.damage(level, DamageSource.builder(bleed).withCausingEntity(attacker).wit
 - Keep every key in `ContentKeys` and never rename one after release (items and worlds store keys)
 - Implement enchantment effects in listeners, and skip your own follow-up damage to avoid loops
 - A custom `messageId` needs a `death.attack.<messageId>` translation from a resource pack
-- Runtime-verified on Paper 26.3: entries registered, tags still present after `/minecraft:reload`; Bleed dealt the full 6.0 to a zombie in full diamond armor, while the mob_attack control dealt 1.2
+- Runtime-verified on Paper 26.3 and 1.21.11: entries registered, tags still present after `/minecraft:reload`; Bleed dealt the full 6.0 to a zombie in full diamond armor, while the mob_attack control dealt 1.2
 
 ---
 

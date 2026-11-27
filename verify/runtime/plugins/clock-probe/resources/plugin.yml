@@ -1,0 +1,4 @@
+name: ClockProbe
+version: '1.0'
+main: com.example.probe.clock.ClockProbe
+api-version: '${apiVersion}'

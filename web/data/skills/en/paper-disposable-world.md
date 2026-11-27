@@ -48,7 +48,7 @@ rules.apply(world);   // Apply game rules immediately after creation
 ```java
 // 26.x keeps world data in <main world>/dimensions/minecraft/<name>/ (1.21.11: <world container>/<name>/); resolve paths with WorldFolders.dataRoot / getWorldPath()
 // Copy: skip the world UUID file (26.x data/paper/metadata.dat, 1.21.11 uid.dat) and session.lock; write to <name>.copying, then rename atomically
-// Delete: rename to <name>.deleting first; purgeStaleAsync clears leftovers and .copying / .deleting debris at startup (verified on a running Paper 26.3 server)
+// Delete: rename to <name>.deleting first; purgeStaleAsync clears leftovers and .copying / .deleting debris at startup (verified on running Paper 26.3 and 1.21.11 servers)
 WorldFolders.copyTemplate(template, target);
 WorldFolders.deleteWorld(folder);
 ```

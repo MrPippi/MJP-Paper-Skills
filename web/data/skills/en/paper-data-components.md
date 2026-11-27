@@ -8,7 +8,7 @@ Since 1.20.5 an item is a material plus data components such as `food`, `max_sta
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.3 (compile-verified on both, templates identical; runtime-verified on Paper 26.3)
+- Paper 1.21.11 / 26.3 (compile-verified on both, templates identical; runtime-verified on Paper 26.3 and 1.21.11)
 - On 1.21.11 the data component API is still `@ApiStatus.Experimental`; Paper 26.3 removed the marker
 - 26.3 added `ATTACK_ANIMATION`, `INTERACT_ANIMATION`, `MOB_VISIBILITY`, `VILLAGER_FOOD` and others and removed `SWING_ANIMATION` and `MAP_COLOR`; `brewing_fuel`, `cooking_fuel`, `compostable` and `block_transformer` are not exposed by Paper yet (use `nms-data-component`)
 - Java 21 (1.21.11) / 25 (26.3)
@@ -55,7 +55,7 @@ item.unsetData(DataComponentTypes.FOOD);         // removes FOOD even though the
 - Food needs both `FOOD` and `CONSUMABLE`
 - Use `ITEM_NAME` for the item's own name (not italic); `CUSTOM_NAME` is what anvils set
 - When mixing `ItemMeta` and components, call `editMeta` before `setData` and never write an old `ItemMeta` back
-- Runtime-verified on Paper 26.3: 27/27 checks, including set / unset / reset semantics, wear-ignoring comparison and PDC ids surviving serialization
+- Runtime-verified on Paper 26.3 and 1.21.11: 27/27 checks, including set / unset / reset semantics, wear-ignoring comparison and PDC ids surviving serialization
 
 ---
 

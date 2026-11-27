@@ -8,13 +8,14 @@
     "registry-probe": { "templates": "paper/paper-registry-events/examples", "include": ["com/example/probe"] },
     "recipes": { "templates": "paper/paper-custom-recipes/skill", "include": ["com/example/recipes"] },
     "datapack": { "templates": "paper/paper-datapack-bundling/skill", "include": ["com/example/datapack"] },
-    "gameplay-probe": { "templates": "paper/paper-world-clock/skill", "include": ["com/example/clock", "com/example/probe"] }
+    "recipes-probe": { "templates": "paper/paper-custom-recipes/skill", "include": ["com/example/probe"] },
+    "clock-probe": { "templates": "paper/paper-world-clock/skill", "include": ["com/example/clock", "com/example/probe"] }
   },
   "scenarios": [
     {
       "id": "disposable-world",
       "skills": ["paper-disposable-world"],
-      "mc": ["26.3"],
+      "mc": ["26.3", "1.21.11"],
       "plugins": ["arena-probe"],
       "starts": 2,
       "checks": 18
@@ -22,7 +23,7 @@
     {
       "id": "data-components",
       "skills": ["paper-data-components"],
-      "mc": ["26.3"],
+      "mc": ["26.3", "1.21.11"],
       "plugins": ["items-probe"],
       "starts": 1,
       "checks": 27
@@ -30,18 +31,26 @@
     {
       "id": "registry-events",
       "skills": ["paper-registry-events"],
-      "mc": ["26.3"],
+      "mc": ["26.3", "1.21.11"],
       "plugins": ["registry-content", "registry-balance", "registry-probe"],
       "starts": 1,
       "checks": 18
     },
     {
-      "id": "recipes-datapack-clock",
-      "skills": ["paper-custom-recipes", "paper-datapack-bundling", "paper-world-clock"],
+      "id": "recipes-datapack",
+      "skills": ["paper-custom-recipes", "paper-datapack-bundling"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["recipes", "datapack", "recipes-probe"],
+      "starts": 1,
+      "checks": 18
+    },
+    {
+      "id": "world-clock",
+      "skills": ["paper-world-clock"],
       "mc": ["26.3"],
-      "plugins": ["recipes", "datapack", "gameplay-probe"],
+      "plugins": ["clock-probe"],
       "starts": 2,
-      "checks": 27
+      "checks": 8
     }
   ]
 }

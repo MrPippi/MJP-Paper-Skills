@@ -8,7 +8,7 @@ Register crafting and brewing recipes from a plugin, sync them to players and re
 
 ## Platform Requirements
 
-- Paper 1.21.11 / 26.3 (compile-verified on both with zero deprecation warnings; runtime-verified on Paper 26.3)
+- Paper 1.21.11 / 26.3 (compile-verified on both with zero deprecation warnings; runtime-verified on Paper 26.3 and 1.21.11)
 - 26.3 deprecated `addRecipe(Recipe, boolean)` and `removeRecipe(key, boolean)` in favor of `addRecipes` / `removeRecipes`, and the `ExactChoice` constructors in favor of `RecipeChoice.exactChoice(...)`; differing lines carry `// @1.21.11:`
 - Brewing: `BrewingRecipe` on 26.3, `PotionMix` on 1.21.11 (split with `// @only`)
 - Java 21 (1.21.11) / 25 (26.3)
@@ -55,7 +55,7 @@ public void onResourcesReloaded(ServerResourcesReloadedEvent event) {
 - Recipe keys stay `<plugin>:<name>`; recipe books store them
 - Remove every key on disable; `discoverRecipes` on join so recipes appear in the recipe book
 - `/minecraft:reload` rebuilds the recipe list from data packs and **drops plugin recipes** (crafting and brewing, observed on Paper 26.3); re-register in `ServerResourcesReloadedEvent`
-- Runtime-verified on Paper 26.3: the trident accepts a blaze rod handle, the transmute upgrade keeps Sharpness III and the custom name, a real brewing stand turned Awkward Potions + glow berries into Regeneration, and recipes return after reload
+- Runtime-verified on Paper 26.3 and 1.21.11: the trident accepts a blaze rod handle, the transmute upgrade keeps Sharpness III and the custom name, a real brewing stand turned Awkward Potions + glow berries into Regeneration, and recipes return after reload
 
 ---
 
