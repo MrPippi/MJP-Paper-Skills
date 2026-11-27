@@ -17,7 +17,8 @@
     "web": { "templates": "paper/paper-embedded-http/skill", "include": ["com/example/web"] },
     "web-probe": { "templates": "paper/paper-embedded-http/skill", "include": ["com/example/probe"] },
     "command": { "templates": "paper/paper-brigadier-command/skill", "include": ["com/example/command"] },
-    "command-probe": { "templates": "paper/paper-brigadier-command/skill", "include": ["com/example/probe"] }
+    "command-probe": { "templates": "paper/paper-brigadier-command/skill", "include": ["com/example/probe"] },
+    "scheduling-probe": { "templates": "paper/paper-folia-scheduler/skill", "include": ["com/example/scheduling", "com/example/probe"] }
   },
   "scenarios": [
     {
@@ -99,6 +100,23 @@
       "plugins": ["command", "command-probe"],
       "starts": 1,
       "checks": 12
+    },
+    {
+      "id": "folia-scheduler",
+      "skills": ["paper-folia-scheduler"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["scheduling-probe"],
+      "starts": 1,
+      "checks": 19
+    },
+    {
+      "id": "folia-scheduler-on-folia",
+      "skills": ["paper-folia-scheduler"],
+      "server": "folia",
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["scheduling-probe"],
+      "starts": 1,
+      "checks": 19
     }
   ]
 }

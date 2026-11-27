@@ -12,12 +12,17 @@
 - `skills-canary.yml`：每週一（或手動）讀 Paper 最新 dev bundle，比固定版本新時（新 build 或下一版 beta）先編譯並檢查片段，不擋 PR；`verify` 支援 `-Pbundle=<版本>`
 - registry `mc_versions` 正式化：抽取腳本依此跳過不支援的版本，網站技能頁顯示支援的 Minecraft 版本（frontmatter `mcVersions`）
 - `scripts/lib/registry.mjs`：不依賴 YAML 套件的 registry 讀取，供上述腳本與網站測試共用
-- 實機檢查（`verify/runtime/`、`scripts/runtime-check.mjs`、`skills-runtime.yml`）：從抽出的範本建出插件，在真的 Paper 伺服器上執行並檢查行為。10 個情境：26.3 跑 10 個共 137 項檢查、1.21.11 跑 9 個共 129 項（`paper-world-clock` 只有 26.3），涵蓋 `paper-disposable-world`、`paper-data-components`、`paper-registry-events`、`paper-custom-recipes`、`paper-datapack-bundling`、`paper-world-clock`、`paper-service-api`（兩個插件跨 class loader、Wallet 未安裝時的退化）、`paper-sqlite-repository`（`libraries:` 下載驅動、遷移、WAL、寫入延遲、關服最後一次寫入、較新的 schema 拒絕啟動）、`paper-embedded-http`（真的 HTTP 請求：ETag／304、405、404、429 限流、BOM、停用後釋放連接埠）、`paper-brigadier-command`（註冊、別名、reload、錯誤訊息、k/m/b 補全）；改到這些技能時與每週一執行，不擋 PR。執行時會接受 Minecraft EULA（`--accept-eula`）
+- 實機檢查（`verify/runtime/`、`scripts/runtime-check.mjs`、`skills-runtime.yml`）：從抽出的範本建出插件，在真的 Paper 伺服器上執行並檢查行為；情境可設 `"server": "folia"` 改在 Folia（Fill API 最新 build）上執行，`Probe` 改用 `GlobalRegionScheduler` 以便兩種伺服器共用。12 個情境：26.3 跑 12 個共 175 項檢查、1.21.11 跑 11 個共 167 項（`paper-world-clock` 只有 26.3），涵蓋 `paper-disposable-world`、`paper-data-components`、`paper-registry-events`、`paper-custom-recipes`、`paper-datapack-bundling`、`paper-world-clock`、`paper-service-api`（兩個插件跨 class loader、Wallet 未安裝時的退化）、`paper-sqlite-repository`（`libraries:` 下載驅動、遷移、WAL、寫入延遲、關服最後一次寫入、較新的 schema 拒絕啟動）、`paper-embedded-http`（真的 HTTP 請求：ETag／304、405、404、429 限流、BOM、停用後釋放連接埠）、`paper-brigadier-command`（註冊、別名、reload、錯誤訊息、k/m/b 補全）、`paper-folia-scheduler`（同一個 jar 在 Paper 與 Folia 上跑）；改到這些技能時與每週一執行，不擋 PR。執行時會接受 Minecraft EULA（`--accept-eula`）
 
 ### Fixed — paper-datapack-bundling 1.0.1
 
 - 實機測試發現：`pack.mcmeta` 的版本範圍不含伺服器時，資料包**不會**被拒絕，仍會載入並自動啟用，log 也沒有任何訊息；`discoverPack` 只有在 `pack.mcmeta` 缺少或無效時才回傳 `null`。修正原本「版本不符會回傳 `null`」的說明與 Fallback 表
 - 範本在 `getCompatibility()` 不是 `COMPATIBLE` 時記錄警告，伺服器升級超出 `max_format`（26.4 快照已是 125 以上）時提醒重新測試再調整範圍
+
+### Added — paper-folia-scheduler（registry 7.5.0，共 38 個技能）
+
+- `paper-folia-scheduler`（新分類 `paper-threading`）：以 `RegionScheduler`、`EntityScheduler`（retired 回呼）、`GlobalRegionScheduler`、`AsyncScheduler` 取代 `BukkitScheduler`，同一份程式在 Paper 與 Folia 執行；`Tasks` 外觀類別把延遲限制在至少 1 tick、停用時取消重複任務；範例含移植對照表與 Folia 上的競技場倒數
+- 實機驗證（Paper 與 Folia 的 26.3、1.21.11，同一個 jar）：Folia 上 `BukkitScheduler.runTask` 丟出 `UnsupportedOperationException`、`Entity#teleport` 即使移動 1 格也丟出「Must use teleportAsync while in region threading」；兩者延遲 0 都丟出 `IllegalArgumentException`；實體被移除時待執行任務改跑 `retired`；`teleportAsync` 後實體排程器在新位置的執行緒執行
 
 ### Fixed — paper-brigadier-command 1.0.1
 

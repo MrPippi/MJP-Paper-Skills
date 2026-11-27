@@ -1,0 +1,5 @@
+name: SchedulingProbe
+version: '1.0'
+main: com.example.probe.scheduling.SchedulingProbe
+api-version: '${apiVersion}'
+folia-supported: true

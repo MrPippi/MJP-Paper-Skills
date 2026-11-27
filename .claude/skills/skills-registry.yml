@@ -1,5 +1,5 @@
-version: "7.4.0"
-updated: "2026-11-23"
+version: "7.5.0"
+updated: "2026-11-27"
 description: "MJP-Paper-Skills — Minecraft Paper Agent Skills / 技能索引：NMS（paper-nms）與純 Paper API（paper-api），Paper 1.21.11 / 26.x"
 
 skills:
@@ -1422,6 +1422,46 @@ skills:
       - "day length"
       - "freeze time"
       - "ClockTimeSkipEvent"
+
+  - id: paper-folia-scheduler
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-threading
+    description: "Paper／Folia 共用排程：RegionScheduler、EntityScheduler（retired 回呼）、GlobalRegionScheduler、AsyncScheduler 取代 BukkitScheduler，folia-supported、teleportAsync、延遲至少 1 tick / Paper and Folia scheduling with one code path: region, entity (retired callback), global and async schedulers instead of BukkitScheduler, folia-supported, teleportAsync, delays of at least one tick"
+    skill_file: paper/paper-folia-scheduler/SKILL.md
+    examples_file: paper/paper-folia-scheduler/examples.md
+    inputs:
+      - name: task_kinds
+        description: "哪些工作在哪個排程器執行（位置／實體／全域／IO）"
+        required: true
+      - name: period
+        description: "重複任務的間隔（tick）"
+        required: false
+      - name: folia_required
+        description: "是否也要在 Folia 上執行"
+        required: false
+    outputs:
+      - name: "Tasks.java"
+        description: "四個排程器的外觀類別、延遲至少 1 tick、停用時取消"
+      - name: "PlayerHud.java"
+        description: "每位玩家的實體排程任務與 retired 清理"
+      - name: "BlockRegen.java"
+        description: "以區域排程器延後還原方塊"
+      - name: "ProfileLoader.java"
+        description: "非同步 IO 後回到玩家自己的執行緒"
+      - name: "SchedulingPlugin.java"
+        description: "註冊與 folia-supported"
+    tags: [paper-api, folia, scheduler, threading]
+    trigger_keywords:
+      - "Folia"
+      - "folia-supported"
+      - "RegionScheduler"
+      - "EntityScheduler"
+      - "GlobalRegionScheduler"
+      - "AsyncScheduler"
+      - "區域執行緒"
+      - "teleportAsync"
 
 platforms:
   - id: paper-nms
