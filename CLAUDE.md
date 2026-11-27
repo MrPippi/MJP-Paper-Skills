@@ -18,7 +18,7 @@ MJP-Paper-Skills (Minecraft Paper Agent Skills) 是一套 Paper 插件開發的 
 執行時目錄：**`.claude/skills/`**（Claude Code 專用）
 規範來源：**`Skills/`**（authoritative source，與 `.claude/skills/` 內容相同）
 
-Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 37 個技能頁面。
+Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 38 個技能頁面。
 
 ### Repository Layout
 
@@ -33,14 +33,14 @@ MJP-Paper-Skills/
 │   ├── ci.yml                           ← PR：tsc + test + build（不部署）
 │   ├── skills-compile.yml               ← 範本對 26.3／1.21.11 編譯＋片段 import 檢查（改到 Skills/、verify/、docs/paper-nms/ 時）
 │   ├── skills-canary.yml                ← 每週一：有更新的 Paper dev bundle（新 build 或下一版 beta）時先編譯一次，不擋 PR
-│   └── skills-runtime.yml               ← 在真的 Paper 伺服器上跑 verify/runtime/ 的情境（改到涵蓋的技能時、每週一），不擋 PR
+│   └── skills-runtime.yml               ← 在真的 Paper（部分情境另跑 Folia）伺服器上跑 verify/runtime/ 的情境（改到涵蓋的技能時、每週一），不擋 PR
 ├── .claude/
-│   └── skills/                          ← Claude Code 執行時（37 個技能，與 Skills/ 同步）
+│   └── skills/                          ← Claude Code 執行時（38 個技能，與 Skills/ 同步）
 │       ├── skills-registry.yml          ← 與 Skills/ 相同
 │       ├── _shared/
 │       └── nms/
 ├── Skills/                              ← Canonical source
-│   ├── skills-registry.yml              ← v7.4.0，37 個技能（paper-nms + paper-api）
+│   ├── skills-registry.yml              ← v7.5.0，38 個技能（paper-nms + paper-api）
 │   ├── _shared/
 │   │   ├── nms-threading.md
 │   │   ├── nms-obfuscation.md
@@ -56,7 +56,7 @@ MJP-Paper-Skills/
 │   ├── extract-skill-java.mjs           ← 抽出完整 Java 範本（套用 @1.21.11／@only、依 mc_versions 跳過）供 verify/ 編譯，並列出片段 import
 │   ├── sync-catalog.mjs                 ← 依 registry 改寫各處技能數量／版本；--check 檢查網站頁、README 目錄、Skills Index
 │   ├── canary-bundle.mjs                ← 找出 Paper 最新 dev bundle（skills-canary.yml 用）
-│   ├── runtime-check.mjs                ← 下載 Paper 伺服器、跑 verify/runtime/ 情境並判讀結果（需 --accept-eula）
+│   ├── runtime-check.mjs                ← 下載 Paper／Folia 伺服器、跑 verify/runtime/ 情境並判讀結果（需 --accept-eula）
 │   └── lib/                             ← registry.mjs（不依賴 YAML 套件的 registry 讀取）、paper-server.mjs（下載與啟動伺服器）
 ├── verify/                              ← Gradle 專案：對指定版本 dev bundle 編譯抽出的範本
 │   └── runtime/                         ← 實機檢查：scenarios.json（情境）、probe/（Probe 基底類別）、plugins/<名稱>/（探測插件與描述檔）
@@ -67,7 +67,7 @@ MJP-Paper-Skills/
 │       ├── network.md                   ← Netty pipeline 結構與執行緒模型
 │       └── bukkit-nms-bridge.md         ← Bukkit ↔ NMS 橋接轉換表
 └── web/                                 ← Next.js 文件站
-    └── data/skills/                     ← 37 個技能 .md（已完整）
+    └── data/skills/                     ← 38 個技能 .md（已完整）
 ```
 
 ---
@@ -109,7 +109,7 @@ MJP-Paper-Skills/
 
 ## Skills Index
 
-所有技能以 `Skills/skills-registry.yml`（v7.4.0）為準（共 37 個：NMS 16 個、Paper API 21 個）。✅ = 已同步至 `.claude/skills/`。
+所有技能以 `Skills/skills-registry.yml`（v7.5.0）為準（共 38 個：NMS 16 個、Paper API 22 個）。✅ = 已同步至 `.claude/skills/`。
 
 **NMS 技能**（`platform: paper-nms`，`Skills/nms/`）
 
@@ -157,6 +157,7 @@ MJP-Paper-Skills/
 | `paper-brigadier-command` | paper-command | Brigadier 指令（LifecycleEvents.COMMANDS、k/m/b 金額） | ✅ |
 | `paper-disposable-world` | paper-world | 拋棄式世界與競技場重置 | ✅ |
 | `paper-world-clock` | paper-world | 26.3 世界時鐘：每個世界暫停、流速、時間鎖定（僅 26.3） | ✅ |
+| `paper-folia-scheduler` | paper-threading | Paper／Folia 共用排程：區域、實體（retired）、全域、非同步排程器，folia-supported、teleportAsync | ✅ |
 
 ---
 
@@ -276,13 +277,13 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 7. 驗證觸發關鍵字無與既有技能衝突
 8. 在 `web/data/skills/<slug>.md` 新增網站頁面（frontmatter 的 `version`、`category` 與 registry 一致；只支援部分版本時加 `mcVersions`）、在 `web/data/skills/en/<slug>.md` 新增英文內文（只含內文、不含 frontmatter、不得有中文），在 8 份 README 目錄、本檔 Skills Index、`Skills/paper-api/PLATFORM.md` 技能清單各加一列，然後執行 `node scripts/sync-catalog.mjs` 更新各處技能數量與 registry 版本。網站測試的預期值直接讀 registry，不必手改；`web/tests/catalog.test.ts` 以 `--check` 檢查以上是否一致
 9. 範本對 1.21.11 與 26.3 實際編譯驗證：`node scripts/extract-skill-java.mjs <版本>` 後在 `verify/` 執行 `./gradlew compileSkills -Pmc=<版本>`（26.3 用 JDK 25、1.21.11 用 JDK 21；CI `skills-compile.yml` 也會跑）。只編譯含 `package` 的完整檔案；片段（以及 `docs/paper-nms/`）的 import 由 `./gradlew checkSnippetImports -Pmc=<版本>` 對同一 classpath 檢查類別是否存在（`com.example.*` 與 JDK 除外）；`SKILL.md` 與 `template.md` 合為一組，examples.md 的同名類別會覆蓋該組版本另成一組編譯。Paper API 技能不得 import NMS（抽取時檢查）。
-   能在沒有玩家連線的伺服器上驗證的行為（世界、配方、物品元件、registry 等），可在 `verify/runtime/` 加實機情境：`scenarios.json` 加一筆（插件取自哪個抽出的範本組、哪些套件進 jar、伺服器啟動幾次、預期通過幾項檢查），在 `verify/runtime/plugins/<名稱>/` 放描述檔（`api-version: '${apiVersion}'`）與繼承 `com.example.probe.Probe` 的探測類別，並把技能路徑加進 `skills-runtime.yml` 的 `paths`（`sync-catalog --check` 會檢查）。本機執行：`./gradlew buildRuntimePlugins -Pmc=26.3` 後 `node scripts/runtime-check.mjs 26.3 --accept-eula`（會接受 Minecraft EULA）
+   能在沒有玩家連線的伺服器上驗證的行為（世界、配方、物品元件、registry 等），可在 `verify/runtime/` 加實機情境：`scenarios.json` 加一筆（插件取自哪個抽出的範本組、哪些套件進 jar、伺服器啟動幾次、預期通過幾項檢查；`"server": "folia"` 改在 Folia 上執行），在 `verify/runtime/plugins/<名稱>/` 放描述檔（`api-version: '${apiVersion}'`）與繼承 `com.example.probe.Probe` 的探測類別，並把技能路徑加進 `skills-runtime.yml` 的 `paths`（`sync-catalog --check` 會檢查）。本機執行：`./gradlew buildRuntimePlugins -Pmc=26.3` 後 `node scripts/runtime-check.mjs 26.3 --accept-eula`（會接受 Minecraft EULA）
 
 ---
 
 ## Web App (`web/`)
 
-Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 37 個技能（每個一個 `.md`）。
+Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 38 個技能（每個一個 `.md`）。
 
 ```bash
 cd web

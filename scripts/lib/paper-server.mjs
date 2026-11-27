@@ -1,5 +1,5 @@
 /**
- * Downloads, prepares and runs a Paper server for scripts/runtime-check.mjs.
+ * Downloads, prepares and runs a Paper (or Folia) server for scripts/runtime-check.mjs.
  *
  * The server jar comes from PaperMC's download API (fill.papermc.io) and is checked against the
  * SHA-256 the API publishes. Paperclip patches it once into a base folder (libraries/, versions/,
@@ -12,7 +12,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { REPO_ROOT } from './registry.mjs';
 
-const FILL_API = 'https://fill.papermc.io/v3/projects/paper/versions';
+const FILL_API = 'https://fill.papermc.io/v3/projects';
+/** Server software a scenario can run on (fill.papermc.io project ids). */
+export const SERVER_PROJECTS = ['paper', 'folia'];
 /** PaperMC asks API clients to identify themselves; no personal data. */
 const USER_AGENT = 'mjp-paper-skills-runtime-check/1.0 (+https://github.com/MrPippi/MJP-Paper-Skills)';
 const PREPARED_DIRS = ['libraries', 'versions', 'cache'];
@@ -26,10 +28,14 @@ export function pinnedBundle(mc) {
   return match[1];
 }
 
-/** The server build matching a dev bundle: 26.3.build.258-stable → build 258; a SNAPSHOT → the latest build. */
-export function serverBuildFor(mc, bundle) {
-  const build = bundle.match(/\.build\.(\d+)-/)?.[1];
-  return { version: mc, build: build ?? 'latest' };
+/**
+ * The server build to test: Paper matches the dev bundle (26.3.build.258-stable → build 258; a SNAPSHOT → the
+ * latest build); Folia has no dev bundle of its own here, so it uses its latest build for `mc`.
+ */
+export function serverBuildFor(mc, bundle, project = 'paper') {
+  if (!SERVER_PROJECTS.includes(project)) throw new Error(`Unknown server project ${project}`);
+  const build = project === 'paper' ? bundle.match(/\.build\.(\d+)-/)?.[1] : undefined;
+  return { project, version: mc, build: build ?? 'latest' };
 }
 
 async function fetchJson(url) {
@@ -43,8 +49,8 @@ function sha256(file) {
 }
 
 /** Downloads the server jar into `dir` (reused when already there and the checksum matches). */
-export async function downloadPaper({ version, build }, dir) {
-  const info = await fetchJson(`${FILL_API}/${encodeURIComponent(version)}/builds/${encodeURIComponent(build)}`);
+export async function downloadPaper({ project = 'paper', version, build }, dir) {
+  const info = await fetchJson(`${FILL_API}/${encodeURIComponent(project)}/versions/${encodeURIComponent(version)}/builds/${encodeURIComponent(build)}`);
   const download = info?.downloads?.['server:default'];
   const expected = download?.checksums?.sha256;
   if (!download?.url?.startsWith('https://') || !/^[0-9a-f]{64}$/.test(expected ?? '') || !/^[\w.-]+\.jar$/.test(download.name ?? '')) {

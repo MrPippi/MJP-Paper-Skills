@@ -8,7 +8,7 @@
 
 [![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
-[![Skills](https://img.shields.io/badge/skills-37-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
+[![Skills](https://img.shields.io/badge/skills-38-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
 [![Skills compile](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml/badge.svg)](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml)
 [![License: MIT](https://img.shields.io/github/license/MrPippi/MJP-Paper-Skills)](LICENSE)
@@ -29,7 +29,7 @@ AI 程式設計工具常在 Paper 插件上出現細微錯誤：過時或已混�
 - **Mojang 官方名稱**：NMS 程式碼使用 Paperweight userdev，以及 Minecraft 自 26.1 起以未混淆形式發行的名稱。
 - **執行緒安全的設計**：每個技能都會說明每次呼叫是在哪個執行緒執行（主執行緒、Netty IO 或非同步）。
 - **不限工具**：開放的 [Agent Skills](https://agentskills.io) 格式可搭配 Claude Code、OpenAI Codex、Cursor、GitHub Copilot、Gemini CLI 等工具。
-- **兩條路線**：16 個處理底層工作的 NMS 技能，以及 21 個只需 `paper-api` 的 Paper API 技能。
+- **兩條路線**：16 個處理底層工作的 NMS 技能，以及 22 個只需 `paper-api` 的 Paper API 技能。
 - **易讀的文件**：每個技能也發布於[文件網站](https://mrpippi.github.io/MJP-Paper-Skills)，提供英文與繁體中文版本。
 
 ## 目錄
@@ -118,7 +118,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 
 ## 技能目錄
 
-共 37 個技能，皆已針對 Paper 1.21.11 與 26.3 編譯驗證。可在[文件網站](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)依條件篩選並查看完整範本；機器可讀的索引為 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)。
+共 38 個技能，皆已針對 Paper 1.21.11 與 26.3 編譯驗證。可在[文件網站](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)依條件篩選並查看完整範本；機器可讀的索引為 [`Skills/skills-registry.yml`](Skills/skills-registry.yml)。
 
 ### NMS（16 個技能，需要 Paperweight userdev）
 
@@ -141,7 +141,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | 橋接 | [`nms-reflection-bridge`](Skills/nms/nms-reflection-bridge/SKILL.md) | 不依賴 Paperweight、以反射存取 NMS |
 | 橋接 | [`nms-version-adapter`](Skills/nms/nms-version-adapter/SKILL.md) | 支援多版本 NMS 的 Adapter 模式 |
 
-### Paper API（21 個技能，只需 `paper-api`）
+### Paper API（22 個技能，只需 `paper-api`）
 
 | 類別 | 技能 | 功能 |
 |----------|-------|--------------|
@@ -166,6 +166,7 @@ Before writing Paper plugin code, find the matching skill in <skills-folder>/ski
 | 指令 | [`paper-brigadier-command`](Skills/paper/paper-brigadier-command/SKILL.md) | 透過 `LifecycleEvents.COMMANDS` 註冊的 Brigadier 指令 |
 | 世界 | [`paper-disposable-world`](Skills/paper/paper-disposable-world/SKILL.md) | 拋棄式世界與競技場重置 |
 | 世界 | [`paper-world-clock`](Skills/paper/paper-world-clock/SKILL.md) | 每個世界獨立的時鐘暫停、流速與時間鎖定（僅 26.3） |
+| 執行緒 | [`paper-folia-scheduler`](Skills/paper/paper-folia-scheduler/SKILL.md) | Paper 與 Folia 共用的排程：區域、實體、全域與非同步排程器 |
 
 ---
 
@@ -210,12 +211,12 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 MJP-Paper-Skills/
 ├── .claude/skills/           # 可直接複製的技能資料夾（鏡像 Skills/，PLATFORM 資料夾除外）
 ├── Skills/                   # 技能的規範來源
-│   ├── skills-registry.yml   # 全部 37 個技能的索引（paper-nms + paper-api）
+│   ├── skills-registry.yml   # 全部 38 個技能的索引（paper-nms + paper-api）
 │   ├── _shared/              # 所有技能共用的執行緒與命名規則
 │   ├── paper-nms/PLATFORM.md # NMS build.gradle / paper-plugin.yml 範本、版本對照表
 │   ├── paper-api/PLATFORM.md # Paper API 建置設定、軟依賴座標
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/（16 個 NMS 技能）
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/（21 個 Paper API 技能）
+│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/（22 個 Paper API 技能）
 ├── scripts/                  # sync-skill-references.mjs（references/）、extract-skill-java.mjs（編譯檢查）
 ├── verify/                   # 為各版本編譯所擷取範本的 Gradle 專案
 ├── docs/paper-nms/           # NMS API 速查表

@@ -12,6 +12,9 @@ import org.bukkit.plugin.java.JavaPlugin;
  *   [PROBE] DONE                  the probe finished this server start (it then stops the server)
  *
  * A run that never logs DONE (crash, hang, a callback that never fired) fails on the runner's timeout.
+ *
+ * Steps are scheduled on the global region scheduler: on Paper it runs on the main thread (like the Bukkit
+ * scheduler), and it also works on Folia, where the Bukkit scheduler is unsupported.
  */
 public abstract class Probe extends JavaPlugin {
 
@@ -44,9 +47,9 @@ public abstract class Probe extends JavaPlugin {
         getLogger().info("[PROBE] " + message);
     }
 
-    /** Runs {@code step} on the main thread after {@code ticks}. */
+    /** Runs {@code step} after {@code ticks} (at least 1) on the main thread (Paper) / global region thread (Folia). */
     protected final void later(long ticks, Step step) {
-        getServer().getScheduler().runTaskLater(this, () -> guard(step), ticks);
+        getServer().getGlobalRegionScheduler().runDelayed(this, task -> guard(step), Math.max(1L, ticks));
     }
 
     /** Runs {@code step}; an exception is reported as FAILED and stops the server. */

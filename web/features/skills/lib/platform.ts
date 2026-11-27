@@ -43,6 +43,7 @@ const ICON_BY_SUFFIX: Record<string, PixelIconName> = {
   world: 'grass',
   gameplay: 'sword',
   command: 'command',
+  threading: 'redstone',
 };
 
 export function categoryIconFor(category: string): PixelIconName {

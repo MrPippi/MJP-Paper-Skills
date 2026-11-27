@@ -1,4 +1,4 @@
-# Runs skill templates on a real Paper server and checks their behaviour
+# Runs skill templates on a real Paper (and, for some scenarios, Folia) server and checks their behaviour
 # (verify/runtime/scenarios.json, scripts/runtime-check.mjs). Not a required check.
 #
 # Running the test servers accepts the Minecraft EULA (https://aka.ms/MinecraftEULA)
@@ -19,6 +19,7 @@ on:
       - "Skills/paper/paper-sqlite-repository/**"
       - "Skills/paper/paper-embedded-http/**"
       - "Skills/paper/paper-brigadier-command/**"
+      - "Skills/paper/paper-folia-scheduler/**"
       - "verify/**"
       - "scripts/runtime-check.mjs"
       - "scripts/extract-skill-java.mjs"
@@ -37,6 +38,7 @@ on:
       - "Skills/paper/paper-sqlite-repository/**"
       - "Skills/paper/paper-embedded-http/**"
       - "Skills/paper/paper-brigadier-command/**"
+      - "Skills/paper/paper-folia-scheduler/**"
       - "verify/**"
       - "scripts/runtime-check.mjs"
       - "scripts/extract-skill-java.mjs"
@@ -90,6 +92,8 @@ jobs:
           path: |
             verify/build/runtime/${{ matrix.mc }}/downloads
             verify/build/runtime/${{ matrix.mc }}/base
+            verify/build/runtime/${{ matrix.mc }}/folia-downloads
+            verify/build/runtime/${{ matrix.mc }}/folia-base
           key: paper-server-${{ matrix.mc }}-${{ hashFiles('verify/build.gradle') }}
 
       - name: Extract templates

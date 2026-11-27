@@ -7,8 +7,8 @@
  *   node scripts/runtime-check.mjs 26.3 --accept-eula [scenario ...]
  *
  * --accept-eula is required: the script writes eula=true for each test server, which accepts the
- * Minecraft EULA (https://aka.ms/MinecraftEULA). The server build matches the dev bundle pinned in
- * verify/build.gradle. Each scenario in verify/runtime/scenarios.json gets a fresh server, started
+ * Minecraft EULA (https://aka.ms/MinecraftEULA). The Paper build matches the dev bundle pinned in
+ * verify/build.gradle; scenarios with "server": "folia" run on the latest Folia build instead. Each scenario in verify/runtime/scenarios.json gets a fresh server, started
  * `starts` times; it passes when every start reaches DONE, no CHECK fails, no probe or plugin
  * error is logged, and the passed checks total `checks`. Logs: verify/build/runtime/<mc>/<scenario>/.
  * Set JAVA (or JAVA_HOME) to pick the JDK: 25 for 26.3, 21 for 1.21.11.
@@ -16,7 +16,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { REPO_ROOT } from './lib/registry.mjs';
-import { downloadPaper, newServerDir, pinnedBundle, preparePaper, runServer, serverBuildFor } from './lib/paper-server.mjs';
+import { downloadPaper, newServerDir, pinnedBundle, preparePaper, runServer, serverBuildFor, SERVER_PROJECTS } from './lib/paper-server.mjs';
 
 const START_TIMEOUT_MS = 5 * 60 * 1000;
 const CHECK_LINE = /\[PROBE\] CHECK (OK|FAIL)\s+(.*)$/;
@@ -43,7 +43,26 @@ function loadScenarios(mc, only) {
   const unknown = only.filter((id) => !config.scenarios.some((s) => s.id === id));
   if (unknown.length) throw new Error(`Unknown scenario(s): ${unknown.join(', ')}`);
   if (!scenarios.length) throw new Error(`No runtime scenario targets Minecraft ${mc}`);
+  const badServer = scenarios.find((s) => !SERVER_PROJECTS.includes(serverOf(s)));
+  if (badServer) throw new Error(`${badServer.id}: unknown server "${badServer.server}" (expected ${SERVER_PROJECTS.join(' or ')})`);
   return scenarios;
+}
+
+function serverOf(scenario) {
+  return scenario.server ?? 'paper';
+}
+
+const SERVER_NAMES = { paper: 'Paper', folia: 'Folia' };
+
+/** Downloads and prepares one server type; Paper keeps the original folder names (CI caches them). */
+async function prepareServer(mc, project, java) {
+  const root = path.join(REPO_ROOT, 'verify', 'build', 'runtime', mc);
+  const prefix = project === 'paper' ? '' : `${project}-`;
+  const download = await downloadPaper(serverBuildFor(mc, pinnedBundle(mc), project), path.join(root, `${prefix}downloads`));
+  const server = { ...download, project, name: `${SERVER_NAMES[project]} ${mc} build ${download.build}`, baseDir: path.join(root, `${prefix}base`) };
+  console.log(`${server.name} (${path.basename(server.jar)})`);
+  preparePaper(server.jar, server.baseDir, java);
+  return server;
 }
 
 function pluginJars(mc, scenario) {
@@ -88,10 +107,12 @@ async function runScenario(mc, scenario, server, java) {
   return { scenario, passed, failed, errors, ok: failed.length === 0 && errors.length === 0, dir };
 }
 
-function report(mc, server, results) {
-  const lines = [`Paper ${mc} build ${server.build}`];
+function report(mc, results) {
+  const servers = [...new Set(results.map((r) => r.server))];
+  const lines = [servers.join(', ')];
   for (const r of results) {
-    lines.push(`${r.ok ? 'PASS' : 'FAIL'}  ${r.scenario.id} (${r.scenario.skills.join(', ')}): ${r.passed}/${r.scenario.checks} checks`);
+    const on = servers.length > 1 ? ` [${r.server}]` : '';
+    lines.push(`${r.ok ? 'PASS' : 'FAIL'}  ${r.scenario.id}${on} (${r.scenario.skills.join(', ')}): ${r.passed}/${r.scenario.checks} checks`);
     for (const f of r.failed) lines.push(`      failed check: ${f}`);
     for (const e of r.errors) lines.push(`      ${e}`);
     if (!r.ok) lines.push(`      logs: ${path.relative(REPO_ROOT, r.dir)}`);
@@ -99,9 +120,9 @@ function report(mc, server, results) {
   console.log(lines.join('\n'));
 
   if (process.env.GITHUB_STEP_SUMMARY) {
-    const md = [`### Runtime checks: Paper ${mc} build ${server.build}`, '', '| Scenario | Skills | Checks | Result |', '|---|---|---|---|'];
+    const md = [`### Runtime checks: ${servers.join(', ')}`, '', '| Scenario | Server | Skills | Checks | Result |', '|---|---|---|---|---|'];
     for (const r of results) {
-      md.push(`| \`${r.scenario.id}\` | ${r.scenario.skills.map((s) => `\`${s}\``).join(', ')} | ${r.passed}/${r.scenario.checks} | ${r.ok ? '✅' : '❌'} |`);
+      md.push(`| \`${r.scenario.id}\` | ${r.server} | ${r.scenario.skills.map((s) => `\`${s}\``).join(', ')} | ${r.passed}/${r.scenario.checks} | ${r.ok ? '✅' : '❌'} |`);
     }
     const problems = results.flatMap((r) => [...r.failed.map((f) => `failed check: ${f}`), ...r.errors].map((p) => `- \`${r.scenario.id}\`: ${p}`));
     if (problems.length) md.push('', ...problems);
@@ -116,18 +137,18 @@ async function main() {
   }
   const scenarios = loadScenarios(mc, only);
   const java = javaCommand();
-  const root = path.join(REPO_ROOT, 'verify', 'build', 'runtime', mc);
-  const download = await downloadPaper(serverBuildFor(mc, pinnedBundle(mc)), path.join(root, 'downloads'));
-  const server = { ...download, baseDir: path.join(root, 'base') };
-  console.log(`Paper ${mc} build ${server.build} (${path.basename(server.jar)})`);
-  preparePaper(server.jar, server.baseDir, java);
+  const servers = {};
+  for (const project of new Set(scenarios.map(serverOf))) {
+    servers[project] = await prepareServer(mc, project, java);
+  }
 
   const results = [];
   for (const scenario of scenarios) {
-    console.log(`running ${scenario.id} ...`);
-    results.push(await runScenario(mc, scenario, server, java));
+    const server = servers[serverOf(scenario)];
+    console.log(`running ${scenario.id} on ${server.name} ...`);
+    results.push({ ...(await runScenario(mc, scenario, server, java)), server: server.name });
   }
-  report(mc, server, results);
+  report(mc, results);
   if (results.some((r) => !r.ok)) process.exit(1);
 }
 
