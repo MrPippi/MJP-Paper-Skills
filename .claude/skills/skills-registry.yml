@@ -1,5 +1,5 @@
-version: "7.5.0"
-updated: "2026-11-27"
+version: "7.6.0"
+updated: "2026-11-28"
 description: "MJP-Paper-Skills — Minecraft Paper Agent Skills / 技能索引：NMS（paper-nms）與純 Paper API（paper-api），Paper 1.21.11 / 26.x"
 
 skills:
@@ -1462,6 +1462,44 @@ skills:
       - "AsyncScheduler"
       - "區域執行緒"
       - "teleportAsync"
+
+  - id: paper-display-entities
+    version: "1.0.0"
+    status: active
+    platform: paper-api
+    category: paper-display
+    description: "Paper Display 實體：TextDisplay 全息字、ItemDisplay／BlockDisplay 插值動畫、非持久化＋區塊載入時重建、PDC 清掉重複、只給單一玩家看 / Paper display entities: TextDisplay holograms, ItemDisplay / BlockDisplay interpolated animations, non-persistent entities rebuilt on chunk load, PDC cleanup of duplicates, per-player holograms"
+    skill_file: paper/paper-display-entities/SKILL.md
+    examples_file: paper/paper-display-entities/examples.md
+    inputs:
+      - name: holograms
+        description: "全息字的 id、位置與文字"
+        required: true
+      - name: animated_items
+        description: "要展示或旋轉的物品"
+        required: false
+      - name: per_player
+        description: "只給單一玩家看的全息字"
+        required: false
+    outputs:
+      - name: "Holograms.java"
+        description: "定義、生成、區塊載入時重建、更新文字、清除殘留"
+      - name: "ItemSpinner.java"
+        description: "插值旋轉的 ItemDisplay"
+      - name: "PrivateHologram.java"
+        description: "只給單一玩家看的全息字"
+      - name: "HologramSpec.java"
+        description: "不可變的全息字定義"
+    tags: [paper-api, display-entity, hologram, text-display]
+    trigger_keywords:
+      - "全息字"
+      - "hologram"
+      - "TextDisplay"
+      - "ItemDisplay"
+      - "BlockDisplay"
+      - "display entity"
+      - "插值動畫"
+      - "浮空文字"
 
 platforms:
   - id: paper-nms

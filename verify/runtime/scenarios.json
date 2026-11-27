@@ -18,7 +18,8 @@
     "web-probe": { "templates": "paper/paper-embedded-http/skill", "include": ["com/example/probe"] },
     "command": { "templates": "paper/paper-brigadier-command/skill", "include": ["com/example/command"] },
     "command-probe": { "templates": "paper/paper-brigadier-command/skill", "include": ["com/example/probe"] },
-    "scheduling-probe": { "templates": "paper/paper-folia-scheduler/skill", "include": ["com/example/scheduling", "com/example/probe"] }
+    "scheduling-probe": { "templates": "paper/paper-folia-scheduler/skill", "include": ["com/example/scheduling", "com/example/probe"] },
+    "display-probe": { "templates": "paper/paper-display-entities/skill", "include": ["com/example/hologram", "com/example/probe"] }
   },
   "scenarios": [
     {
@@ -117,6 +118,23 @@
       "plugins": ["scheduling-probe"],
       "starts": 1,
       "checks": 19
+    },
+    {
+      "id": "display-entities",
+      "skills": ["paper-display-entities"],
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["display-probe"],
+      "starts": 2,
+      "checks": 16
+    },
+    {
+      "id": "display-entities-on-folia",
+      "skills": ["paper-display-entities"],
+      "server": "folia",
+      "mc": ["26.3", "1.21.11"],
+      "plugins": ["display-probe"],
+      "starts": 2,
+      "checks": 16
     }
   ]
 }

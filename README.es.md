@@ -8,7 +8,7 @@ NMS de bajo nivel con los nombres oficiales de Mojang y Paper API puro, para cua
 
 [![Paper](https://img.shields.io/badge/Paper-1.21.11%20%7C%2026.3-2ea44f)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21%20%7C%2025-orange)](https://adoptium.net)
-[![Skills](https://img.shields.io/badge/skills-38-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
+[![Skills](https://img.shields.io/badge/skills-39-blue)](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills)
 [![Agent Skills](https://img.shields.io/badge/format-Agent%20Skills-8a63d2)](https://agentskills.io)
 [![Skills compile](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml/badge.svg)](https://github.com/MrPippi/MJP-Paper-Skills/actions/workflows/skills-compile.yml)
 [![License: MIT](https://img.shields.io/github/license/MrPippi/MJP-Paper-Skills)](LICENSE)
@@ -29,7 +29,7 @@ Las herramientas de programación con IA suelen cometer errores sutiles en los p
 - **Nombres oficiales de Mojang**: el código NMS usa Paperweight userdev y los nombres que Minecraft distribuye sin ofuscar desde la 26.1.
 - **Seguro entre hilos por diseño**: cada skill indica en qué hilo se ejecuta cada llamada (principal, Netty IO o asíncrono).
 - **Independiente de la herramienta**: el formato abierto [Agent Skills](https://agentskills.io) funciona con Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI y más.
-- **Dos vertientes**: 16 skills de NMS para trabajo de bajo nivel y 22 skills de Paper API que solo necesitan `paper-api`.
+- **Dos vertientes**: 16 skills de NMS para trabajo de bajo nivel y 23 skills de Paper API que solo necesitan `paper-api`.
 - **Documentación legible**: cada skill también se publica en el [sitio de documentación](https://mrpippi.github.io/MJP-Paper-Skills), en inglés y chino tradicional.
 
 ## Contenido
@@ -118,7 +118,7 @@ Describe la funcionalidad con lenguaje natural. La herramienta compara tu petici
 
 ## Catálogo de skills
 
-38 skills, todos verificados por compilación con Paper 1.21.11 y 26.3. Explóralos con filtros y plantillas completas en el [sitio de documentación](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); el índice legible por máquina es [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
+39 skills, todos verificados por compilación con Paper 1.21.11 y 26.3. Explóralos con filtros y plantillas completas en el [sitio de documentación](https://mrpippi.github.io/MJP-Paper-Skills/docs/skills); el índice legible por máquina es [`Skills/skills-registry.yml`](Skills/skills-registry.yml).
 
 ### NMS (16 skills, requiere Paperweight userdev)
 
@@ -141,7 +141,7 @@ Describe la funcionalidad con lenguaje natural. La herramienta compara tu petici
 | Puente | [`nms-reflection-bridge`](Skills/nms/nms-reflection-bridge/SKILL.md) | Acceso a NMS mediante reflexión, sin Paperweight |
 | Puente | [`nms-version-adapter`](Skills/nms/nms-version-adapter/SKILL.md) | Patrón Adapter para soporte NMS multiversión |
 
-### Paper API (22 skills, requiere solo `paper-api`)
+### Paper API (23 skills, requiere solo `paper-api`)
 
 | Categoría | Skill | Qué hace |
 |----------|-------|--------------|
@@ -167,6 +167,7 @@ Describe la funcionalidad con lenguaje natural. La herramienta compara tu petici
 | Mundo | [`paper-disposable-world`](Skills/paper/paper-disposable-world/SKILL.md) | Mundos desechables y reinicio de arenas |
 | Mundo | [`paper-world-clock`](Skills/paper/paper-world-clock/SKILL.md) | Pausa, velocidad y bloqueo del reloj por mundo (solo 26.3) |
 | Hilos | [`paper-folia-scheduler`](Skills/paper/paper-folia-scheduler/SKILL.md) | Programación de tareas común a Paper y Folia: planificadores de región, entidad, global y asíncrono |
+| Visualización | [`paper-display-entities`](Skills/paper/paper-display-entities/SKILL.md) | Hologramas y objetos animados con TextDisplay e ItemDisplay, siempre una sola copia |
 
 ---
 
@@ -211,12 +212,12 @@ Las plantillas canónicas de `build.gradle` y `paper-plugin.yml` están en los d
 MJP-Paper-Skills/
 ├── .claude/skills/           # Carpeta de skills lista para copiar (refleja Skills/, salvo las carpetas PLATFORM)
 ├── Skills/                   # Fuentes canónicas de los skills
-│   ├── skills-registry.yml   # Índice de los 38 skills (paper-nms + paper-api)
+│   ├── skills-registry.yml   # Índice de los 39 skills (paper-nms + paper-api)
 │   ├── _shared/              # Reglas de hilos y nomenclatura compartidas por todos los skills
 │   ├── paper-nms/PLATFORM.md # Plantillas de build.gradle / paper-plugin.yml para NMS, tabla de versiones
 │   ├── paper-api/PLATFORM.md # Configuración de compilación de Paper API, coordenadas de dependencias suaves
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (16 skills de NMS)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (22 skills de Paper API)
+│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (23 skills de Paper API)
 ├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (comprobación de compilación)
 ├── verify/                   # Proyecto Gradle que compila las plantillas extraídas para cada versión
 ├── docs/paper-nms/           # Referencia rápida de la API de NMS
