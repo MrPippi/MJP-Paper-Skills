@@ -149,3 +149,4 @@ Paper stopped importing new Spigot API after its 2024-12-13 hard fork, so APIs a
 | `paper-disposable-world` | paper-world | Disposable worlds / arena reset |
 | `paper-world-clock` | paper-world | Per-world clock control (26.3 only) |
 | `paper-folia-scheduler` | paper-threading | Paper and Folia scheduling with region, entity, global and async schedulers |
+| `paper-display-entities` | paper-display | TextDisplay / ItemDisplay holograms and animations, one copy guaranteed |

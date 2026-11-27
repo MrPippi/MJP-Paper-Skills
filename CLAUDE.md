@@ -18,7 +18,7 @@ MJP-Paper-Skills (Minecraft Paper Agent Skills) 是一套 Paper 插件開發的 
 執行時目錄：**`.claude/skills/`**（Claude Code 專用）
 規範來源：**`Skills/`**（authoritative source，與 `.claude/skills/` 內容相同）
 
-Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 38 個技能頁面。
+Web app（`web/`）保留供文件瀏覽；`web/data/skills/` 含全部 39 個技能頁面。
 
 ### Repository Layout
 
@@ -35,12 +35,12 @@ MJP-Paper-Skills/
 │   ├── skills-canary.yml                ← 每週一：有更新的 Paper dev bundle（新 build 或下一版 beta）時先編譯一次，不擋 PR
 │   └── skills-runtime.yml               ← 在真的 Paper（部分情境另跑 Folia）伺服器上跑 verify/runtime/ 的情境（改到涵蓋的技能時、每週一），不擋 PR
 ├── .claude/
-│   └── skills/                          ← Claude Code 執行時（38 個技能，與 Skills/ 同步）
+│   └── skills/                          ← Claude Code 執行時（39 個技能，與 Skills/ 同步）
 │       ├── skills-registry.yml          ← 與 Skills/ 相同
 │       ├── _shared/
 │       └── nms/
 ├── Skills/                              ← Canonical source
-│   ├── skills-registry.yml              ← v7.5.0，38 個技能（paper-nms + paper-api）
+│   ├── skills-registry.yml              ← v7.6.0，39 個技能（paper-nms + paper-api）
 │   ├── _shared/
 │   │   ├── nms-threading.md
 │   │   ├── nms-obfuscation.md
@@ -67,7 +67,7 @@ MJP-Paper-Skills/
 │       ├── network.md                   ← Netty pipeline 結構與執行緒模型
 │       └── bukkit-nms-bridge.md         ← Bukkit ↔ NMS 橋接轉換表
 └── web/                                 ← Next.js 文件站
-    └── data/skills/                     ← 38 個技能 .md（已完整）
+    └── data/skills/                     ← 39 個技能 .md（已完整）
 ```
 
 ---
@@ -109,7 +109,7 @@ MJP-Paper-Skills/
 
 ## Skills Index
 
-所有技能以 `Skills/skills-registry.yml`（v7.5.0）為準（共 38 個：NMS 16 個、Paper API 22 個）。✅ = 已同步至 `.claude/skills/`。
+所有技能以 `Skills/skills-registry.yml`（v7.6.0）為準（共 39 個：NMS 16 個、Paper API 23 個）。✅ = 已同步至 `.claude/skills/`。
 
 **NMS 技能**（`platform: paper-nms`，`Skills/nms/`）
 
@@ -158,6 +158,7 @@ MJP-Paper-Skills/
 | `paper-disposable-world` | paper-world | 拋棄式世界與競技場重置 | ✅ |
 | `paper-world-clock` | paper-world | 26.3 世界時鐘：每個世界暫停、流速、時間鎖定（僅 26.3） | ✅ |
 | `paper-folia-scheduler` | paper-threading | Paper／Folia 共用排程：區域、實體（retired）、全域、非同步排程器，folia-supported、teleportAsync | ✅ |
+| `paper-display-entities` | paper-display | Display 實體全息字與插值動畫：非持久化＋區塊載入重建、PDC 清除重複、單一玩家可見 | ✅ |
 
 ---
 
@@ -283,7 +284,7 @@ Paper API 技能（`Skills/paper/`）使用相同結構，差異：`name: paper-
 
 ## Web App (`web/`)
 
-Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 38 個技能（每個一個 `.md`）。
+Next.js 16 靜態匯出至 `web/out/`。`web/data/skills/` 含全部 39 個技能（每個一個 `.md`）。
 
 ```bash
 cd web

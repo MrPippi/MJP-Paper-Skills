@@ -1,0 +1,5 @@
+name: DisplayProbe
+version: '1.0'
+main: com.example.probe.display.DisplayProbe
+api-version: '${apiVersion}'
+folia-supported: true
