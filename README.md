@@ -70,7 +70,7 @@ Each skill bundles the build setup and threading rules it needs in its own `refe
 | Install for all your projects (e.g. `~/.claude/skills/`) | add `-g` to any `add` command |
 | Check for updates | `npx skills check` |
 | Update installed skills | `npx skills update` |
-| Install a tested release | `npx skills add MrPippi/MJP-Paper-Skills@v7.4.0 --skill paper-dialog-ui` |
+| Install a tested release | `npx skills add MrPippi/MJP-Paper-Skills@v7.6.0 --skill paper-dialog-ui` |
 | Remove a skill | `npx skills remove paper-dialog-ui` |
 
 Updates are not automatic. `npx skills check` compares the Git commit recorded in `skills-lock.json` with the latest commit of this repository (not the release number), so any new commit on `main` shows up as an update. To use a tested version, install from a [release](https://github.com/MrPippi/MJP-Paper-Skills/releases) tag.
