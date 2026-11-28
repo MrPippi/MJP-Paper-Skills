@@ -70,7 +70,7 @@ AI 程式設計工具常在 Paper 插件上出現細微錯誤：過時或已混�
 | 安裝到所有專案（例如 `~/.claude/skills/`） | 在任何 `add` 指令後加上 `-g` |
 | 檢查是否有更新 | `npx skills check` |
 | 更新已安裝的技能 | `npx skills update` |
-| 安裝已發佈的版本 | `npx skills add MrPippi/MJP-Paper-Skills@v7.4.0 --skill paper-dialog-ui` |
+| 安裝已發佈的版本 | `npx skills add MrPippi/MJP-Paper-Skills@v7.6.0 --skill paper-dialog-ui` |
 | 移除技能 | `npx skills remove paper-dialog-ui` |
 
 技能不會自動更新。`npx skills check` 比對的是 `skills-lock.json` 記錄的 Git commit 與本 repo 最新的 commit（不是版本號），所以 `main` 上任何新 commit 都會顯示為有更新。想使用測試過的版本，請從 [Release](https://github.com/MrPippi/MJP-Paper-Skills/releases) 的 tag 安裝。

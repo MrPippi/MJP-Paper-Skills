@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+## [7.6.0] - 2026-11-28
+
+技能庫 registry 版本 `7.4.0` → `7.6.0`（7.5.0 paper-folia-scheduler、7.6.0 paper-display-entities）。共 39 個技能（NMS 16、Paper API 23）。
+
 ### Changed — 文件跟上實機檢查與 template.md
 
 - README（8 種語言）：特色新增「實機檢查」（不需玩家在線的技能在真的 Paper／Folia 伺服器上執行，情境在 `verify/runtime/`）；How it works 說明長技能的範本在 `template.md`；目錄結構補上 `template.md`、`verify/runtime/` 與新腳本；貢獻步驟改為加 README 目錄列並執行 `sync-catalog.mjs`（取代已不需手改的 `skills-api.data.test.ts`），新增 `SKILL.md` 約 800 行上限與選用的實機情境步驟
@@ -48,7 +52,7 @@
 
 ### Changed — 說明技能更新方式
 
-- README（8 種語言）與網站「開始使用」：補上 `npx skills check`、從 Release tag 安裝（`@v7.4.0`），並說明技能不會自動更新，`check` 比對的是 Git commit 而非版本號
+- README（8 種語言）與網站「開始使用」：補上 `npx skills check`、從 Release tag 安裝（`@v7.6.0`），並說明技能不會自動更新，`check` 比對的是 Git commit 而非版本號
 
 ## [7.4.0] - 2026-11-23
 

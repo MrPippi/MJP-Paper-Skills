@@ -70,7 +70,7 @@ AI コーディングツールは、Paper プラグインで細かな間違い�
 | すべてのプロジェクト向けにインストール（例: `~/.claude/skills/`） | 任意の `add` コマンドに `-g` を付ける |
 | 更新の有無を確認 | `npx skills check` |
 | インストール済みのスキルを更新 | `npx skills update` |
-| リリース版をインストール | `npx skills add MrPippi/MJP-Paper-Skills@v7.4.0 --skill paper-dialog-ui` |
+| リリース版をインストール | `npx skills add MrPippi/MJP-Paper-Skills@v7.6.0 --skill paper-dialog-ui` |
 | スキルを削除 | `npx skills remove paper-dialog-ui` |
 
 スキルは自動では更新されません。`npx skills check` は `skills-lock.json` に記録された Git コミットとこのリポジトリの最新コミット（バージョン番号ではありません）を比較するため、`main` への新しいコミットはすべて更新として表示されます。検証済みのバージョンを使うには、[リリース](https://github.com/MrPippi/MJP-Paper-Skills/releases)のタグからインストールしてください。
