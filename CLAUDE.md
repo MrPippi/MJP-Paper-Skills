@@ -235,8 +235,18 @@ java {
 `Skills/skills-registry.yml` 與 `.claude/skills/skills-registry.yml` **兩個檔案內容必須相同**，包含：
 
 - `skills` 陣列：所有技能條目（`id`, `version`, `status`, `platform`, `category`, `skill_file`, `examples_file`, `inputs`, `outputs`, `tags`, `trigger_keywords`）
-- `platforms` 陣列：`paper-nms`、`paper-api` 平台定義
+- `platforms` 陣列：`paper-nms`、`paper-api` 平台定義。腳本與網站不寫死平台，改讀這裡的欄位（說明在該段開頭註解）：`label`、`skills_dir`、`category_prefix`、`targets`（第一個是預設版本）、`references`、`language`、`forbidden_imports`、`snippet_docs`、`skill_list`
 - `shared` 陣列：指向 `_shared/` 下的共享參考文件
+
+#### 新增平台
+
+新平台（不限 Minecraft）只要：
+
+1. 在 registry `platforms` 加一筆（兩份 registry 同步），建立 `Skills/<platform_file 所在資料夾>/PLATFORM.md` 與 `Skills/<skills_dir>/`
+2. 在 `web/features/skills/lib/platform.ts` 的 `PLATFORMS` 加同一個平台（`tests/platform.test.ts` 檢查 id、label、skills_dir、category_prefix 與 registry 一致），補上圖示與文件頁
+3. 依新增技能流程加技能；`sync-skill-references`、`sync-catalog`、技能數量會自動涵蓋新平台
+4. 驗證：`language: java` 的平台由 `extract-skill-java.mjs` 與 `verify/`（Paper dev bundle classpath）編譯；其他語言或 classpath 需要新的抽取／編譯腳本，`scripts/lib/registry.mjs` 的 `readRegistry()` 提供平台與 `targets`
+5. README 的平台小節標題用 `### <label>`、目錄樹用 `<skills_dir>/<skill-id>/`，數量才會自動改寫
 
 ### SKILL.md 結構
 

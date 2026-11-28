@@ -1502,18 +1502,43 @@ skills:
       - "浮空文字"
 
 platforms:
+  # Each platform is one folder of skills plus the tooling that checks them. The scripts
+  # (sync-catalog, sync-skill-references, extract-skill-java) read these fields instead of
+  # hard-coding platforms; adding a platform means adding an entry here (and to web/features/skills/lib/platform.ts).
+  #   label              short name on the site and in README / CLAUDE.md headings and counts
+  #   skills_dir         folder under Skills/ that holds the platform's skills
+  #   category_prefix    prefix of every category id on this platform
+  #   targets            versions every skill is verified on (a skill narrows this with mc_versions); first = default
+  #   references         shared docs (relative to Skills/) copied into each skill's references/, after platform_file
+  #   language           code blocks the verifier extracts (java: scripts/extract-skill-java.mjs + verify/)
+  #   forbidden_imports  import prefixes a template on this platform must not use
+  #   snippet_docs       extra reference folders (relative to the repo root) whose snippet imports are checked
+  #   skill_list         true when platform_file keeps a table row for every skill
   - id: paper-nms
     name: "Paper NMS"
+    label: "NMS"
     description: "Paper 1.21.11 / 26.x + Paperweight userdev + Mojang 官方命名"
     platform_file: paper-nms/PLATFORM.md
-    mc_versions: ["1.21.11", "26.3"]
+    skills_dir: nms
+    category_prefix: nms-
+    targets: ["26.3", "1.21.11"]
+    references: ["_shared/nms-threading.md", "_shared/nms-obfuscation.md"]
+    language: java
+    snippet_docs: ["docs/paper-nms"]
     java_version: "21 (1.21.11) / 25 (26.3)"
     build_tool: gradle
   - id: paper-api
     name: "Paper API"
+    label: "Paper API"
     description: "Paper 1.21.11 / 26.x 純 Paper API（paper-api compileOnly，不需 Paperweight）"
     platform_file: paper-api/PLATFORM.md
-    mc_versions: ["1.21.11", "26.3"]
+    skills_dir: paper
+    category_prefix: paper-
+    targets: ["26.3", "1.21.11"]
+    references: ["_shared/paper-threading.md"]
+    language: java
+    forbidden_imports: ["net.minecraft", "org.bukkit.craftbukkit"]
+    skill_list: true
     java_version: "21 (1.21.11) / 25 (26.3)"
     build_tool: gradle
 

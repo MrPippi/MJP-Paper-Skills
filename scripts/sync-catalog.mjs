@@ -7,21 +7,24 @@
  *
  * Rewritten (counts and version only): READMEs, CLAUDE.md, the site's locale strings and docs page.
  * Checked only (needs a human or agent, e.g. translations): skill folders, both registry copies,
- * web pages and their frontmatter, README catalog rows, the CLAUDE.md index, the paper-api PLATFORM list
- * and the runtime scenarios (verify/runtime/scenarios.json vs the registry and skills-runtime.yml paths).
+ * web pages and their frontmatter, README catalog rows, the CLAUDE.md index, the skill list of every
+ * platform with `skill_list: true` and the runtime scenarios (verify/runtime/scenarios.json vs the registry and skills-runtime.yml paths).
+ *
+ * Platforms (skill folders, labels, counts) come from the registry's `platforms:` section.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from '../web/node_modules/gray-matter/index.js';
-import { REPO_ROOT, REGISTRY_PATH, ALL_MC_VERSIONS, readRegistry } from './lib/registry.mjs';
+import { REPO_ROOT, REGISTRY_PATH, platformOf, readRegistry, skillsPath } from './lib/registry.mjs';
 
 const CHECK = process.argv.includes('--check');
 const registry = readRegistry();
-const counts = {
-  total: registry.skills.length,
-  nms: registry.skills.filter((s) => s.platform === 'paper-nms').length,
-  paper: registry.skills.filter((s) => s.platform === 'paper-api').length,
-};
+const { platforms } = registry;
+const total = registry.skills.length;
+/** Skill count per platform, in registry order. */
+const platformCounts = platforms.map((p) => registry.skills.filter((s) => s.platform === p.id).length);
+const countOf = (platform) => platformCounts[platforms.indexOf(platform)];
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const README_FILES = fs.readdirSync(REPO_ROOT).filter((f) => /^README(\.[\w-]+)?\.md$/.test(f)).sort();
 
 /** A standalone integer: not part of a version such as 1.21.11 or 26.3. */
@@ -43,39 +46,46 @@ function setLastInts(line, values) {
   });
 }
 
+/** CLAUDE.md Skills Index summary, e.g. `共 39 個：NMS 16 個、Paper API 23 個` (one part per platform). */
+const INDEX_COUNTS = new RegExp(`共 \\d+ 個：${platforms.map((p) => `${escapeRegex(p.label)} \\d+ 個`).join('、')}`);
+const INDEX_COUNTS_TEXT = `共 ${total} 個：${platforms.map((p, i) => `${p.label} ${platformCounts[i]} 個`).join('、')}`;
+
 /** Per-file line rewriters. Each returns the corrected line (unchanged when it does not apply). */
 const RULES = [
   {
     files: README_FILES,
     rewrite(line) {
-      line = line.replace(/badge\/skills-\d+-blue/, `badge/skills-${counts.total}-blue`);
-      if (line.startsWith('│') && line.includes('skills-registry.yml')) return setInts(line, [counts.total]);
-      if (line.includes('nms/<skill-id>/')) return setInts(line, [counts.nms]);
-      if (line.includes('paper/<skill-id>/')) return setInts(line, [counts.paper]);
-      if (line.startsWith('### NMS')) return setInts(line, [counts.nms]);
-      if (line.startsWith('### Paper API')) return setInts(line, [counts.paper]);
-      // the last two integers: some languages start the line with a number (ja: 2 つのトラック)
-      if (line.startsWith('- **') && line.includes('NMS') && line.includes('`paper-api`')) return setLastInts(line, [counts.nms, counts.paper]);
-      if (line.includes('/docs/skills)') && line.includes('skills-registry.yml') && !line.startsWith('[')) return setInts(line, [counts.total]);
+      line = line.replace(/badge\/skills-\d+-blue/, `badge/skills-${total}-blue`);
+      if (line.startsWith('│') && line.includes('skills-registry.yml')) return setInts(line, [total]);
+      for (const p of platforms) {
+        if (line.includes(`${p.skillsDir}/<skill-id>/`)) return setInts(line, [countOf(p)]);   // layout tree
+        if (line.startsWith(`### ${p.label}`)) return setInts(line, [countOf(p)]);             // catalog heading
+      }
+      // the summary bullet naming every platform: its last integers, one per platform in registry order
+      // (some languages start the line with a number, e.g. ja: 2 つのトラック)
+      if (line.startsWith('- **') && platforms.every((p) => line.includes(p.label)) && line.includes('`paper-api`')) {
+        return setLastInts(line, platformCounts);
+      }
+      if (line.includes('/docs/skills)') && line.includes('skills-registry.yml') && !line.startsWith('[')) return setInts(line, [total]);
       return line;
     },
   },
   {
     files: ['CLAUDE.md'],
     rewrite(line) {
-      line = line.replace(/(?<![\d.])\d+ 個技能/g, `${counts.total} 個技能`);
-      line = line.replace(/共 \d+ 個：NMS \d+ 個、Paper API \d+ 個/, `共 ${counts.total} 個：NMS ${counts.nms} 個、Paper API ${counts.paper} 個`);
+      line = line.replace(/(?<![\d.])\d+ 個技能/g, `${total} 個技能`);
+      line = line.replace(INDEX_COUNTS, INDEX_COUNTS_TEXT);
       if (line.includes('skills-registry.yml')) line = line.replace(/v\d+\.\d+\.\d+/g, `v${registry.version}`);
       return line;
     },
   },
   {
     files: ['web/shared/i18n/locales/en.ts'],
-    rewrite: (line) => line.replace(/(?<![\d.])\d+ agent skills/, `${counts.total} agent skills`).replace(/all \d+ skills/, `all ${counts.total} skills`),
+    rewrite: (line) => line.replace(/(?<![\d.])\d+ agent skills/, `${total} agent skills`).replace(/all \d+ skills/, `all ${total} skills`),
   },
   {
     files: ['web/shared/i18n/locales/zh-TW.ts', 'web/app/docs/page.tsx'],
-    rewrite: (line) => line.replace(/(?<![\d.])\d+ 個專為/, `${counts.total} 個專為`).replace(/、\d+ 個 Skills/, `、${counts.total} 個 Skills`),
+    rewrite: (line) => line.replace(/(?<![\d.])\d+ 個專為/, `${total} 個專為`).replace(/、\d+ 個 Skills/, `、${total} 個 Skills`),
   },
 ];
 
@@ -104,12 +114,17 @@ for (const rule of RULES) {
 // ---- Checks that cannot be fixed automatically ----
 
 const ids = registry.skills.map((s) => s.id);
-const groupOf = (skill) => (skill.platform === 'paper-nms' ? 'nms' : 'paper');
+const knownPlatform = (skill) => platforms.some((p) => p.id === skill.platform);
+/** Folder under Skills/ that holds a skill (its platform's skills_dir). */
+const groupOf = (skill) => platformOf(registry, skill).skillsDir;
 
-for (const group of ['nms', 'paper']) {
+for (const { skillsDir: group } of platforms) {
   for (const id of fs.readdirSync(path.join(REPO_ROOT, 'Skills', group))) {
     if (!ids.includes(id)) problems.push(`Skills/${group}/${id}: folder has no registry entry`);
   }
+}
+for (const skill of registry.skills.filter((s) => !knownPlatform(s))) {
+  problems.push(`${skill.id}: unknown platform "${skill.platform}" (not under platforms: in the registry)`);
 }
 const claudeCopy = path.join(REPO_ROOT, '.claude', 'skills', 'skills-registry.yml');
 if (fs.readFileSync(claudeCopy, 'utf8').replace(/\r\n/g, '\n') !== fs.readFileSync(REGISTRY_PATH, 'utf8').replace(/\r\n/g, '\n')) {
@@ -118,10 +133,17 @@ if (fs.readFileSync(claudeCopy, 'utf8').replace(/\r\n/g, '\n') !== fs.readFileSy
 
 const readmes = Object.fromEntries(README_FILES.map((f) => [f, fs.readFileSync(path.join(REPO_ROOT, f), 'utf8')]));
 const claudeMd = fs.readFileSync(path.join(REPO_ROOT, 'CLAUDE.md'), 'utf8');
-const paperPlatform = fs.readFileSync(path.join(REPO_ROOT, 'Skills', 'paper-api', 'PLATFORM.md'), 'utf8');
+/** platform_file text of every platform that lists its skills (skill_list: true). */
+const skillLists = new Map(
+  platforms.filter((p) => p.skillList).map((p) => [p.id, fs.readFileSync(path.join(REPO_ROOT, skillsPath(p.platformFile)), 'utf8')]),
+);
 
-for (const skill of registry.skills) {
-  const group = groupOf(skill);
+for (const skill of registry.skills.filter(knownPlatform)) {
+  const platform = platformOf(registry, skill);
+  const group = platform.skillsDir;
+  if (!skill.category.startsWith(platform.categoryPrefix)) {
+    problems.push(`${skill.id}: category "${skill.category}" does not start with ${platform.id}'s category_prefix "${platform.categoryPrefix}"`);
+  }
   if (!fs.existsSync(path.join(REPO_ROOT, 'Skills', group, skill.id, 'SKILL.md'))) {
     problems.push(`${skill.id}: Skills/${group}/${skill.id}/SKILL.md is missing`);
   }
@@ -133,7 +155,7 @@ for (const skill of registry.skills) {
     for (const [key, expected] of [['id', skill.id], ['version', skill.version], ['category', skill.category]]) {
       if (String(data[key] ?? '') !== expected) problems.push(`${skill.id}: web frontmatter ${key} "${data[key]}" != registry "${expected}"`);
     }
-    const pageVersions = Array.isArray(data.mcVersions) ? data.mcVersions.map(String) : ALL_MC_VERSIONS;
+    const pageVersions = Array.isArray(data.mcVersions) ? data.mcVersions.map(String) : platform.targets;
     if ([...pageVersions].sort().join() !== [...skill.mcVersions].sort().join()) {
       problems.push(`${skill.id}: web mcVersions [${pageVersions}] != registry mc_versions [${skill.mcVersions}]`);
     }
@@ -145,7 +167,8 @@ for (const skill of registry.skills) {
     if (!text.includes(`(Skills/${group}/${skill.id}/SKILL.md)`)) problems.push(`${file}: no catalog row for ${skill.id}`);
   }
   if (!claudeMd.includes(`| \`${skill.id}\` |`)) problems.push(`CLAUDE.md: no Skills Index row for ${skill.id}`);
-  if (group === 'paper' && !paperPlatform.includes(`| \`${skill.id}\` |`)) problems.push(`Skills/paper-api/PLATFORM.md: no skill list row for ${skill.id}`);
+  const skillList = skillLists.get(platform.id);
+  if (skillList !== undefined && !skillList.includes(`| \`${skill.id}\` |`)) problems.push(`${skillsPath(platform.platformFile)}: no skill list row for ${skill.id}`);
 }
 
 // Runtime scenarios (verify/runtime/scenarios.json) name real skills on versions they support,
@@ -178,7 +201,7 @@ for (const scenario of scenarioConfig.scenarios) {
 if (CHECK) {
   for (const problem of problems) console.error(`out of sync: ${problem}`);
   if (problems.length) process.exit(1);
-  console.log(`catalog in sync (${counts.total} skills: ${counts.nms} NMS, ${counts.paper} Paper API; registry ${registry.version})`);
+  console.log(`catalog in sync (${total} skills: ${platforms.map((p, i) => `${platformCounts[i]} ${p.label}`).join(', ')}; registry ${registry.version})`);
 } else {
   for (const problem of problems) console.error(`needs manual update: ${problem}`);
   console.log(rewritten ? `rewrote ${rewritten} line(s)` : 'counts and version already in sync');

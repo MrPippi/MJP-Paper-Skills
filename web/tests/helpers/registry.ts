@@ -15,9 +15,23 @@ export interface RegistrySkill {
   triggerKeywords: string[];
 }
 
-let cache: { version: string; skills: RegistrySkill[] } | null = null;
+export interface RegistryPlatform {
+  id: string;
+  label: string;
+  skillsDir: string;
+  categoryPrefix: string;
+  targets: string[];
+}
 
-export function readRegistry(): { version: string; skills: RegistrySkill[] } {
+export interface Registry {
+  version: string;
+  skills: RegistrySkill[];
+  platforms: RegistryPlatform[];
+}
+
+let cache: Registry | null = null;
+
+export function readRegistry(): Registry {
   if (cache) return cache;
   const lib = pathToFileURL(path.resolve(process.cwd(), '..', 'scripts', 'lib', 'registry.mjs')).href;
   const result = spawnSync(

@@ -22,8 +22,23 @@ describe('getPlatform', () => {
   it('classifies the real data like the registry platforms', () => {
     const counts = groupSkillsByPlatform(getAllSkills()).map((g) => [g.platform, g.skills.length]);
     const registry = readRegistry().skills;
-    const expected = ['paper-nms', 'paper-api'].map((p) => [p, registry.filter((s) => s.platform === p).length]);
+    const expected = readRegistry().platforms.map((p) => [p.id, registry.filter((s) => s.platform === p.id).length]);
     assert.deepEqual(counts, expected);
+  });
+});
+
+describe('PLATFORMS', () => {
+  it('mirrors the registry platforms, in registry order', () => {
+    const site = PLATFORMS.map(({ id, label, skillsDir, categoryPrefix }) => ({ id, label, skillsDir, categoryPrefix }));
+    const registry = readRegistry().platforms.map(({ id, label, skillsDir, categoryPrefix }) => ({ id, label, skillsDir, categoryPrefix }));
+    assert.deepEqual(site, registry);
+  });
+
+  it('every real category starts with its platform prefix', () => {
+    for (const s of getAllSkills()) {
+      const platform = PLATFORMS.find((p) => p.id === getPlatform(s))!;
+      assert.ok(s.category.startsWith(platform.categoryPrefix), `${s.slug}: ${s.category}`);
+    }
   });
 });
 

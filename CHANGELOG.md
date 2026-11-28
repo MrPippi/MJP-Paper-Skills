@@ -5,6 +5,13 @@
 
 ## [Unreleased]
 
+### Changed — 平台改由 registry 定義
+
+- registry `platforms` 新增 `label`、`skills_dir`、`category_prefix`、`targets`、`references`、`language`、`forbidden_imports`、`snippet_docs`、`skill_list`（原平台層級的 `mc_versions` 改為 `targets`）；技能層級的 `mc_versions` 不變（也接受 `targets`）
+- `sync-skill-references.mjs`、`sync-catalog.mjs`、`extract-skill-java.mjs` 不再寫死 `nms`／`paper` 兩個平台：參考檔、技能資料夾、計數、README／CLAUDE.md 數量句、版本標記（`// @<非預設版本>:`）、禁止的 import 與片段檢查目錄都從 registry 讀取；抽出的範本與重構前逐檔相同
+- 網站 `PLATFORMS` 加上 `skillsDir`、`categoryPrefix`，平台判斷改查表；新測試檢查與 registry 一致。`sync-catalog --check` 另檢查技能分類是否以平台的 `category_prefix` 開頭、技能的 `platform` 是否存在
+- CLAUDE.md 新增「新增平台」步驟
+
 ## [7.6.0] - 2026-11-28
 
 技能庫 registry 版本 `7.4.0` → `7.6.0`（7.5.0 paper-folia-scheduler、7.6.0 paper-display-entities）。共 39 個技能（NMS 16、Paper API 23）。
