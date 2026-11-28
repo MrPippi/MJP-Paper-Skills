@@ -149,7 +149,7 @@ export const en: Translations = {
       },
       {
         q: 'Which Minecraft versions are supported?',
-        a: 'Every template is compile-verified against Paper 1.21.11 and 26.3. NMS skills use Paperweight userdev; Paper API skills need only paper-api. Lines that differ carry an inline // @1.21.11: alternative. The only exception is paper-world-clock, which uses an API that exists only on 26.3.',
+        a: 'Every template is compile-verified against Paper 1.21.11 and 26.3. NMS skills use Paperweight userdev; Paper API skills need only paper-api. Lines that differ carry an inline // @1.21.11: alternative. The only exception is paper-world-clock, which uses an API that exists only on 26.3. Skills whose behavior can be checked without a player online also run on a real Paper server in CI, and on Folia where it matters.',
       },
       {
         q: 'Does it work on Spigot?',
@@ -165,7 +165,7 @@ export const en: Translations = {
       },
       {
         q: 'How do I contribute a skill?',
-        a: 'Fork the repo, add a folder under Skills/nms/ or Skills/paper/ with SKILL.md and examples.md, sync it to .claude/skills/, update both skills-registry.yml files, add a page under web/data/skills/, then open a pull request.',
+        a: 'Fork the repo, add a folder under Skills/nms/ or Skills/paper/ with SKILL.md and examples.md (a long template goes in template.md next to SKILL.md), sync it to .claude/skills/, update both skills-registry.yml files, add a page under web/data/skills/, run node scripts/sync-catalog.mjs, then open a pull request. The README lists every step, including optional runtime checks on a real server.',
       },
     ],
     ctaTitle: 'Ready?',

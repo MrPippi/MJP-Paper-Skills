@@ -26,6 +26,7 @@
 ## Основные возможности
 
 - **Проверенная компиляция**: CI при каждом изменении компилирует каждый полный шаблон под Paper **1.21.11** и **26.3**; строки, зависящие от версии, помечены прямо в коде.
+- **Проверка на сервере**: навыки, поведение которых можно проверить без игроков в сети (миры, рецепты, компоненты предметов, реестры, команды, хранилище, планировщик Folia), также запускаются на настоящем сервере Paper, а где это важно — и на Folia; сценарии лежат в [`verify/runtime/`](verify/runtime).
 - **Официальные названия Mojang**: код NMS использует Paperweight userdev и названия, с которыми Minecraft поставляется без обфускации начиная с 26.1.
 - **Потокобезопасность по умолчанию**: каждый навык указывает, в каком потоке выполняется каждый вызов (основной, Netty IO или асинхронный).
 - **Не привязано к инструменту**: открытый формат [Agent Skills](https://agentskills.io) работает с Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI и другими.
@@ -181,7 +182,7 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 ```
 
 1. Агент сопоставляет ваш запрос с навыком по его описанию и ключевым словам-триггерам.
-2. Он читает `SKILL.md` навыка (шаблон, входные и выходные данные, заметки о потокобезопасности, запасной вариант) и `examples.md`.
+2. Он читает `SKILL.md` навыка (входные и выходные данные, заметки о потокобезопасности, запасной вариант) и шаблон кода: прямо в `SKILL.md` или, у длинных навыков, в `template.md` в той же папке — `SKILL.md` содержит его оглавление и указание прочитать его первым. `examples.md` описывает дополнительные сценарии.
 3. Он применяет настройку сборки платформы, включённую в `references/` и сгенерированную из [`Skills/paper-nms/PLATFORM.md`](Skills/paper-nms/PLATFORM.md) или [`Skills/paper-api/PLATFORM.md`](Skills/paper-api/PLATFORM.md).
 4. Он следует правилам работы с потоками и именования Mojang, включённым в `references/` и сгенерированным из [`Skills/_shared/`](Skills/_shared).
 
@@ -217,9 +218,10 @@ MJP-Paper-Skills/
 │   ├── paper-nms/PLATFORM.md # Шаблоны build.gradle / paper-plugin.yml для NMS, таблица версий
 │   ├── paper-api/PLATFORM.md # Настройка сборки Paper API, координаты мягких зависимостей
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (16 навыков NMS)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (23 навыков Paper API)
-├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (проверка компиляции)
+│   └── paper/<skill-id>/     # SKILL.md (+ template.md для длинных шаблонов) + examples.md + references/ (23 навыков Paper API)
+├── scripts/                  # синхронизация references/, извлечение шаблонов, синхронизация каталога, проверки на сервере, canary для dev bundle
 ├── verify/                   # Gradle-проект, компилирующий извлечённые шаблоны для каждой версии
+│   └── runtime/              # Сценарии на настоящем сервере: проб-плагины и ожидаемые проверки для каждого навыка
 ├── docs/paper-nms/           # Краткий справочник по API NMS
 ├── web/                      # Сайт документации на Next.js (статический экспорт на GitHub Pages)
 ├── CHANGELOG.md
@@ -232,15 +234,22 @@ MJP-Paper-Skills/
 
 Вклад приветствуется. Чтобы добавить навык:
 
-1. Создайте `Skills/nms/<slug>/` или `Skills/paper/<slug>/` с файлами `SKILL.md` и `examples.md` (не менее двух примеров).
+1. Создайте `Skills/nms/<slug>/` или `Skills/paper/<slug>/` с файлами `SKILL.md` и `examples.md` (не менее двух примеров). Держите `SKILL.md` в пределах примерно 800 строк; длинный шаблон кладите в `template.md` в той же папке.
 2. Продублируйте его по тому же пути в `.claude/skills/`, затем выполните `node scripts/sync-skill-references.mjs`, чтобы сгенерировать его папку `references/` (запускайте заново при изменении `PLATFORM.md` или файла из `_shared/`).
 3. Добавьте запись в оба файла `skills-registry.yml`.
-4. Добавьте страницу сайта `web/data/skills/<slug>.md` и её английский текст `web/data/skills/en/<slug>.md`, затем обновите ожидаемый список в `web/tests/skills-api.data.test.ts`.
+4. Добавьте страницу сайта `web/data/skills/<slug>.md` и её английский текст `web/data/skills/en/<slug>.md`, а также строку в таблицы навыков восьми README, в Skills Index в `CLAUDE.md` и, для навыков Paper API, в список в `Skills/paper-api/PLATFORM.md`. Затем запустите `node scripts/sync-catalog.mjs`, чтобы обновить число навыков; `npm test` проверяет каталог с `--check`.
 5. Убедитесь, что шаблоны компилируются под Paper 1.21.11 и 26.3. CI запускает это для каждого pull request, затрагивающего `Skills/`; чтобы запустить локально (JDK 25 для 26.3, JDK 21 для 1.21.11):
 
    ```bash
    node scripts/extract-skill-java.mjs 26.3
    cd verify && ./gradlew compileSkills -Pmc=26.3
+   ```
+
+6. Необязательно: если поведение можно проверить на сервере без игроков в сети, добавьте сценарий в `verify/runtime/` (см. `CLAUDE.md`). CI запускает его на настоящем сервере Paper или на Folia, если этого требует сценарий. Локально (это означает принятие EULA Minecraft):
+
+   ```bash
+   cd verify && ./gradlew buildRuntimePlugins -Pmc=26.3 && cd ..
+   node scripts/runtime-check.mjs 26.3 --accept-eula
    ```
 
 [`CLAUDE.md`](CLAUDE.md) описывает полный процесс и инварианты репозитория. Чтобы работать над сайтом документации:
