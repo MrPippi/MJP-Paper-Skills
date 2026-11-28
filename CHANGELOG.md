@@ -5,6 +5,12 @@
 
 ## [Unreleased]
 
+### Changed — 文件跟上實機檢查與 template.md
+
+- README（8 種語言）：特色新增「實機檢查」（不需玩家在線的技能在真的 Paper／Folia 伺服器上執行，情境在 `verify/runtime/`）；How it works 說明長技能的範本在 `template.md`；目錄結構補上 `template.md`、`verify/runtime/` 與新腳本；貢獻步驟改為加 README 目錄列並執行 `sync-catalog.mjs`（取代已不需手改的 `skills-api.data.test.ts`），新增 `SKILL.md` 約 800 行上限與選用的實機情境步驟
+- 網站 FAQ（中英）：版本問答補上實機檢查；貢獻問答補上 `template.md` 與 `sync-catalog.mjs`
+- CLAUDE.md：目錄結構註明 Paper API 技能的長範本另有 `template.md`
+
 ### Added — 自動化與檢查
 
 - `scripts/sync-catalog.mjs`：依 `Skills/skills-registry.yml` 改寫 README（8 種語言）、CLAUDE.md、網站文案與文件頁中的技能數量與 registry 版本；`--check` 另外檢查技能資料夾、兩份 registry、網站頁（含 frontmatter 版本／分類／`mcVersions`）、README 目錄列、Skills Index 與 paper-api 技能清單，由 `web/tests/catalog.test.ts` 執行；網站測試的預期值改為直接讀 registry

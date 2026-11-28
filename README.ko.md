@@ -26,6 +26,7 @@ AI 코딩 도구는 Paper 플러그인에서 미묘한 실수를 자주 합니�
 ## 주요 특징
 
 - **컴파일 검증 완료**: CI가 변경이 있을 때마다 완성된 모든 템플릿을 Paper **1.21.11**과 **26.3** 모두에서 컴파일합니다. 버전별로 다른 줄은 인라인으로 표시되어 있습니다.
+- **실서버 검증**: 플레이어 접속 없이 동작을 확인할 수 있는 스킬(월드, 레시피, 아이템 컴포넌트, 레지스트리, 명령어, 저장소, Folia 스케줄러)은 실제 Paper 서버에서도 실행하며, 필요한 경우 Folia에서도 실행합니다. 시나리오는 [`verify/runtime/`](verify/runtime)에 있습니다.
 - **공식 Mojang 이름**: NMS 코드는 Paperweight userdev와, 26.1부터 Minecraft가 난독화 없이 제공하는 이름을 사용합니다.
 - **스레드 안전 설계**: 각 스킬은 모든 호출이 어느 스레드(메인, Netty IO, 비동기)에서 실행되는지 명시합니다.
 - **도구에 종속되지 않음**: 개방형 [Agent Skills](https://agentskills.io) 형식은 Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI 등에서 동작합니다.
@@ -181,7 +182,7 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 ```
 
 1. 에이전트는 설명과 트리거 키워드를 통해 요청에 맞는 스킬을 찾습니다.
-2. 해당 스킬의 `SKILL.md`(템플릿, 입력, 출력, 스레드 안전 노트, 폴백)와 `examples.md`를 읽습니다.
+2. 해당 스킬의 `SKILL.md`(입력, 출력, 스레드 안전 노트, 폴백)와 코드 템플릿을 읽습니다. 템플릿은 `SKILL.md` 안에 있거나, 긴 스킬은 같은 폴더의 `template.md`에 있으며 `SKILL.md`가 그 색인과 먼저 읽으라는 안내를 담고 있습니다. `examples.md`는 추가 시나리오를 다룹니다.
 3. `references/`에 포함된 플랫폼 빌드 설정을 적용합니다. 이는 [`Skills/paper-nms/PLATFORM.md`](Skills/paper-nms/PLATFORM.md) 또는 [`Skills/paper-api/PLATFORM.md`](Skills/paper-api/PLATFORM.md)에서 생성됩니다.
 4. `references/`에 포함된 스레딩과 Mojang 명명 규칙을 따릅니다. 이는 [`Skills/_shared/`](Skills/_shared)에서 생성됩니다.
 
@@ -217,9 +218,10 @@ MJP-Paper-Skills/
 │   ├── paper-nms/PLATFORM.md # NMS build.gradle / paper-plugin.yml 템플릿, 버전 표
 │   ├── paper-api/PLATFORM.md # Paper API 빌드 설정, 소프트 의존성 좌표
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (NMS 스킬 16개)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (Paper API 스킬 23개)
-├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (컴파일 검사)
+│   └── paper/<skill-id>/     # SKILL.md (긴 템플릿은 template.md) + examples.md + references/ (Paper API 스킬 23개)
+├── scripts/                  # references/ 동기화, 템플릿 추출, 카탈로그 동기화, 실서버 검사, dev bundle canary
 ├── verify/                   # 추출한 템플릿을 버전별로 컴파일하는 Gradle 프로젝트
+│   └── runtime/              # 실서버 시나리오: 스킬별 프로브 플러그인과 예상 검사 항목
 ├── docs/paper-nms/           # NMS API 빠른 참조
 ├── web/                      # Next.js 문서 사이트 (GitHub Pages로 정적 내보내기)
 ├── CHANGELOG.md
@@ -232,15 +234,22 @@ MJP-Paper-Skills/
 
 기여를 환영합니다. 스킬을 추가하려면 다음 절차를 따르십시오.
 
-1. `Skills/nms/<slug>/` 또는 `Skills/paper/<slug>/`에 `SKILL.md`와 `examples.md`(예제 2개 이상)를 생성합니다.
+1. `Skills/nms/<slug>/` 또는 `Skills/paper/<slug>/`에 `SKILL.md`와 `examples.md`(예제 2개 이상)를 생성합니다. `SKILL.md`는 약 800줄 이내로 유지하고, 긴 템플릿은 같은 폴더의 `template.md`에 둡니다.
 2. `.claude/skills/` 아래 동일한 경로에 미러링한 다음, `node scripts/sync-skill-references.mjs`를 실행하여 `references/` 폴더를 생성합니다(`PLATFORM.md` 또는 `_shared/` 파일이 변경될 때마다 다시 실행).
 3. 두 `skills-registry.yml` 파일 모두에 항목을 추가합니다.
-4. 사이트 페이지 `web/data/skills/<slug>.md`와 영어 본문 `web/data/skills/en/<slug>.md`를 추가한 다음, `web/tests/skills-api.data.test.ts`의 기대 목록을 업데이트합니다.
+4. 사이트 페이지 `web/data/skills/<slug>.md`와 영어 본문 `web/data/skills/en/<slug>.md`를 추가하고, 8개 README의 스킬 표, `CLAUDE.md`의 Skills Index, (Paper API 스킬인 경우) `Skills/paper-api/PLATFORM.md`의 목록에 각각 한 줄을 추가합니다. 그런 다음 `node scripts/sync-catalog.mjs`를 실행해 스킬 수를 업데이트합니다. `npm test`가 `--check`로 카탈로그를 검사합니다.
 5. 템플릿이 Paper 1.21.11과 26.3에서 컴파일되는지 확인합니다. `Skills/`를 건드리는 모든 풀 리퀘스트에서 CI가 이를 실행합니다. 로컬에서 실행하려면 (26.3는 JDK 25, 1.21.11은 JDK 21):
 
    ```bash
    node scripts/extract-skill-java.mjs 26.3
    cd verify && ./gradlew compileSkills -Pmc=26.3
+   ```
+
+6. 선택 사항: 플레이어 접속 없이 서버에서 동작을 확인할 수 있다면 `verify/runtime/`에 실서버 시나리오를 추가합니다(`CLAUDE.md` 참고). CI는 실제 Paper 서버에서, 시나리오가 요구하면 Folia에서 실행합니다. 로컬 실행(Minecraft EULA에 동의하게 됩니다):
+
+   ```bash
+   cd verify && ./gradlew buildRuntimePlugins -Pmc=26.3 && cd ..
+   node scripts/runtime-check.mjs 26.3 --accept-eula
    ```
 
 전체 절차와 저장소 불변 규칙은 [`CLAUDE.md`](CLAUDE.md)에 문서화되어 있습니다. 문서 사이트 작업은 다음과 같이 진행합니다.

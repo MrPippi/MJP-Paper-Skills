@@ -149,7 +149,7 @@ export const zhTW: Translations = {
       },
       {
         q: '支援哪些 Minecraft 版本？',
-        a: '所有範本都對 Paper 1.21.11 與 26.3 實際編譯驗證。NMS 技能透過 Paperweight userdev；Paper API 技能只需 paper-api。兩版寫法不同處以 // @1.21.11: 標註。唯一例外是 paper-world-clock，它用的 API 只有 26.3 有。',
+        a: '所有範本都對 Paper 1.21.11 與 26.3 實際編譯驗證。NMS 技能透過 Paperweight userdev；Paper API 技能只需 paper-api。兩版寫法不同處以 // @1.21.11: 標註。唯一例外是 paper-world-clock，它用的 API 只有 26.3 有。不需玩家在線就能檢查行為的技能，CI 也會在真的 Paper 伺服器上執行，需要時也會在 Folia 上執行。',
       },
       {
         q: '可以用在 Spigot 嗎？',
@@ -165,7 +165,7 @@ export const zhTW: Translations = {
       },
       {
         q: '如何貢獻新的 Skill？',
-        a: 'Fork 後在 Skills/nms/ 或 Skills/paper/ 新增目錄，撰寫 SKILL.md 與 examples.md，同步到 .claude/skills/、更新兩份 skills-registry.yml，並在 web/data/skills/ 新增網站頁面後送出 Pull Request。',
+        a: 'Fork 後在 Skills/nms/ 或 Skills/paper/ 新增目錄，撰寫 SKILL.md 與 examples.md（長範本放在同目錄的 template.md），同步到 .claude/skills/、更新兩份 skills-registry.yml，在 web/data/skills/ 新增網站頁面並執行 node scripts/sync-catalog.mjs，再送出 Pull Request。完整步驟（含選用的實機檢查）見 README。',
       },
     ],
     ctaTitle: '準備好了嗎？',

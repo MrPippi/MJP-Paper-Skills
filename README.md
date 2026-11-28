@@ -26,6 +26,7 @@ AI coding tools often get Paper plugins subtly wrong: outdated or obfuscated NMS
 ## Highlights
 
 - **Compile-verified**: CI compiles every complete template against both Paper **1.21.11** and **26.3** on each change; version-specific lines are marked inline.
+- **Runtime-checked**: skills whose behavior can be checked without a player online (worlds, recipes, item components, registries, commands, storage, the Folia scheduler) also run on a real Paper server, and on Folia where it matters; the scenarios live in [`verify/runtime/`](verify/runtime).
 - **Official Mojang names**: NMS code uses Paperweight userdev and the names Minecraft ships unobfuscated since 26.1.
 - **Thread-safe by design**: each skill states which thread every call runs on (main, Netty IO or async).
 - **Tool-agnostic**: the open [Agent Skills](https://agentskills.io) format works with Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI and more.
@@ -181,7 +182,7 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 ```
 
 1. The agent matches your request to a skill through its description and trigger keywords.
-2. It reads the skill's `SKILL.md` (template, inputs, outputs, thread-safety notes, fallback) and `examples.md`.
+2. It reads the skill's `SKILL.md` (inputs, outputs, thread-safety notes, fallback) and its code template: inline, or in `template.md` next to it for long skills, which `SKILL.md` indexes and tells the agent to read first. `examples.md` covers further scenarios.
 3. It applies the platform build setup bundled in `references/`, generated from [`Skills/paper-nms/PLATFORM.md`](Skills/paper-nms/PLATFORM.md) or [`Skills/paper-api/PLATFORM.md`](Skills/paper-api/PLATFORM.md).
 4. It follows the threading and Mojang naming rules bundled in `references/`, generated from [`Skills/_shared/`](Skills/_shared).
 
@@ -217,9 +218,10 @@ MJP-Paper-Skills/
 │   ├── paper-nms/PLATFORM.md # NMS build.gradle / paper-plugin.yml templates, version table
 │   ├── paper-api/PLATFORM.md # Paper API build setup, soft-dependency coordinates
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/ (16 NMS skills)
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/ (23 Paper API skills)
-├── scripts/                  # sync-skill-references.mjs (references/), extract-skill-java.mjs (compile check)
+│   └── paper/<skill-id>/     # SKILL.md (+ template.md for long templates) + examples.md + references/ (23 Paper API skills)
+├── scripts/                  # references/ sync, template extraction, catalog sync, runtime checks, dev bundle canary
 ├── verify/                   # Gradle project that compiles the extracted templates for each version
+│   └── runtime/              # Real-server scenarios: probe plugins and expected checks per skill
 ├── docs/paper-nms/           # NMS API quick reference
 ├── web/                      # Next.js documentation site (static export to GitHub Pages)
 ├── CHANGELOG.md
@@ -232,15 +234,22 @@ MJP-Paper-Skills/
 
 Contributions are welcome. To add a skill:
 
-1. Create `Skills/nms/<slug>/` or `Skills/paper/<slug>/` with `SKILL.md` and `examples.md` (at least two examples).
+1. Create `Skills/nms/<slug>/` or `Skills/paper/<slug>/` with `SKILL.md` and `examples.md` (at least two examples). Keep `SKILL.md` under about 800 lines; a longer template goes in `template.md` in the same folder.
 2. Mirror it to the same path under `.claude/skills/`, then run `node scripts/sync-skill-references.mjs` to generate its `references/` folder (re-run it whenever a `PLATFORM.md` or `_shared/` file changes).
 3. Add the entry to both `skills-registry.yml` files.
-4. Add the site page `web/data/skills/<slug>.md` and its English body `web/data/skills/en/<slug>.md`, then update the expected list in `web/tests/skills-api.data.test.ts`.
+4. Add the site page `web/data/skills/<slug>.md` and its English body `web/data/skills/en/<slug>.md`, and a row to the skill tables in the eight READMEs, the Skills Index in `CLAUDE.md` and, for Paper API skills, the list in `Skills/paper-api/PLATFORM.md`. Then run `node scripts/sync-catalog.mjs` to update the skill counts; `npm test` checks the catalog with `--check`.
 5. Make sure the templates compile against Paper 1.21.11 and 26.3. CI runs this on every pull request that touches `Skills/`; to run it locally (JDK 25 for 26.3, JDK 21 for 1.21.11):
 
    ```bash
    node scripts/extract-skill-java.mjs 26.3
    cd verify && ./gradlew compileSkills -Pmc=26.3
+   ```
+
+6. Optional: if the behavior can be checked on a server with no player online, add a runtime scenario under `verify/runtime/` (see `CLAUDE.md`). CI runs it on a real Paper server, or on Folia when the scenario asks for it. Locally (this accepts the Minecraft EULA):
+
+   ```bash
+   cd verify && ./gradlew buildRuntimePlugins -Pmc=26.3 && cd ..
+   node scripts/runtime-check.mjs 26.3 --accept-eula
    ```
 
 [`CLAUDE.md`](CLAUDE.md) documents the full process and repository invariants. To work on the documentation site:

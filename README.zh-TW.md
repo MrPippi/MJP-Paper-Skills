@@ -26,6 +26,7 @@ AI 程式設計工具常在 Paper 插件上出現細微錯誤：過時或已混�
 ## 亮點
 
 - **經編譯驗證**：CI 會在每次變更時，針對 Paper **1.21.11** 與 **26.3** 編譯每個完整範本；版本專屬的行會在行內標註。
+- **經實機檢查**：不需玩家在線就能檢查行為的技能（世界、配方、物品元件、註冊表、指令、儲存、Folia 排程器）也會在真的 Paper 伺服器上執行，需要時另在 Folia 上執行；情境放在 [`verify/runtime/`](verify/runtime)。
 - **Mojang 官方名稱**：NMS 程式碼使用 Paperweight userdev，以及 Minecraft 自 26.1 起以未混淆形式發行的名稱。
 - **執行緒安全的設計**：每個技能都會說明每次呼叫是在哪個執行緒執行（主執行緒、Netty IO 或非同步）。
 - **不限工具**：開放的 [Agent Skills](https://agentskills.io) 格式可搭配 Claude Code、OpenAI Codex、Cursor、GitHub Copilot、Gemini CLI 等工具。
@@ -181,7 +182,7 @@ Your request ──▶ skill description ──▶ SKILL.md ──▶ references
 ```
 
 1. 代理透過技能的描述與觸發關鍵字，將你的請求對應到某個技能。
-2. 它會讀取該技能的 `SKILL.md`（範本、輸入、輸出、執行緒安全說明、失敗回退）與 `examples.md`。
+2. 它會讀取該技能的 `SKILL.md`（輸入、輸出、執行緒安全說明、失敗回退）與程式碼範本：範本直接寫在 `SKILL.md` 內；較長的技能則放在同目錄的 `template.md`，`SKILL.md` 會列出索引並要求先讀取它。`examples.md` 涵蓋更多情境。
 3. 它會套用 `references/` 中隨附的平台建置設定，內容由 [`Skills/paper-nms/PLATFORM.md`](Skills/paper-nms/PLATFORM.md) 或 [`Skills/paper-api/PLATFORM.md`](Skills/paper-api/PLATFORM.md) 產生。
 4. 它會遵循 `references/` 中隨附的執行緒與 Mojang 命名規則，內容由 [`Skills/_shared/`](Skills/_shared) 產生。
 
@@ -217,9 +218,10 @@ MJP-Paper-Skills/
 │   ├── paper-nms/PLATFORM.md # NMS build.gradle / paper-plugin.yml 範本、版本對照表
 │   ├── paper-api/PLATFORM.md # Paper API 建置設定、軟依賴座標
 │   ├── nms/<skill-id>/       # SKILL.md + examples.md + references/（16 個 NMS 技能）
-│   └── paper/<skill-id>/     # SKILL.md + examples.md + references/（23 個 Paper API 技能）
-├── scripts/                  # sync-skill-references.mjs（references/）、extract-skill-java.mjs（編譯檢查）
+│   └── paper/<skill-id>/     # SKILL.md（長範本另有 template.md）+ examples.md + references/（23 個 Paper API 技能）
+├── scripts/                  # references/ 同步、範本擷取、目錄同步、實機檢查、dev bundle canary
 ├── verify/                   # 為各版本編譯所擷取範本的 Gradle 專案
+│   └── runtime/              # 實機情境：各技能的探測插件與預期檢查項目
 ├── docs/paper-nms/           # NMS API 速查表
 ├── web/                      # Next.js 文件網站（靜態匯出至 GitHub Pages）
 ├── CHANGELOG.md
@@ -232,15 +234,22 @@ MJP-Paper-Skills/
 
 歡迎貢獻。新增技能的步驟：
 
-1. 建立 `Skills/nms/<slug>/` 或 `Skills/paper/<slug>/`，內含 `SKILL.md` 與 `examples.md`（至少兩個範例）。
+1. 建立 `Skills/nms/<slug>/` 或 `Skills/paper/<slug>/`，內含 `SKILL.md` 與 `examples.md`（至少兩個範例）。`SKILL.md` 請控制在約 800 行以內；較長的範本放在同目錄的 `template.md`。
 2. 同步至 `.claude/skills/` 下的相同路徑，然後執行 `node scripts/sync-skill-references.mjs` 產生其 `references/` 資料夾（每當 `PLATFORM.md` 或 `_shared/` 檔案變更時重新執行）。
 3. 在兩份 `skills-registry.yml` 中加入該條目。
-4. 新增網站頁面 `web/data/skills/<slug>.md` 及其英文內文 `web/data/skills/en/<slug>.md`，然後更新 `web/tests/skills-api.data.test.ts` 中的預期清單。
+4. 新增網站頁面 `web/data/skills/<slug>.md` 及其英文內文 `web/data/skills/en/<slug>.md`，並在 8 份 README 的技能表、`CLAUDE.md` 的 Skills Index，以及（Paper API 技能）`Skills/paper-api/PLATFORM.md` 的清單各加一列。然後執行 `node scripts/sync-catalog.mjs` 更新技能數量；`npm test` 會以 `--check` 檢查目錄。
 5. 確認範本可針對 Paper 1.21.11 與 26.3 編譯。每個涉及 `Skills/` 的 Pull Request，CI 都會執行此檢查；若要在本機執行（26.3 用 JDK 25，1.21.11 用 JDK 21）：
 
    ```bash
    node scripts/extract-skill-java.mjs 26.3
    cd verify && ./gradlew compileSkills -Pmc=26.3
+   ```
+
+6. 選用：若行為能在沒有玩家在線的伺服器上檢查，可在 `verify/runtime/` 新增實機情境（見 `CLAUDE.md`）。CI 會在真的 Paper 伺服器上執行，情境要求時改在 Folia 上執行。本機執行（會接受 Minecraft EULA）：
+
+   ```bash
+   cd verify && ./gradlew buildRuntimePlugins -Pmc=26.3 && cd ..
+   node scripts/runtime-check.mjs 26.3 --accept-eula
    ```
 
 完整流程與倉庫不變式記載於 [`CLAUDE.md`](CLAUDE.md)。若要開發文件網站：

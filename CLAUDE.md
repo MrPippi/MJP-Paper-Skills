@@ -50,7 +50,7 @@ MJP-Paper-Skills/
 │   ├── paper-api/
 │   │   └── PLATFORM.md                  ← paper-api compileOnly 建置設定（Paper API 技能）
 │   ├── nms/                             ← NMS 技能（每個含 SKILL.md + examples.md + references/）
-│   └── paper/                           ← Paper API 技能（每個含 SKILL.md + examples.md + references/）
+│   └── paper/                           ← Paper API 技能（每個含 SKILL.md + examples.md + references/；長範本另有 template.md）
 ├── scripts/
 │   ├── sync-skill-references.mjs        ← 產生各技能 references/（PLATFORM.md、_shared 副本）
 │   ├── extract-skill-java.mjs           ← 抽出完整 Java 範本（套用 @1.21.11／@only、依 mc_versions 跳過）供 verify/ 編譯，並列出片段 import
