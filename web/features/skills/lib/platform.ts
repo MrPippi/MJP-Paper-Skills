@@ -1,19 +1,31 @@
 import type { PixelIconName } from '@/shared/ui/pixel-icons';
 
-export type PlatformId = 'paper-nms' | 'paper-api';
+/**
+ * Mirrors the `platforms:` section of Skills/skills-registry.yml (id, label, skills_dir,
+ * category_prefix, in registry order; tests/platform.test.ts checks it). The icon and docs page
+ * are site-only. Adding a platform: add it to the registry, then here.
+ */
+export const PLATFORMS = [
+  { id: 'paper-nms', label: 'NMS', icon: 'redstone', docSlug: 'paper-nms', skillsDir: 'nms', categoryPrefix: 'nms-' },
+  { id: 'paper-api', label: 'Paper API', icon: 'emerald', docSlug: 'paper-api', skillsDir: 'paper', categoryPrefix: 'paper-' },
+] as const satisfies readonly PlatformDefinition[];
 
-export interface PlatformInfo {
-  id: PlatformId;
+export type PlatformId = (typeof PLATFORMS)[number]['id'];
+
+interface PlatformDefinition {
+  id: string;
   label: string;
   icon: PixelIconName;
   /** Docs page describing this platform's build setup. */
   docSlug: string;
+  /** Folder under Skills/ that holds the platform's skills. */
+  skillsDir: string;
+  /** Prefix of every category id on this platform. */
+  categoryPrefix: string;
 }
 
-export const PLATFORMS: readonly PlatformInfo[] = [
-  { id: 'paper-nms', label: 'NMS', icon: 'redstone', docSlug: 'paper-nms' },
-  { id: 'paper-api', label: 'Paper API', icon: 'emerald', docSlug: 'paper-api' },
-];
+/** Platform of a skill whose path and category match no platform. */
+const FALLBACK_PLATFORM: PlatformId = 'paper-api';
 
 interface PlatformSource {
   githubPath: string;
@@ -21,13 +33,13 @@ interface PlatformSource {
 }
 
 export function getPlatform(skill: PlatformSource): PlatformId {
-  if (skill.githubPath.startsWith('Skills/nms/')) return 'paper-nms';
-  if (skill.githubPath.startsWith('Skills/paper/')) return 'paper-api';
-  return skill.category.startsWith('nms-') ? 'paper-nms' : 'paper-api';
+  const byPath = PLATFORMS.find((p) => skill.githubPath.startsWith(`Skills/${p.skillsDir}/`));
+  if (byPath) return byPath.id;
+  return PLATFORMS.find((p) => skill.category.startsWith(p.categoryPrefix))?.id ?? FALLBACK_PLATFORM;
 }
 
 export function isPlatformId(value: string | null | undefined): value is PlatformId {
-  return value === 'paper-nms' || value === 'paper-api';
+  return PLATFORMS.some((p) => p.id === value);
 }
 
 const ICON_BY_SUFFIX: Record<string, PixelIconName> = {
@@ -47,7 +59,8 @@ const ICON_BY_SUFFIX: Record<string, PixelIconName> = {
 };
 
 export function categoryIconFor(category: string): PixelIconName {
-  const suffix = category.replace(/^(nms|paper)-/, '');
+  const prefix = PLATFORMS.find((p) => category.startsWith(p.categoryPrefix))?.categoryPrefix ?? '';
+  const suffix = category.slice(prefix.length);
   return ICON_BY_SUFFIX[suffix] ?? 'pickaxe';
 }
 

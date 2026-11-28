@@ -7,8 +7,12 @@
  *   node scripts/extract-skill-java.mjs 26.3      # → verify/build/extracted/26.3/<group>/<skill>/<set>/...
  *   node scripts/extract-skill-java.mjs 1.21.11
  *
+ * Groups (Skills/<skills_dir>), targets, forbidden imports and extra snippet docs come from
+ * the registry's Java platforms; the first target is the default the templates are written for.
+ *
  * Version markers (see Skills/paper-nms/PLATFORM.md):
  *   `code; // @1.21.11: other code;`  → for 1.21.11 the line becomes `other code;`
+ *                                        (every non-default target has such a marker)
  *   first line `// @only <version>`   → the block is skipped for other versions
  *
  * Long skills keep their full templates in template.md next to SKILL.md; both files
@@ -21,17 +25,19 @@
  * docs/paper-nms reference, are written to snippet-imports.tsv; verify's
  * checkSnippetImports task resolves them against the same classpath, so a snippet that
  * names a class removed in a new version is still caught. Exits 1 on conflicting
- * duplicate files or NMS imports in Paper API skills.
+ * duplicate files or imports a platform forbids (e.g. NMS in Paper API skills).
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ALL_MC_VERSIONS, readRegistry } from './lib/registry.mjs';
+import { REPO_ROOT, allTargets, readRegistry } from './lib/registry.mjs';
 
-const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const TARGETS = ALL_MC_VERSIONS;
-const DEFAULT_TARGET = '26.3';
-const GROUPS = ['nms', 'paper'];
+const REGISTRY = readRegistry();
+/** Platforms whose code blocks are Java; each one's skills_dir is a group under Skills/. */
+const JAVA_PLATFORMS = REGISTRY.platforms.filter((p) => p.language === 'java');
+export const TARGETS = allTargets({ platforms: JAVA_PLATFORMS });
+const DEFAULT_TARGET = TARGETS[0];
+const GROUPS = JAVA_PLATFORMS.map((p) => p.skillsDir);
 /** Files whose complete units form a skill's base compile set. */
 const TEMPLATE_FILES = ['SKILL.md', 'template.md'];
 
@@ -40,8 +46,20 @@ const PACKAGE = /^package\s+([\w.]+)\s*;/m;
 const TOP_LEVEL_TYPE =
   /^(public\s+)?(?:(?:abstract|final|sealed|non-sealed|strictfp)\s+)*(?:class|interface|record|enum|@interface)\s+(\w+)/gm;
 const ONLY = /^\s*\/\/\s*@only\s+(\S+)/;
-const VERSION_ALT = /^(\s*).*?\/\/\s*@1\.21\.11:\s?(.*)$/;
-const NMS_IMPORT = /^import\s+(?:static\s+)?(?:net\.minecraft|org\.bukkit\.craftbukkit)\./m;
+const escapeRegex = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** Target → its `// @<target>:` marker, for every target except the default one. */
+const VERSION_ALT = new Map(
+  TARGETS.filter((t) => t !== DEFAULT_TARGET).map((t) => [t, new RegExp(String.raw`^(\s*).*?\/\/\s*@${escapeRegex(t)}:\s?(.*)$`)]),
+);
+/** Group → a regex for the imports its platform forbids (registry forbidden_imports), or null. */
+const FORBIDDEN_IMPORT = new Map(
+  JAVA_PLATFORMS.map((p) => [
+    p.skillsDir,
+    p.forbiddenImports.length
+      ? new RegExp(String.raw`^import\s+(?:static\s+)?(?:${p.forbiddenImports.map(escapeRegex).join('|')})\.`, 'm')
+      : null,
+  ]),
+);
 const SNIPPET_IMPORT = /^\s*import\s+(static\s+)?([\w.]+(?:\.\*)?)\s*;/gm;
 /**
  * Not checked: JDK packages (not on the Gradle classpath; javac checks them when templates compile)
@@ -49,18 +67,19 @@ const SNIPPET_IMPORT = /^\s*import\s+(static\s+)?([\w.]+(?:\.\*)?)\s*;/gm;
  */
 const UNCHECKED_PREFIX = /^(?:java|javax|jdk|sun|com\.sun|com\.example)\./;
 /** Reference docs whose snippets are checked as well (they belong to no skill). */
-const SNIPPET_DOC_DIRS = ['docs/paper-nms'];
+const SNIPPET_DOC_DIRS = JAVA_PLATFORMS.flatMap((p) => p.snippetDocs);
 
 /** Applies the version markers; returns null when the block does not apply to `target`. */
 export function applyTarget(code, target) {
   const firstLine = code.split('\n').find((l) => l.trim() !== '') ?? '';
   const only = firstLine.match(ONLY);
   if (only && only[1] !== target) return null;
-  if (target !== '1.21.11') return code;
+  const marker = VERSION_ALT.get(target);
+  if (!marker) return code;
   return code
     .split('\n')
     .map((line) => {
-      const alt = line.match(VERSION_ALT);
+      const alt = line.match(marker);
       return alt ? `${alt[1]}${alt[2]}` : line;
     })
     .join('\n');
@@ -97,7 +116,7 @@ function collectFile(group, id, file, target, units, problems) {
     }
     const code = applyTarget(block, target);
     if (code === null) continue;
-    if (group === 'paper' && NMS_IMPORT.test(code)) problems.push(`${where}: Paper API skill imports NMS/CraftBukkit`);
+    if (FORBIDDEN_IMPORT.get(group)?.test(code)) problems.push(`${where}: imports a package its platform forbids (registry forbidden_imports)`);
     const type = primaryTypeName(code);
     if (!type) {
       problems.push(`${where}: no top-level type in package ${pkg[1]}`);
@@ -175,7 +194,7 @@ function main() {
   let snippets = 0;
   let skippedSkills = 0;
   const problems = [];
-  const versionsById = new Map(readRegistry().skills.map((skill) => [skill.id, skill.mcVersions]));
+  const versionsById = new Map(REGISTRY.skills.map((skill) => [skill.id, skill.mcVersions]));
   for (const group of GROUPS) {
     const groupDir = path.join(REPO_ROOT, 'Skills', group);
     for (const id of fs.readdirSync(groupDir).sort()) {

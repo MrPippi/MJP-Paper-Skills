@@ -4,7 +4,8 @@
  * naming rules) into `<skill>/references/`, so a skill installed on its own
  * (e.g. `npx skills add MrPippi/MJP-Paper-Skills --skill <id>`) is self-contained.
  *
- * Sources of truth stay in Skills/paper-nms, Skills/paper-api and Skills/_shared;
+ * Which docs a platform's skills get comes from the registry (`platform_file` and `references`
+ * of each entry under `platforms:`). Sources of truth stay in Skills/<platform>/ and Skills/_shared;
  * the copies are generated for both Skills/ and .claude/skills/.
  *
  *   node scripts/sync-skill-references.mjs          # write copies
@@ -13,24 +14,27 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { REPO_ROOT, readRegistry, skillsPath } from './lib/registry.mjs';
 
-export const REPO_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+export { REPO_ROOT };
 const GITHUB_BLOB = 'https://github.com/MrPippi/MJP-Paper-Skills/blob/main';
+const PLATFORMS = readRegistry().platforms;
 
-/** Shared doc → file name inside references/. Paths are relative to the repo root. */
-export const SHARED_DOCS = {
-  'Skills/paper-nms/PLATFORM.md': 'paper-nms-platform.md',
-  'Skills/paper-api/PLATFORM.md': 'paper-api-platform.md',
-  'Skills/_shared/nms-threading.md': 'nms-threading.md',
-  'Skills/_shared/nms-obfuscation.md': 'nms-obfuscation.md',
-  'Skills/_shared/paper-threading.md': 'paper-threading.md',
-};
+/**
+ * Shared doc → file name inside references/ (paths relative to the repo root): each platform's
+ * platform_file becomes `<platform id>-platform.md`, its other references keep their file name.
+ */
+export const SHARED_DOCS = Object.fromEntries(
+  PLATFORMS.flatMap((p) => [
+    [skillsPath(p.platformFile), `${p.id}-platform.md`],
+    ...p.references.map((ref) => [skillsPath(ref), path.posix.basename(ref)]),
+  ]),
+);
 
 /** Skill folder → docs every skill in it gets, whether or not SKILL.md links them. */
-const PLATFORM_DEFAULTS = {
-  nms: ['Skills/paper-nms/PLATFORM.md', 'Skills/_shared/nms-threading.md', 'Skills/_shared/nms-obfuscation.md'],
-  paper: ['Skills/paper-api/PLATFORM.md', 'Skills/_shared/paper-threading.md'],
-};
+const PLATFORM_DEFAULTS = Object.fromEntries(
+  PLATFORMS.map((p) => [p.skillsDir, [p.platformFile, ...p.references].map(skillsPath)]),
+);
 
 const MIRROR_ROOTS = ['Skills', '.claude/skills'];
 const SKILL_TEXT_FILES = ['SKILL.md', 'template.md', 'examples.md'];
